@@ -1,0 +1,3 @@
+[submodule "ssdatabench"]
+	path = ssdatabench
+	url = https://github.com/lszshu/SSDataBench.git
