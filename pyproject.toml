@@ -1,0 +1,38 @@
+[build-system]
+requires = ["setuptools>=64", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ssdataagent"
+version = "0.1.0"
+description = "LLM data-analyst agent for population-level survey simulation"
+requires-python = ">=3.10"
+dependencies = [
+  "pandas>=2.0",
+  "numpy>=1.24",
+  "scipy>=1.11",
+  "statsmodels>=0.14",
+  "scikit-learn>=1.3",
+  "matplotlib>=3.7",
+  "openai>=1.40",
+  "anthropic>=0.34",
+  "pyyaml>=6.0",
+  "python-dotenv>=1.0",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=7.4",
+  "pytest-mock>=3.12",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra -q"
+markers = [
+  "live_llm: tests that hit real LLM APIs; gated by RUN_LIVE_LLM_TESTS=1",
+  "live_eval: tests that shell out to ssdatabench evaluation scripts",
+]

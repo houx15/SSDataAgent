@@ -1,0 +1,125 @@
+# =============================================================================
+# AI CODING ASSISTANTS
+# =============================================================================
+
+# Claude Code - local settings contain personal preferences and may include tokens
+.claude/settings.local.json
+.claude/CLAUDE.local.md
+.claude/*.local.*
+CLAUDE.local.md
+
+# Codex CLI - local files (sessions, logs, config)
+.codex/*
+!.codex/skills/
+!.codex/prompts/
+
+# Gemini CLI - local files (settings, tmp)
+.gemini/*
+!.gemini/skills/
+!.gemini/commands/
+
+# =============================================================================
+# SECRETS & ENVIRONMENT
+# =============================================================================
+
+# Environment files often contain API keys, database credentials, etc.
+.env
+.env.*
+!.env.example
+
+# Private keys and certificates
+*.pem
+*.key
+
+# Credential files
+credentials.json
+secrets.json
+
+# =============================================================================
+# OPERATING SYSTEM
+# =============================================================================
+
+# macOS - Finder metadata
+.DS_Store
+
+# Windows - thumbnail cache
+Thumbs.db
+
+# =============================================================================
+# EDITORS & IDEs
+# =============================================================================
+
+# JetBrains (IntelliJ, WebStorm, PyCharm, etc.)
+.idea/
+
+# Visual Studio Code
+.vscode/
+
+# Vim/Neovim swap and backup files
+*.swp
+*.swo
+*~
+
+# =============================================================================
+# DEPENDENCIES
+# =============================================================================
+
+# Node.js
+node_modules/
+
+# PHP (Composer)
+vendor/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# =============================================================================
+# BUILD OUTPUTS
+# =============================================================================
+
+# Common build directories
+dist/
+build/
+
+# Python package build
+*.egg-info/
+
+# Rust/Cargo
+target/
+
+# =============================================================================
+# LOGS & TEMPORARY FILES
+# =============================================================================
+
+*.log
+logs/
+
+# =============================================================================
+# TEST COVERAGE
+# =============================================================================
+
+# JavaScript/TypeScript
+coverage/
+.nyc_output/
+
+# Python
+htmlcov/
+
+# =============================================================================
+# SSDATAAGENT PROJECT
+# =============================================================================
+
+# Legacy config holding plaintext API key (replaced by .env)
+config/config.py
+
+# Per-experiment run artifacts
+results/
+
+# Agent-produced simulated data and evaluation outputs inside ssdatabench
+ssdatabench/simulated_data/agent_*/
+ssdatabench/evaluation_results/agent_*/
+
