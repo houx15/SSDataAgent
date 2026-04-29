@@ -1,0 +1,19 @@
+datasets:
+  gss:
+    real_data_path: real_data/gss_clean.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/gss2018.yaml
+    ssdatabench_sim_subdir: gss_2018
+    evaluation_script: scripts/evaluation/gss_2018.py
+    type: cross-sectional
+  cps:
+    real_data_path: real_data/cps_clean.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/cps1980.yaml
+    ssdatabench_sim_subdir: cps_1980
+    evaluation_script: scripts/evaluation/cps_1980.py
+    type: cross-sectional
+  acs:
+    real_data_path: real_data/acs_clean.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/acs1980.yaml
+    ssdatabench_sim_subdir: acs_1980
+    evaluation_script: scripts/evaluation/acs_1980.py
+    type: cross-sectional
