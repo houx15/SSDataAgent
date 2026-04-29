@@ -65,17 +65,17 @@ def test_run_experiment_resume_skips_done(
     assert MockOrch.return_value.run.call_count == first_count
 
 
+@patch("ssdataagent.experiments.direct_generation.generate_direct",
+       return_value=pd.DataFrame({"profile_id": [0], "gender": ["Male"]}))
 @patch("ssdataagent.experiments.runner.run_evaluation",
        return_value=PassRates(by_type={"type1": 0.5}, overall_average=0.5))
 @patch("ssdataagent.experiments.runner.Orchestrator")
 @patch("ssdataagent.experiments.runner.build_client")
 @patch("ssdataagent.experiments.runner.load_llm_config")
-def test_direct_generation_skipped_in_phase5(
-    _cfg, _client, MockOrch, _eval, tmp_path
+def test_direct_generation_uses_direct_generator(
+    _cfg, _client, MockOrch, _eval, _direct, tmp_path
 ):
-    """Phase 5: direct_generation produces an empty PassRates and does not
-    call the orchestrator. Phase 7 wires in the real direct generator."""
-    MockOrch.return_value.run.return_value = _fake_run_result()
+    """direct_generation calls generate_direct, not Orchestrator."""
     cfg = ExperimentConfig(
         name="t3",
         datasets=["gss"],
@@ -89,3 +89,4 @@ def test_direct_generation_skipped_in_phase5(
     results = run_experiment(cfg)
     assert ("direct_generation", "gss") in results
     assert MockOrch.return_value.run.call_count == 0
+    assert _direct.called

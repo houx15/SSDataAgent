@@ -96,11 +96,20 @@ def run_experiment(
             workspace.mkdir(parents=True, exist_ok=True)
 
             if not spec.is_agent:
-                # Phase 7 will fill this in with ssdatabench's own generation.
-                results[(cond_name, dataset)] = PassRates()
-                (run_dir / "eval.json").write_text(
-                    _serialize_rates(PassRates())
+                from ssdataagent.experiments.direct_generation import generate_direct
+                generated = generate_direct(
+                    client=client,
+                    sampled=eval_df,
+                    dataset_name=dataset,
                 )
+                rates = run_evaluation(
+                    dataset_name=dataset,
+                    run_id=run_id,
+                    generated=generated,
+                    sampled=eval_df,
+                )
+                (run_dir / "eval.json").write_text(_serialize_rates(rates))
+                results[(cond_name, dataset)] = rates
                 continue
 
             unseen = cfg.unseen_variables.get(dataset, [])
