@@ -1,4 +1,13 @@
 experiments:
+  smoke_gss:
+    # Tiny end-to-end sanity check: one condition, one dataset.
+    datasets: [gss]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+
   pilot_gss:
     datasets: [gss]
     conditions: [full_agent, agent_no_semantic, agent_no_data, direct_generation]
