@@ -82,6 +82,34 @@ def test_anthropic_chat_returns_text():
     assert out == "hello world"
 
 
+def test_openai_retries_on_transient_connection_error():
+    from openai import APIConnectionError
+    cfg = _openai_cfg()
+    fake_resp = MagicMock()
+    fake_resp.choices = [MagicMock(message=MagicMock(content="ok", reasoning_content=None))]
+    transient = APIConnectionError(request=MagicMock())
+    with patch("ssdataagent.agent.llm_client.OpenAI") as Sdk, \
+         patch("ssdataagent.agent.llm_client.time.sleep"):
+        Sdk.return_value.chat.completions.create.side_effect = [transient, transient, fake_resp]
+        client = OpenAICompatibleClient(cfg, max_retries=3)
+        out = client.chat([{"role": "user", "content": "x"}])
+    assert out == "ok"
+    assert Sdk.return_value.chat.completions.create.call_count == 3
+
+
+def test_openai_gives_up_after_max_retries():
+    from openai import APIConnectionError
+    cfg = _openai_cfg()
+    transient = APIConnectionError(request=MagicMock())
+    with patch("ssdataagent.agent.llm_client.OpenAI") as Sdk, \
+         patch("ssdataagent.agent.llm_client.time.sleep"):
+        Sdk.return_value.chat.completions.create.side_effect = transient
+        client = OpenAICompatibleClient(cfg, max_retries=2)
+        with pytest.raises(APIConnectionError):
+            client.chat([{"role": "user", "content": "x"}])
+    assert Sdk.return_value.chat.completions.create.call_count == 3  # initial + 2 retries
+
+
 def test_unknown_provider_rejected():
     cfg = LLMConfig(
         provider="nope",  # type: ignore[arg-type]

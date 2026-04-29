@@ -95,65 +95,83 @@ def run_experiment(
             workspace = run_dir / "workspace"
             workspace.mkdir(parents=True, exist_ok=True)
 
-            if not spec.is_agent:
-                from ssdataagent.experiments.direct_generation import generate_direct
-                generated = generate_direct(
-                    client=client,
-                    sampled=eval_df,
-                    dataset_name=dataset,
+            try:
+                rates = _run_one_condition(
+                    spec=spec, dataset=dataset, run_id=run_id,
+                    run_dir=run_dir, workspace=workspace,
+                    train=train, eval_df=eval_df, cfg=cfg,
+                    client=client, llm_cfg=llm_cfg,
                 )
-                rates = run_evaluation(
-                    dataset_name=dataset,
-                    run_id=run_id,
-                    generated=generated,
-                    sampled=eval_df,
-                )
-                (run_dir / "eval.json").write_text(_serialize_rates(rates))
                 results[(cond_name, dataset)] = rates
-                continue
-
-            unseen = cfg.unseen_variables.get(dataset, [])
-            ctx = build_context(
-                condition=spec.context_condition,
-                dataset_name=dataset,
-                train_df=train,
-                workspace=workspace,
-                unseen_variables=unseen if spec.context_condition is Condition.UNSEEN else None,
-            )
-            orch = Orchestrator(
-                client=client,
-                n_rows=cfg.n_rows,
-                max_validation_iters=cfg.max_iterations,
-                sandbox_timeout=cfg.sandbox_timeout,
-            )
-            result = orch.run(
-                condition=spec.context_condition,
-                dataset_name=dataset,
-                workspace=workspace,
-                has_data=ctx.has_data,
-                has_descriptions=ctx.has_descriptions,
-            )
-            log_run(
-                result,
-                run_dir=run_dir,
-                meta={
-                    "experiment": cfg.name,
-                    "dataset": dataset,
-                    "condition": cond_name,
-                    "run_id": run_id,
-                    "git_sha": _git_sha(),
-                    "model": llm_cfg.model,
-                    "provider": llm_cfg.provider,
-                    "unseen_variables": unseen,
-                },
-            )
-
-            rates = run_evaluation(
-                dataset_name=dataset,
-                run_id=run_id,
-                generated=result.generated,
-                sampled=eval_df,
-            )
-            (run_dir / "eval.json").write_text(_serialize_rates(rates))
-            results[(cond_name, dataset)] = rates
+            except Exception as e:
+                # Log the failure but continue with the next condition.
+                err_path = run_dir / "error.txt"
+                err_path.write_text(f"{type(e).__name__}: {e}\n")
+                print(f"[runner] {cond_name} on {dataset} FAILED: {type(e).__name__}: {e}")
+                results[(cond_name, dataset)] = PassRates()
     return results
+
+
+def _run_one_condition(
+    *, spec, dataset, run_id, run_dir, workspace, train, eval_df, cfg, client, llm_cfg,
+) -> PassRates:
+    if not spec.is_agent:
+        from ssdataagent.experiments.direct_generation import generate_direct
+        generated = generate_direct(
+            client=client,
+            sampled=eval_df,
+            dataset_name=dataset,
+        )
+        rates = run_evaluation(
+            dataset_name=dataset,
+            run_id=run_id,
+            generated=generated,
+            sampled=eval_df,
+        )
+        (run_dir / "eval.json").write_text(_serialize_rates(rates))
+        return rates
+
+    unseen = cfg.unseen_variables.get(dataset, [])
+    ctx = build_context(
+        condition=spec.context_condition,
+        dataset_name=dataset,
+        train_df=train,
+        workspace=workspace,
+        unseen_variables=unseen if spec.context_condition is Condition.UNSEEN else None,
+    )
+    orch = Orchestrator(
+        client=client,
+        n_rows=cfg.n_rows,
+        max_validation_iters=cfg.max_iterations,
+        sandbox_timeout=cfg.sandbox_timeout,
+    )
+    result = orch.run(
+        condition=spec.context_condition,
+        dataset_name=dataset,
+        workspace=workspace,
+        has_data=ctx.has_data,
+        has_descriptions=ctx.has_descriptions,
+    )
+    log_run(
+        result,
+        run_dir=run_dir,
+        meta={
+            "experiment": cfg.name,
+            "dataset": dataset,
+            "condition": spec.name,
+            "run_id": run_id,
+            "git_sha": _git_sha(),
+            "model": llm_cfg.model,
+            "provider": llm_cfg.provider,
+            "unseen_variables": unseen,
+        },
+    )
+
+    rates = run_evaluation(
+        dataset_name=dataset,
+        run_id=run_id,
+        generated=result.generated,
+        sampled=eval_df,
+    )
+    (run_dir / "eval.json").write_text(_serialize_rates(rates))
+    return rates

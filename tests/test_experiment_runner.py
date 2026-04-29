@@ -65,6 +65,34 @@ def test_run_experiment_resume_skips_done(
     assert MockOrch.return_value.run.call_count == first_count
 
 
+@patch("ssdataagent.experiments.runner.run_evaluation",
+       return_value=PassRates(by_type={"type1": 0.5}, overall_average=0.5))
+@patch("ssdataagent.experiments.runner.Orchestrator")
+@patch("ssdataagent.experiments.runner.build_client")
+@patch("ssdataagent.experiments.runner.load_llm_config")
+def test_one_condition_failure_does_not_kill_others(
+    _cfg, _client, MockOrch, _eval, tmp_path
+):
+    """If one condition raises, the runner records an error and continues."""
+    MockOrch.return_value.run.side_effect = [RuntimeError("boom"), _fake_run_result()]
+    cfg = ExperimentConfig(
+        name="resilient",
+        datasets=["gss"],
+        conditions=["full_agent", "agent_no_semantic"],
+        max_iterations=1,
+        sandbox_timeout=10,
+        train_eval_split=0.5,
+        n_rows=10,
+        results_root=tmp_path,
+    )
+    results = run_experiment(cfg)
+    assert ("full_agent", "gss") in results
+    assert ("agent_no_semantic", "gss") in results
+    # The failing run wrote an error.txt
+    failed_dirs = list((tmp_path / "resilient" / "full_agent" / "gss").glob("*/error.txt"))
+    assert failed_dirs
+
+
 @patch("ssdataagent.experiments.direct_generation.generate_direct",
        return_value=pd.DataFrame({"profile_id": [0], "gender": ["Male"]}))
 @patch("ssdataagent.experiments.runner.run_evaluation",
