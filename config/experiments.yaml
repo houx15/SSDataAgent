@@ -1,0 +1,18 @@
+experiments:
+  pilot_gss:
+    datasets: [gss]
+    conditions: [full_agent, agent_no_semantic, agent_no_data, direct_generation]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  pilot_gss_unseen:
+    datasets: [gss]
+    conditions: [full_agent_unseen]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+    unseen_variables:
+      gss: [age_first_childbirth]
