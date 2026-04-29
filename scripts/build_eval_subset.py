@@ -32,8 +32,22 @@ DATASET_TO_SUBDIR_AND_CSV = {
 
 def _prune_variables(spec: dict, available: set[str]) -> dict:
     out = dict(spec)
+    # Type1, Type2, Type5 use a "variables:" block.
     if "variables" in out and isinstance(out["variables"], dict):
         out["variables"] = {k: v for k, v in out["variables"].items() if k in available}
+    # Type3 uses "response:" (variables being modeled) and "predictors:".
+    # Also has a parallel "model_type:" list that must match len(response).
+    response_before = list((out.get("response") or {}).keys()) if isinstance(out.get("response"), dict) else None
+    for key in ("response", "predictors", "covariates"):
+        if isinstance(out.get(key), dict):
+            out[key] = {k: v for k, v in out[key].items() if k in available}
+        elif isinstance(out.get(key), list):
+            out[key] = [k for k in out[key] if (isinstance(k, str) and k in available)
+                        or (isinstance(k, dict) and k.get("name", k.get("var")) in available)]
+    if response_before is not None and isinstance(out.get("model_type"), list):
+        # Truncate or pad model_type to match the new response length.
+        kept_indices = [i for i, k in enumerate(response_before) if k in (out.get("response") or {})]
+        out["model_type"] = [out["model_type"][i] for i in kept_indices if i < len(out["model_type"])]
     return out
 
 
