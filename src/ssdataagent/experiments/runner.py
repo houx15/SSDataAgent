@@ -117,11 +117,39 @@ def _run_one_condition(
 ) -> PassRates:
     if not spec.is_agent:
         from ssdataagent.experiments.direct_generation import generate_direct
+        transcript: list[dict] = []
         generated = generate_direct(
             client=client,
             sampled=eval_df,
             dataset_name=dataset,
+            transcript_out=transcript,
         )
+        meta = {
+            "experiment": cfg.name,
+            "dataset": dataset,
+            "condition": spec.name,
+            "run_id": run_id,
+            "git_sha": _git_sha(),
+            "model": llm_cfg.model,
+            "provider": llm_cfg.provider,
+            "n_individuals": len(eval_df),
+        }
+        (run_dir / "meta.json").write_text(json.dumps(meta, indent=2, default=str))
+        prompts_lines = [
+            json.dumps({"row": e["row"], "role": "user", "content": e["prompt"]})
+            for e in transcript
+        ]
+        responses_lines = [
+            json.dumps({"row": e["row"], "role": "assistant", "content": e["response"]})
+            for e in transcript
+        ]
+        (run_dir / "prompts.jsonl").write_text(
+            "\n".join(prompts_lines) + ("\n" if prompts_lines else "")
+        )
+        (run_dir / "responses.jsonl").write_text(
+            "\n".join(responses_lines) + ("\n" if responses_lines else "")
+        )
+        generated.to_csv(run_dir / "generated.csv", index=False)
         rates = run_evaluation(
             dataset_name=dataset,
             run_id=run_id,

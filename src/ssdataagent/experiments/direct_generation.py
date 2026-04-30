@@ -70,14 +70,19 @@ def generate_direct(
     client: LLMClient,
     sampled: pd.DataFrame,
     dataset_name: str,
+    transcript_out: list[dict] | None = None,
 ) -> pd.DataFrame:
-    """Generate target variables for each row of *sampled* via direct LLM calls."""
+    """Generate target variables for each row of *sampled* via direct LLM calls.
+
+    If *transcript_out* is provided, it is appended with one dict per row
+    containing the row index, the prompt sent, and the raw response.
+    """
     schema = load_schema(dataset_name)
     bg = [c for c in sampled.columns if c in schema.background_variables or c == "profile_id"]
     targets = list(schema.target_variables)
 
     rows: list[dict] = []
-    for _, row in sampled.iterrows():
+    for i, (_, row) in enumerate(sampled.iterrows()):
         sampled_row = {c: row[c] for c in bg}
         prompt = _build_user_prompt(
             sampled_row=sampled_row,
@@ -91,6 +96,8 @@ def generate_direct(
             messages=[{"role": "user", "content": prompt}],
             system=_DIRECT_SYSTEM,
         )
+        if transcript_out is not None:
+            transcript_out.append({"row": i, "prompt": prompt, "response": raw})
         parsed = _parse_targets(raw, targets)
         rows.append({**sampled_row, **parsed})
     return pd.DataFrame(rows)
