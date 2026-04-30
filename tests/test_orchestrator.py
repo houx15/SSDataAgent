@@ -86,12 +86,13 @@ def test_orchestrator_validation_loop_iterates(tmp_path, tiny_train_df):
     assert fake_client.chat.call_count == 6
 
 
-def test_orchestrator_raises_when_no_code_block(tmp_path, tiny_train_df):
+def test_orchestrator_raises_when_no_code_block_after_retry(tmp_path, tiny_train_df):
+    """If the LLM returns prose without code on TWO consecutive attempts, raise."""
     workspace = _setup_workspace(tmp_path, tiny_train_df)
     fake_client = MagicMock()
     fake_client.chat.return_value = "I don't have code for you."
     orch = Orchestrator(client=fake_client, n_rows=10, max_validation_iters=1)
-    with pytest.raises(RuntimeError, match="no code block"):
+    with pytest.raises(RuntimeError, match="no code block.*after retry"):
         orch.run(
             condition=Condition.FULL,
             dataset_name="gss",
@@ -99,6 +100,27 @@ def test_orchestrator_raises_when_no_code_block(tmp_path, tiny_train_df):
             has_data=True,
             has_descriptions=False,
         )
+    # Two LLM calls for the failed stage (initial + retry), no successful steps after.
+    assert fake_client.chat.call_count == 2
+
+
+def test_orchestrator_recovers_from_one_missing_code_block(tmp_path, tiny_train_df):
+    """If the LLM fails to emit code once but produces it on retry, the run continues."""
+    workspace = _setup_workspace(tmp_path, tiny_train_df)
+    prose_then_code = ["Here's my plan in prose."] + SCRIPTED  # exploration retry succeeds
+    fake_client = MagicMock()
+    fake_client.chat.side_effect = prose_then_code
+    orch = Orchestrator(client=fake_client, n_rows=50, max_validation_iters=1)
+    result = orch.run(
+        condition=Condition.FULL,
+        dataset_name="gss",
+        workspace=workspace,
+        has_data=True,
+        has_descriptions=False,
+    )
+    assert len(result.generated) == 50
+    # 1 prose + 4 successful = 5 LLM calls
+    assert fake_client.chat.call_count == 5
 
 
 def test_orchestrator_raises_when_generation_missing(tmp_path, tiny_train_df):

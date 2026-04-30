@@ -86,7 +86,20 @@ class Orchestrator:
             history.append({"role": "assistant", "content": response})
             code = extract_python_block(response)
             if code is None:
-                raise RuntimeError(f"no code block in {stage} response")
+                # The reasoning model occasionally returns prose-only planning.
+                # Retry once with an explicit reminder before giving up.
+                nudge = (
+                    "Your previous response had no fenced Python code block. "
+                    "Respond again with executable Python in a single ```python ... ``` block."
+                )
+                transcript.append(TranscriptEntry("user", nudge, stage))
+                history.append({"role": "user", "content": nudge})
+                response = self.client.chat(history, system=SYSTEM_PROMPT)
+                transcript.append(TranscriptEntry("assistant", response, stage))
+                history.append({"role": "assistant", "content": response})
+                code = extract_python_block(response)
+                if code is None:
+                    raise RuntimeError(f"no code block in {stage} response (after retry)")
             code_steps.append(code)
             result = sandbox.run(code)
             sandbox_results.append(result)
