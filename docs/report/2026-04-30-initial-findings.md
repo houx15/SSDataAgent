@@ -92,25 +92,46 @@ Two robust findings:
 
 A consistent failure mode: **`full_agent` scores 0.000 on type 3 (regression coefficient preservation) for both CPS and ACS**, despite winning on type 1 and type 2. Whatever the agent built generates per-row distributions that match marginals and bivariate correlations but fails to preserve OLS-fittable conditional structure. `agent_no_semantic` does not have this collapse on ACS (type 3 = 0.690), suggesting again that the descriptions are inducing some constraint that breaks regression preservation specifically.
 
+### 2.3 The type-3 collapse: imputed missingness destroys conditional structure
+
+We replicated the SSDataBench type-3 OLS fit by hand on the actual simulated CSVs (formula: `response ~ age + C(gender) + C(race) + C(education)`). The pattern is unambiguous on ACS:
+
+| Response | Real | full_agent | no_semantic |
+|---|---|---|---|
+| `age_first_childbirth` | n=309, R²=0.502 | n=**1000**, R²=0.008 | n=295, R²=0.475 |
+| `age_first_marriage` | n=564, R²=0.210 | n=**1000**, R²=0.010 | n=536, R²=0.169 |
+| `child_number` | n=1000, R²=0.298 | n=1000, R²=0.004 | n=1000, R²=0.251 |
+| `income` | n=772, R²=0.297 | n=**1000**, R²=0.005 | n=765, R²=0.291 |
+
+`full_agent` populated *every row* with values for variables that are conditionally missing in the real data. Sample inspection of its raw output confirms it: row 0 is a 65yo male with `age_first_childbirth=27.2` and `age_first_marriage=18.9`; row 1 is a 24yo with 2.18 children and `age_first_childbirth=37.9` (a child born to a 37-year-old who is currently 24).
+
+Real `age_first_childbirth` is NaN for 69% of ACS individuals (those without children). SSDataBench's OLS uses the natural ~309-row mother subset to fit a coherent regression on age/education, recovering R²=0.50. The same OLS on `full_agent`'s data uses all 1000 rows including teenage males with imputed childbirth ages, reducing the conditional structure to noise — R² collapses to 0.008. Across 100 bootstrap iterations, the R² gap is statistically significant in every one → `insignificant_rate = 0.000`.
+
+`agent_no_semantic` on ACS preserved the missingness pattern (n=295 ≈ real's 309) and recovered real-comparable R² (0.475 vs 0.502). On CPS, *both* conditions populated every NaN — that's why CPS no_semantic also takes a hit on type 3 (0.357), but the imputed values for income happened to be conditional-mean-tracking enough that the R² gap stays modest. ACS no_semantic was unusual in actually preserving the data pattern.
+
+**Why does the descriptions-aware agent destroy missingness?** The "validation theater" hypothesis: with descriptions in the prompt, the agent infers that "complete rows" are part of the task and writes imputation code in MODELING. Without descriptions, it treats the data as opaque tabular structure and just samples from joint distribution as observed. We don't have a controlled test of this yet — but the pattern is consistent across two datasets and the GENERATION-step code shows extensive plausibility validation that a no-semantic run wouldn't have any reason to write.
+
+**Implication for paradigm design:** the data-analyst prompt template should explicitly tell the agent to preserve missingness patterns rather than impute. Imputation is a downstream choice for the *consumer* of the synthetic data, not a property of the data itself.
+
 Three patterns hold across all datasets:
 
 1. **`agent_no_data` is a flat floor at ~0.18** — without real data, prior knowledge produces calibration-free distributions independent of which dataset we're emulating. Its type 1 pass rate is essentially zero everywhere; only type 2 (bivariate associations) survives, because broad demographic correlations are part of the LLM's training prior.
 2. **`agent_no_semantic` is the consistent ceiling**, often the best condition.
 3. **`direct_generation` degrades across datasets** (0.273 → 0.200 → 0.189), suggesting per-individual prompting struggles more as the target variable count grows (GSS: 5, CPS: 8, ACS: 9).
 
-### 2.3 Surprise: semantics can hurt
+### 2.4 Why semantics hurt on ACS
 
-On ACS, **`agent_no_semantic` (0.655) outperforms `full_agent` (0.443) by +0.21**. The data-only agent fitted a tighter generative model than the agent given both data and descriptions. Looking at type 3 (regression preservation), the gap is even more striking: `agent_no_semantic` scores 0.690 while `full_agent` collapses to 0.000.
+The ACS surprise (`agent_no_semantic` 0.655 > `full_agent` 0.443, +0.21) is dominated by the type-3 collapse documented in §2.3. Specifically, `full_agent` imputed `age_first_marriage`, `age_first_childbirth`, and `income` for every individual; `agent_no_semantic` happened to preserve their conditional missingness pattern. Type-3 swung from 0.690 to 0.000, dragging the mean.
 
-A plausible explanation: with descriptions, the agent inserts plausibility-based constraints (allowed-value enforcement, sanity assertions, conditional gates inferred from variable names) that distort empirical conditional distributions. Without descriptions, the agent has no temptation to "fix" the data and just samples from joint structure as observed. We do not yet have direct evidence — the ACS `full_agent` final code differs structurally from `agent_no_semantic`'s — but this is consistent with the failure pattern.
+The "validation theater" mechanism — descriptions cue the agent to write imputation/validation code that destroys conditional structure — is consistent with the inspection of the GENERATION-stage code: full_agent wrote ~50 lines of post-hoc range and category assertions; agent_no_semantic wrote a 3-line `model.sample(1000); to_csv()` and stopped. Neither agent is "wrong"; the descriptions-aware one took the prompt as license to enforce schema validity, which on ACS produced a worse synthetic dataset.
 
-This is the most actionable finding for the design space: **giving the agent both data and semantics is not Pareto-better than data alone**.
+**Implication for prompt design:** giving the agent both data and semantics is not Pareto-better than data alone. The data-analyst prompt should explicitly distinguish "preserve the data's structural properties (including missingness)" from "validate output for schema correctness."
 
-### 2.4 GSS and CPS share the headline; ACS is the outlier
+### 2.5 GSS and CPS share the headline; ACS is the outlier
 
 On both GSS and CPS, `full_agent` is the strongest condition (0.631 / 0.622). On ACS, `agent_no_semantic` (0.655) outperforms `full_agent` (0.443). Two of three datasets confirm the original "agent paradigm wins" claim; one shows that semantics can actively hurt. The narrower data-driven > per-individual claim holds everywhere.
 
-### 2.5 Held-out-variable test (SPEC criterion 3)
+### 2.6 Held-out-variable test (SPEC criterion 3)
 
 We removed `age_first_childbirth` from the agent's training data on GSS (`pilot_gss_unseen`, condition `full_agent_unseen`). The agent is told the column exists but does not see its values, and is asked to produce it in output anyway — the SPEC's zero-shot prediction test.
 
@@ -189,11 +210,11 @@ Approximate runtime per pilot: ~15 min for the three agent conditions, ~2 hours 
 
 ## 7. Next steps
 
-1. **Investigate the type-3 collapse.** `full_agent` scores 0.000 on type 3 (regression preservation) for both CPS and ACS, while doing fine on types 1 and 2. The agent's models match marginals and pairwise associations but break OLS-fittable conditional structure. One observation from a single ACS comparison: `full_agent` used hard cluster assignment for its Gaussian mixture (`gmm.predict`) while `agent_no_semantic` used soft membership with Laplace smoothing (`gmm.predict_proba`). With descriptions in the prompt, `full_agent` also wrote ~50 lines of post-hoc schema validation in the GENERATION step. Plausible "validation theater" hypothesis: descriptions cue the agent into plausibility-checking work that crowds out modeling care. Worth a controlled comparison.
+1. **Add a "preserve missingness" instruction to the modeling prompt.** §2.3 traced the type-3 collapse to the agent imputing conditionally-missing variables. A targeted prompt variant — *"do not impute missing values; preserve the missingness pattern of the training data in your generated output"* — should fix the failure mode without removing any agent capability. Test this against `full_agent` on CPS and ACS as a controlled before/after.
 2. **Multiple seeds** for the four conditions × three datasets to get variance bands. Particularly important given the CPS full_agent instability (two failures + one success in three independent runs).
 3. **Stronger prompt for zero-shot prediction.** The held-out test showed the agent omits absent variables rather than inferring them. A modeling-prompt variant that explicitly asks for predictions of unseen variables would test whether zero-shot is a capability of the paradigm or just an absence of intent.
 4. **Vary model capability** — re-run `agent_no_semantic` and `direct_generation` against a smaller model. If the data-driven advantage requires reasoning capability, that is an interesting ceiling claim.
-5. **Cross-dataset ACS replication** — the `agent_no_semantic > full_agent` ACS finding is one run. Multiple seeds will tell us whether it's a robust pattern or a single-trajectory accident.
+5. **Match SSDataBench's full reporting structure.** Currently we collapse evaluation to one mean per condition × dataset. SSDataBench reports per-pattern, per-domain, and per-variable breakdowns; expanding our reporting will make our numbers directly comparable to the SSDataBench paper.
 6. **Longitudinal datasets** (NLSY, Add Health) — the per-individual paradigm has a clearer claim there because individuals have temporal context the agent paradigm has to model explicitly.
 
 ---
