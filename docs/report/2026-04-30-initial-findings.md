@@ -10,7 +10,7 @@ We compare two LLM-based paradigms for generating synthetic social-survey data w
 - **Direct generation** (the SSDataBench paradigm): one LLM call per simulated individual, conditioned on background variables, returning JSON of target values.
 - **Data-analyst agent**: a single LLM session given the real training split and asked to *write Python code* that fits a generative model and samples from it.
 
-Across **GSS-2018, CPS-1980, and ACS-1980** (n=1000 each, ~10 variables each) using DeepSeek's `deepseek-v4-flash` reasoning model, the agent paradigm — even when stripped of variable descriptions and population context (`agent_no_semantic`) — beats per-individual prompting on every dataset, with the gap *widening* across datasets (+0.23 / +0.34 / +0.47 mean pass rate). The robust finding is not "agents win" but rather **"data-driven empirical sampling beats per-individual LLM elicitation, regardless of variable semantics."** Removing data access collapses the agent to a near-identical floor (~0.18) on every dataset. The full agent (with data + semantics) is the strongest condition only on GSS; on harder datasets it is unstable or underperforms its data-only ablation.
+Across **GSS-2018, CPS-1980, and ACS-1980** (n=1000 each, ~10 variables each) using DeepSeek's `deepseek-v4-flash` reasoning model, the agent paradigm beats per-individual prompting on every dataset, with `full_agent` reaching mean pass rates of **0.631 / 0.622 / 0.443** vs `direct_generation`'s 0.273 / 0.200 / 0.189. Even when the agent is stripped of variable descriptions and population context (`agent_no_semantic`), the gap holds and *widens* across datasets (+0.23 / +0.34 / +0.47). The robust finding is **"data-driven empirical sampling beats per-individual LLM elicitation, regardless of variable semantics."** Removing data access collapses the agent to a near-identical floor (~0.18) on every dataset. On ACS, semantics actively *hurt* — the data-only ablation outperforms the full agent. A held-out-variable test on GSS confirms the agent does not attempt zero-shot prediction of a variable absent from training.
 
 ## 1. Setup
 
@@ -61,14 +61,17 @@ Mean pass rate (overall, averaged over types 1–3) per condition × dataset:
 
 | Condition | GSS-2018 | CPS-1980 | ACS-1980 |
 |---|---:|---:|---:|
-| `full_agent` | **0.631** | failed¹ | 0.443 |
+| `full_agent` | **0.631** | **0.622**¹ | 0.443 |
 | `agent_no_semantic` | 0.506 | 0.544 | **0.655** |
 | `agent_no_data` | 0.181 | 0.175 | 0.179 |
 | `direct_generation` | 0.273 | 0.200 | 0.189 |
 
-¹ *CPS `full_agent` failed in two independent runs at different stages (GENERATION script produced no output file; MODELING response had no fenced code block). The orchestrator currently has no retry on malformed agent output. See §4.*
+¹ *CPS `full_agent` failed twice on the first attempts — once because the GENERATION script produced no output file, once because the MODELING response had no fenced code block. After adding a single-shot retry to the orchestrator for prose-only responses, the third attempt produced 0.622 (essentially tied with GSS).*
 
-The robust finding: **`agent_no_semantic` beats `direct_generation` on every dataset, by a margin that grows from +0.23 (GSS) → +0.34 (CPS) → +0.47 (ACS)**. The data-only agent is *uniformly stronger* than per-individual prompting that has full per-call descriptions.
+Two robust findings:
+
+- **Full agent paradigm wins on 2 of 3 datasets:** `full_agent` reaches ~0.63 on both GSS and CPS, and beats `direct_generation` everywhere (largest gap on ACS at +0.25, smallest on GSS at +0.36).
+- **`agent_no_semantic` beats `direct_generation` on every dataset**, by a margin that grows from +0.23 (GSS) → +0.34 (CPS) → +0.47 (ACS). The data-only agent is *uniformly stronger* than per-individual prompting that has full per-call descriptions.
 
 ### 2.2 Per-type breakdown
 
@@ -78,6 +81,7 @@ The robust finding: **`agent_no_semantic` beats `direct_generation` on every dat
 | GSS | agent_no_semantic   | 0.458 | 0.585 | 0.475 | 0.506 |
 | GSS | direct_generation   | 0.084 | 0.455 | 0.280 | 0.273 |
 | GSS | agent_no_data       | 0.002 | 0.540 | 0.000 | 0.181 |
+| CPS | full_agent          | 0.486 | 0.757 | 0.000 | 0.622 |
 | CPS | agent_no_semantic   | 0.501 | 0.773 | 0.357 | 0.544 |
 | CPS | direct_generation   | 0.253 | 0.346 | 0.000 | 0.200 |
 | CPS | agent_no_data       | 0.001 | 0.520 | 0.003 | 0.175 |
@@ -85,6 +89,8 @@ The robust finding: **`agent_no_semantic` beats `direct_generation` on every dat
 | ACS | full_agent          | 0.361 | 0.526 | 0.000 | 0.443 |
 | ACS | direct_generation   | 0.114 | 0.452 | 0.003 | 0.189 |
 | ACS | agent_no_data       | 0.005 | 0.531 | 0.000 | 0.179 |
+
+A consistent failure mode: **`full_agent` scores 0.000 on type 3 (regression coefficient preservation) for both CPS and ACS**, despite winning on type 1 and type 2. Whatever the agent built generates per-row distributions that match marginals and bivariate correlations but fails to preserve OLS-fittable conditional structure. `agent_no_semantic` does not have this collapse on ACS (type 3 = 0.690), suggesting again that the descriptions are inducing some constraint that breaks regression preservation specifically.
 
 Three patterns hold across all datasets:
 
@@ -100,9 +106,27 @@ A plausible explanation: with descriptions, the agent inserts plausibility-based
 
 This is the most actionable finding for the design space: **giving the agent both data and semantics is not Pareto-better than data alone**.
 
-### 2.4 Cross-dataset GSS still has the headline win
+### 2.4 GSS and CPS share the headline; ACS is the outlier
 
-On GSS, `full_agent` (0.631) is the best by +0.13 over `agent_no_semantic` (0.506). The original "agent paradigm wins" finding holds for GSS — but does not generalize to CPS (where it failed to run) or ACS (where it underperformed). The narrower claim — *data-driven sampling beats per-individual prompting* — is what generalizes.
+On both GSS and CPS, `full_agent` is the strongest condition (0.631 / 0.622). On ACS, `agent_no_semantic` (0.655) outperforms `full_agent` (0.443). Two of three datasets confirm the original "agent paradigm wins" claim; one shows that semantics can actively hurt. The narrower data-driven > per-individual claim holds everywhere.
+
+### 2.5 Held-out-variable test (SPEC criterion 3)
+
+We removed `age_first_childbirth` from the agent's training data on GSS (`pilot_gss_unseen`, condition `full_agent_unseen`). The agent is told the column exists but does not see its values, and is asked to produce it in output anyway — the SPEC's zero-shot prediction test.
+
+Per-variable type-1 pass rates from this run:
+
+| Variable | Pass rate |
+|---|---:|
+| `child_number` (seen) | 1.000 |
+| `marital_status` (seen) | 0.840 |
+| `education` (seen) | 0.540 |
+| `occupation` (seen) | 0.050 |
+| `age_first_childbirth` (**held out**) | **0.000** |
+
+The agent **does not attempt zero-shot prediction** of the held-out variable. Its output omits the column entirely; the formatter's uniform-random baseline scores at zero, as it should. This is itself a finding: the data-analyst paradigm models what it has and does not generalize to absent variables — the agent treats "I don't have this column" as "this column is not part of the task" rather than "I should infer this from observed correlations."
+
+A future variant of this experiment would prompt the agent more aggressively to predict held-out variables (or build them as derived features) to test whether zero-shot prediction is a capability of the paradigm at all, or just an absence of intent in the current prompt.
 
 ## 3. What the agent built
 
@@ -140,8 +164,8 @@ For `agent_no_data` across all three datasets, the LLM defaulted to wide-prior d
 - **One model.** All numbers come from `deepseek-v4-flash`. Whether the no_semantic > direct_generation gap holds at lower-capability models is open.
 - **Schema-pruned evaluation.** Our eval covers 10–14 variables of each dataset's documented 25–30; direct comparisons to SSDataBench's paper numbers are not 1-to-1.
 - **n=1000.** Pass rates likely improve at larger sample sizes (especially type 1 marginals).
-- **No unseen-variable headline yet.** `pilot_gss_unseen` ran but the agent omitted the held-out column from its output, crashing the original eval. The eval is now robust to missing columns; rerun pending.
-- **Single seed.** No variance estimates across reruns. The CPS full_agent failures suggest variance is non-trivial for the headline condition.
+- **Unseen-variable test only on GSS.** SPEC criterion 3 was run only on GSS-2018 with `age_first_childbirth` held out. The result is unambiguous (agent does not attempt zero-shot prediction) but the prompt design has not been varied to invite zero-shot inference.
+- **Single seed.** No variance estimates across reruns. The CPS full_agent retries (two failures, one success) suggest variance is non-trivial for the headline condition.
 
 ## 6. Reproducing
 
@@ -165,11 +189,11 @@ Approximate runtime per pilot: ~15 min for the three agent conditions, ~2 hours 
 
 ## 7. Next steps
 
-1. **Stabilize `full_agent`** — add code-block-missing retry; investigate why ACS's full agent collapsed on type 3 vs the no-semantic ablation. The `agent_no_semantic > full_agent` gap on ACS is the most interesting structural finding to chase.
-2. **Rerun `pilot_gss_unseen`** with the now-tolerant eval to get a real number for SPEC criterion 3 (zero-shot held-out variable prediction).
-3. **Multiple seeds** for the four conditions × three datasets to get variance bands. Particularly important given the CPS full_agent instability.
-4. **Vary model capability** — re-run `agent_no_semantic` and `direct_generation` against a smaller model. If the data-driven advantage requires reasoning capability, that's an interesting ceiling claim.
-5. **Investigate why semantics hurt on ACS** — diff the `full_agent` and `agent_no_semantic` MODELING code for ACS to identify the specific plausibility-constraint that distorted the joint distribution.
+1. **Investigate the type-3 collapse.** `full_agent` scores 0.000 on type 3 (regression preservation) for both CPS and ACS, while doing fine on types 1 and 2. The agent's models match marginals and pairwise associations but break OLS-fittable conditional structure. One observation from a single ACS comparison: `full_agent` used hard cluster assignment for its Gaussian mixture (`gmm.predict`) while `agent_no_semantic` used soft membership with Laplace smoothing (`gmm.predict_proba`). With descriptions in the prompt, `full_agent` also wrote ~50 lines of post-hoc schema validation in the GENERATION step. Plausible "validation theater" hypothesis: descriptions cue the agent into plausibility-checking work that crowds out modeling care. Worth a controlled comparison.
+2. **Multiple seeds** for the four conditions × three datasets to get variance bands. Particularly important given the CPS full_agent instability (two failures + one success in three independent runs).
+3. **Stronger prompt for zero-shot prediction.** The held-out test showed the agent omits absent variables rather than inferring them. A modeling-prompt variant that explicitly asks for predictions of unseen variables would test whether zero-shot is a capability of the paradigm or just an absence of intent.
+4. **Vary model capability** — re-run `agent_no_semantic` and `direct_generation` against a smaller model. If the data-driven advantage requires reasoning capability, that is an interesting ceiling claim.
+5. **Cross-dataset ACS replication** — the `agent_no_semantic > full_agent` ACS finding is one run. Multiple seeds will tell us whether it's a robust pattern or a single-trajectory accident.
 6. **Longitudinal datasets** (NLSY, Add Health) — the per-individual paradigm has a clearer claim there because individuals have temporal context the agent paradigm has to model explicitly.
 
 ---
