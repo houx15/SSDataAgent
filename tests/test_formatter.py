@@ -28,15 +28,34 @@ def test_format_adds_profile_id_when_missing():
     assert "profile_id" in out.columns
 
 
-def test_format_adds_missing_schema_columns_as_nan():
-    """Unseen-variable runs may legitimately omit a target column. The eval
-    must still be runnable; format_generated fills missing schema vars with NaN
-    so the bootstrap test scores them at zero rather than crashing on KeyError."""
-    df = pd.DataFrame({"gender": ["Male"] * 3, "age": [30] * 3})
+def test_format_replaces_all_nan_profile_id():
+    """If the agent emits profile_id but every value is NaN, replace with a
+    fresh 0..N. SSDataBench's bootstrap does dropna() on [profile_id, var]
+    so all-NaN profile_id wipes every row before the test runs."""
+    import numpy as np
+    df = pd.DataFrame({
+        "gender": ["Male"] * 3, "age": [30] * 3,
+        "profile_id": [np.nan, np.nan, np.nan],
+    })
     out = format_generated(df, dataset_name="gss")
-    # gss target schema includes age_first_childbirth — should appear, all NaN
+    assert out["profile_id"].notna().all()
+
+
+def test_format_adds_missing_schema_columns_with_baseline_values():
+    """Unseen-variable runs omit a target column. The eval bootstrap can't
+    sample from an all-NaN series, so format_generated fills missing schema
+    vars with random-uniform draws within the schema range/allowed values —
+    a "no informed prediction" baseline that scores low but doesn't crash eval."""
+    df = pd.DataFrame({"gender": ["Male"] * 100, "age": [30] * 100})
+    out = format_generated(df, dataset_name="gss")
+    # gss target schema includes age_first_childbirth (numeric)
     assert "age_first_childbirth" in out.columns
-    assert out["age_first_childbirth"].isna().all()
+    assert not out["age_first_childbirth"].isna().any(), "should be filled, not NaN"
+    # And marital_status (categorical with allowed values)
+    assert "marital_status" in out.columns
+    from ssdataagent.data.schema import load_schema
+    allowed = set(load_schema("gss").allowed_values["marital_status"])
+    assert set(out["marital_status"].unique()).issubset(allowed)
 
 
 def test_write_simulated_creates_expected_layout(tmp_path):
