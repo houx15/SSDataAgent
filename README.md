@@ -4,16 +4,24 @@ An LLM **data-analyst agent** for population-level social-survey simulation, eva
 
 Instead of prompting an LLM to generate one synthetic respondent at a time (the SSDataBench paradigm), this project gives the LLM access to real survey data and lets it explore, model, and generate via Python code execution. The agent functions as a data scientist, not a survey respondent.
 
-## TL;DR — initial findings (GSS-2018, n=1000)
+## TL;DR — cross-dataset findings (n=1000 each)
 
-| Condition | Type 1 (univariate) | Type 2 (bivariate) | Type 3 (regression) | **Mean** |
-|---|---:|---:|---:|---:|
-| **full_agent** | 0.586 | 0.767 | 0.540 | **0.631** |
-| agent_no_semantic | 0.458 | 0.585 | 0.475 | 0.506 |
-| direct_generation | 0.084 | 0.455 | 0.280 | 0.273 |
-| agent_no_data | 0.002 | 0.540 | 0.000 | 0.181 |
+Mean pass rate (overall, types 1–3) by condition × dataset:
 
-The agent paradigm beats per-individual direct generation by **+0.36** mean pass rate. Both data access and semantic context contribute, with data being the larger lever. See [`docs/report/2026-04-30-initial-findings.md`](docs/report/2026-04-30-initial-findings.md) for the full write-up.
+| Condition | GSS-2018 | CPS-1980 | ACS-1980 |
+|---|---:|---:|---:|
+| `full_agent` | **0.631** | failed¹ | 0.443 |
+| `agent_no_semantic` | 0.506 | 0.544 | **0.655** |
+| `agent_no_data` | 0.181 | 0.175 | 0.179 |
+| `direct_generation` | 0.273 | 0.200 | 0.189 |
+
+¹ *CPS `full_agent` failed in two independent runs on different stages — orchestrator stability work pending.*
+
+The robust cross-dataset finding: **`agent_no_semantic` (data only) beats `direct_generation` (per-individual prompting) on every dataset**, with the margin growing from +0.23 → +0.34 → +0.47. Data-driven empirical sampling is uniformly stronger than per-individual LLM elicitation, regardless of variable semantics.
+
+The full agent (data + descriptions + context) is the strongest condition only on GSS; on ACS the data-only ablation actually wins. The `agent_no_data` baseline is a near-identical floor (~0.18) on every dataset, confirming that prior knowledge alone is calibration-free.
+
+See [`docs/report/2026-04-30-initial-findings.md`](docs/report/2026-04-30-initial-findings.md) for the full write-up.
 
 ## How it works
 
