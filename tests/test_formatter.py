@@ -28,6 +28,17 @@ def test_format_adds_profile_id_when_missing():
     assert "profile_id" in out.columns
 
 
+def test_format_adds_missing_schema_columns_as_nan():
+    """Unseen-variable runs may legitimately omit a target column. The eval
+    must still be runnable; format_generated fills missing schema vars with NaN
+    so the bootstrap test scores them at zero rather than crashing on KeyError."""
+    df = pd.DataFrame({"gender": ["Male"] * 3, "age": [30] * 3})
+    out = format_generated(df, dataset_name="gss")
+    # gss target schema includes age_first_childbirth — should appear, all NaN
+    assert "age_first_childbirth" in out.columns
+    assert out["age_first_childbirth"].isna().all()
+
+
 def test_write_simulated_creates_expected_layout(tmp_path):
     df = pd.DataFrame({"gender": ["Male"], "age": [30], "profile_id": [0]})
     path = write_simulated(

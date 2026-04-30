@@ -135,4 +135,10 @@ class Orchestrator:
             for f in sandbox.workspace.iterdir():
                 if f.is_file():
                     (workspace / f.name).write_bytes(f.read_bytes())
+            # Dump sandbox stdout/stderr alongside step_NNN.py so failures
+            # stay debuggable even when run() raises before log_run is reached.
+            for i, sr in enumerate(sandbox_results, 1):
+                (workspace / f"step_{i:03d}.stdout").write_text(sr.stdout)
+                (workspace / f"step_{i:03d}.stderr").write_text(sr.stderr)
+                (workspace / f"step_{i:03d}.exit").write_text(str(sr.exit_code))
             sandbox.close()

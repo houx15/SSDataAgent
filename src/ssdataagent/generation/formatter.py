@@ -11,10 +11,17 @@ def format_generated(df: pd.DataFrame, dataset_name: str) -> pd.DataFrame:
     """Coerce a generated DataFrame to schema-conformant values.
 
     Categoricals outside the allowed set become NaN; numerics outside the
-    declared range are clipped to the range.
+    declared range are clipped to the range. Schema-declared variables that the
+    agent didn't produce are added as all-NaN columns so downstream eval can
+    still run (and will score that variable at zero pass rate, the correct
+    meaningful negative result rather than a crash).
     """
     schema = load_schema(dataset_name)
     out = df.copy()
+    expected_vars = set(schema.background_variables) | set(schema.target_variables)
+    for var in expected_vars:
+        if var not in out.columns:
+            out[var] = pd.NA
     for var, allowed in schema.allowed_values.items():
         if var in out.columns:
             out.loc[~out[var].isin(allowed), var] = pd.NA
