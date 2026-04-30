@@ -1,0 +1,1001 @@
+gender,age,birth_year,race,immigrant_status,marital_status,child_number,age_first_childbirth,education,occupation,income,profile_id
+Female,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,22.0,High school,Sales and office occupations,,0
+Female,71.0,1947.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,21.0,College and above,Sales and office occupations,,1
+Male,81.0,1937.0,Hispanic,Non-immigrant,Married,6.0,22.0,High school,Unemployed,,2
+Female,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,17.0,College and above,Sales and office occupations,,3
+Female,77.0,1941.0,Black,Non-immigrant,Divorced/widowed,5.0,20.0,High school,Service occupations,,4
+Female,51.0,1967.0,Black,Non-immigrant,Married,1.0,23.0,College and above,"Management, professional, and related occupations",,5
+Male,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Unemployed,,6
+Female,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,30.0,High school,Sales and office occupations,,7
+Female,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,21.0,College and above,"Management, professional, and related occupations",,8
+Female,71.0,1947.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,College and above,Sales and office occupations,,9
+Female,51.0,1967.0,Hispanic,Immigrant,Married,2.0,19.0,High school,Service occupations,,10
+Male,58.0,1960.0,Hispanic,Non-immigrant,Married,7.0,19.0,High school,"Production, transportation, and material moving occupations",,11
+Female,49.0,1969.0,Hispanic,Immigrant,Divorced/widowed,2.0,30.0,College and above,Service occupations,,12
+Male,24.0,1994.0,Hispanic,Non-immigrant,Single,0.0,,High school,"Management, professional, and related occupations",,13
+Female,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,21.0,College and above,"Production, transportation, and material moving occupations",,14
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,15
+Female,54.0,1964.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,High school,Service occupations,,16
+Female,43.0,1975.0,Hispanic,Non-immigrant,Married,2.0,33.0,College and above,"Management, professional, and related occupations",,17
+Male,50.0,1968.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,18
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,3.0,25.0,College and above,Service occupations,,19
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,High school,"Production, transportation, and material moving occupations",,20
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,High school,Service occupations,,21
+Female,70.0,1948.0,Hispanic,Immigrant,Divorced/widowed,3.0,29.0,College and above,Service occupations,,22
+Female,35.0,1983.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,College and above,"Management, professional, and related occupations",,23
+Male,25.0,1993.0,Black,Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,24
+Female,32.0,1986.0,Black,Non-immigrant,Single,0.0,,High school,Service occupations,,25
+Female,35.0,1983.0,Black,Non-immigrant,Married,2.0,29.0,College and above,"Management, professional, and related occupations",,26
+Male,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,26.0,High school,"Production, transportation, and material moving occupations",,27
+Female,55.0,1963.0,Black,Non-immigrant,Divorced/widowed,5.0,17.0,High school,Service occupations,,28
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,17.0,High school,"Management, professional, and related occupations",,29
+Female,24.0,1994.0,Hispanic,Non-immigrant,Single,1.0,19.0,High school,Service occupations,,30
+Male,39.0,1979.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,26.0,College and above,"Management, professional, and related occupations",,31
+Female,40.0,1978.0,Hispanic,Immigrant,Divorced/widowed,5.0,19.0,High school,"Natural resources, construction, and maintenance occupations",,32
+Female,18.0,2000.0,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,High school,"Management, professional, and related occupations",,33
+Male,60.0,1958.0,Hispanic,Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,34
+Female,32.0,1986.0,Hispanic,Non-immigrant,Single,1.0,31.0,College and above,"Management, professional, and related occupations",,35
+Female,44.0,1974.0,Black,Non-immigrant,Single,1.0,,College and above,"Management, professional, and related occupations",,36
+Male,32.0,1986.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,28.0,College and above,Sales and office occupations,,37
+Male,56.0,1962.0,Hispanic,Non-immigrant,Single,3.0,21.0,High school,"Natural resources, construction, and maintenance occupations",,38
+Female,80.0,1938.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,39
+Male,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,40
+Female,44.0,1974.0,Hispanic,Non-immigrant,Married,5.0,20.0,High school,Service occupations,,41
+Female,72.0,1946.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,40.0,College and above,Sales and office occupations,,42
+Female,35.0,1983.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,Unemployed,,43
+Male,75.0,1943.0,Black,Non-immigrant,Married,3.0,25.0,Less than high school,"Production, transportation, and material moving occupations",,44
+Male,50.0,1968.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,29.0,College and above,"Management, professional, and related occupations",,45
+Male,24.0,1994.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,46
+Male,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,21.0,High school,Sales and office occupations,,47
+Female,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,18.0,College and above,Service occupations,,48
+Female,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,35.0,College and above,"Management, professional, and related occupations",,49
+Female,29.0,1989.0,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,50
+Male,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,51
+Male,40.0,1978.0,Hispanic,Immigrant,Married,2.0,19.0,Less than high school,"Natural resources, construction, and maintenance occupations",,52
+Female,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,53
+Female,59.0,1959.0,"Non-Black, Non-Hispanic",Immigrant,Married,4.0,19.0,High school,"Management, professional, and related occupations",,54
+Female,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,24.0,High school,Sales and office occupations,,55
+Female,28.0,1990.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,3.0,20.0,High school,"Management, professional, and related occupations",,56
+Female,49.0,1969.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,57
+Female,48.0,1970.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,30.0,College and above,"Management, professional, and related occupations",,58
+Male,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,24.0,High school,Service occupations,,59
+Female,62.0,1956.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,2.0,24.0,College and above,"Management, professional, and related occupations",,60
+Female,71.0,1947.0,Hispanic,Immigrant,Married,2.0,27.0,High school,"Production, transportation, and material moving occupations",,61
+Male,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Military Occupations,,62
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,High school,Sales and office occupations,,63
+Male,31.0,1987.0,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,,College and above,"Production, transportation, and material moving occupations",,64
+Female,42.0,1976.0,Black,Non-immigrant,Single,3.0,18.0,College and above,Sales and office occupations,,65
+Male,88.0,1930.0,Black,Non-immigrant,Divorced/widowed,6.0,24.0,High school,Service occupations,,66
+Male,31.0,1987.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,67
+Male,58.0,1960.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Service occupations,,68
+Male,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,31.0,College and above,"Natural resources, construction, and maintenance occupations",,69
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,College and above,"Management, professional, and related occupations",,70
+Female,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,26.0,College and above,Service occupations,,71
+Male,34.0,1984.0,Hispanic,Non-immigrant,Married,1.0,33.0,College and above,"Management, professional, and related occupations",,72
+Female,86.0,1932.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,30.0,College and above,"Management, professional, and related occupations",,73
+Male,32.0,1986.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,21.0,High school,"Production, transportation, and material moving occupations",,74
+Female,23.0,1995.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,75
+Female,63.0,1955.0,Black,Non-immigrant,Married,3.0,27.0,College and above,"Management, professional, and related occupations",,76
+Male,26.0,1992.0,Hispanic,Non-immigrant,Single,1.0,25.0,High school,"Natural resources, construction, and maintenance occupations",,77
+Female,44.0,1974.0,Black,Non-immigrant,Single,6.0,17.0,College and above,"Production, transportation, and material moving occupations",,78
+Female,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,19.0,High school,Sales and office occupations,,79
+Female,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,80
+Female,42.0,1976.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,81
+Female,32.0,1986.0,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,82
+Male,89.0,1929.0,Black,Non-immigrant,Married,4.0,22.0,College and above,"Natural resources, construction, and maintenance occupations",,83
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,84
+Female,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,24.0,High school,"Management, professional, and related occupations",,85
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,86
+Male,42.0,1976.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,34.0,College and above,"Management, professional, and related occupations",,87
+Male,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,23.0,High school,Service occupations,,88
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,18.0,College and above,Sales and office occupations,,89
+Male,89.0,1929.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,19.0,Less than high school,Service occupations,,90
+Female,55.0,1963.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,1.0,24.0,College and above,Sales and office occupations,,91
+Male,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,21.0,College and above,"Production, transportation, and material moving occupations",,92
+Female,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,College and above,"Management, professional, and related occupations",,93
+Female,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,22.0,High school,Sales and office occupations,,94
+Female,53.0,1965.0,Black,Immigrant,Married,5.0,22.0,High school,Service occupations,,95
+Male,48.0,1970.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,25.0,High school,Service occupations,,96
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,19.0,High school,"Management, professional, and related occupations",,97
+Female,28.0,1990.0,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,98
+Female,75.0,1943.0,Black,Non-immigrant,Divorced/widowed,2.0,21.0,High school,Unemployed,,99
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,31.0,College and above,"Management, professional, and related occupations",,100
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,101
+Female,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,22.0,High school,"Management, professional, and related occupations",,102
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,22.0,High school,"Management, professional, and related occupations",,103
+Female,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,27.0,College and above,Sales and office occupations,,104
+Male,65.0,1953.0,Black,Non-immigrant,Married,2.0,22.0,College and above,"Production, transportation, and material moving occupations",,105
+Female,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,25.0,College and above,"Management, professional, and related occupations",,106
+Male,51.0,1967.0,Hispanic,Non-immigrant,Divorced/widowed,6.0,21.0,College and above,Sales and office occupations,,107
+Female,41.0,1977.0,Black,Non-immigrant,Married,3.0,17.0,College and above,"Management, professional, and related occupations",,108
+Male,71.0,1947.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,College and above,"Natural resources, construction, and maintenance occupations",,109
+Female,74.0,1944.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,22.0,High school,Sales and office occupations,,110
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,22.0,College and above,"Management, professional, and related occupations",,111
+Female,89.0,1929.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,23.0,College and above,"Management, professional, and related occupations",,112
+Male,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,6.0,19.0,High school,"Management, professional, and related occupations",,113
+Male,85.0,1933.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,20.0,High school,Service occupations,,114
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,College and above,Service occupations,,115
+Female,39.0,1979.0,Hispanic,Non-immigrant,Married,2.0,28.0,College and above,Sales and office occupations,,116
+Female,88.0,1930.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,18.0,High school,"Management, professional, and related occupations",,117
+Female,80.0,1938.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,20.0,College and above,"Management, professional, and related occupations",,118
+Female,31.0,1987.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,College and above,"Management, professional, and related occupations",,119
+Female,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,45.0,High school,Sales and office occupations,,120
+Male,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,College and above,"Management, professional, and related occupations",,121
+Female,28.0,1990.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,High school,Service occupations,,122
+Female,23.0,1995.0,Black,Non-immigrant,Single,1.0,20.0,College and above,Service occupations,,123
+Female,21.0,1997.0,Black,Immigrant,Single,0.0,,High school,Unemployed,,124
+Female,71.0,1947.0,Hispanic,Non-immigrant,Divorced/widowed,1.0,40.0,College and above,"Management, professional, and related occupations",,125
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Production, transportation, and material moving occupations",,126
+Female,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,High school,"Management, professional, and related occupations",,127
+Male,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,High school,"Natural resources, construction, and maintenance occupations",,128
+Female,53.0,1965.0,Hispanic,Immigrant,Divorced/widowed,3.0,18.0,High school,"Production, transportation, and material moving occupations",,129
+Male,32.0,1986.0,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,130
+Male,20.0,1998.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,131
+Female,24.0,1994.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,132
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,32.0,High school,"Production, transportation, and material moving occupations",,133
+Male,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Natural resources, construction, and maintenance occupations",,134
+Male,52.0,1966.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,26.0,College and above,"Natural resources, construction, and maintenance occupations",,135
+Female,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,136
+Female,78.0,1940.0,Black,Non-immigrant,Divorced/widowed,4.0,21.0,High school,Service occupations,,137
+Female,74.0,1944.0,Black,Non-immigrant,Divorced/widowed,4.0,25.0,College and above,"Management, professional, and related occupations",,138
+Female,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,139
+Female,55.0,1963.0,Hispanic,Immigrant,Married,5.0,22.0,Less than high school,Service occupations,,140
+Male,47.0,1971.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,17.0,High school,"Production, transportation, and material moving occupations",,141
+Female,20.0,1998.0,Black,Non-immigrant,Single,0.0,,College and above,Service occupations,,142
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,143
+Male,36.0,1982.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,College and above,"Management, professional, and related occupations",,144
+Female,37.0,1981.0,Hispanic,Immigrant,Divorced/widowed,1.0,32.0,College and above,"Management, professional, and related occupations",,145
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,146
+Female,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,21.0,High school,Sales and office occupations,,147
+Male,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,21.0,College and above,Service occupations,,148
+Male,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,26.0,College and above,"Management, professional, and related occupations",,149
+Male,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,150
+Male,49.0,1969.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,29.0,College and above,"Management, professional, and related occupations",,151
+Female,33.0,1985.0,Black,Non-immigrant,Married,3.0,17.0,College and above,"Management, professional, and related occupations",,152
+Female,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,24.0,High school,Sales and office occupations,,153
+Female,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,College and above,"Management, professional, and related occupations",,154
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,26.0,High school,Service occupations,,155
+Male,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,156
+Female,50.0,1968.0,Black,Non-immigrant,Divorced/widowed,5.0,19.0,High school,"Management, professional, and related occupations",,157
+Female,69.0,1949.0,Black,Non-immigrant,Married,1.0,17.0,College and above,Service occupations,,158
+Male,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,22.0,College and above,Sales and office occupations,,159
+Male,28.0,1990.0,Black,Non-immigrant,Single,0.0,,College and above,"Natural resources, construction, and maintenance occupations",,160
+Male,64.0,1954.0,"Non-Black, Non-Hispanic",Immigrant,Married,3.0,18.0,College and above,"Management, professional, and related occupations",,161
+Male,48.0,1970.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,40.0,College and above,"Management, professional, and related occupations",,162
+Female,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,35.0,College and above,"Management, professional, and related occupations",,163
+Male,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,24.0,College and above,Sales and office occupations,,164
+Female,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,165
+Female,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,21.0,College and above,"Production, transportation, and material moving occupations",,166
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,23.0,College and above,Service occupations,,167
+Female,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,20.0,High school,"Management, professional, and related occupations",,168
+Female,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,21.0,College and above,"Management, professional, and related occupations",,169
+Male,33.0,1985.0,Black,Non-immigrant,Single,1.0,25.0,High school,Service occupations,,170
+Male,36.0,1982.0,Hispanic,Non-immigrant,Married,3.0,19.0,College and above,"Natural resources, construction, and maintenance occupations",,171
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,College and above,Sales and office occupations,,172
+Female,31.0,1987.0,Black,Non-immigrant,Single,0.0,,College and above,Service occupations,,173
+Male,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,High school,"Natural resources, construction, and maintenance occupations",,174
+Female,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,175
+Female,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,19.0,High school,Service occupations,,176
+Female,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,24.0,High school,Sales and office occupations,,177
+Female,35.0,1983.0,Black,Non-immigrant,Single,2.0,18.0,High school,"Production, transportation, and material moving occupations",,178
+Male,23.0,1995.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,179
+Female,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,19.0,College and above,Service occupations,,180
+Female,49.0,1969.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,17.0,College and above,"Management, professional, and related occupations",,181
+Female,67.0,1951.0,Black,Non-immigrant,Single,3.0,35.0,Less than high school,Sales and office occupations,,182
+Female,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,24.0,College and above,Service occupations,,183
+Male,86.0,1932.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,30.0,College and above,Sales and office occupations,,184
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,44.0,College and above,"Production, transportation, and material moving occupations",,185
+Male,,,Hispanic,Non-immigrant,Married,,,College and above,"Management, professional, and related occupations",,186
+Male,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,4.0,17.0,High school,"Production, transportation, and material moving occupations",,187
+Male,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,College and above,"Production, transportation, and material moving occupations",,188
+Male,53.0,1965.0,Black,Non-immigrant,Married,3.0,21.0,High school,"Production, transportation, and material moving occupations",,189
+Male,33.0,1985.0,Hispanic,Immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,190
+Male,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,26.0,College and above,Sales and office occupations,,191
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,College and above,"Management, professional, and related occupations",,192
+Male,78.0,1940.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,30.0,College and above,Sales and office occupations,,193
+Male,31.0,1987.0,Hispanic,Non-immigrant,Married,3.0,20.0,High school,"Natural resources, construction, and maintenance occupations",,194
+Female,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,College and above,"Management, professional, and related occupations",,195
+Female,72.0,1946.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,21.0,College and above,Service occupations,,196
+Female,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,197
+Female,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,21.0,College and above,Sales and office occupations,,198
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,21.0,High school,"Natural resources, construction, and maintenance occupations",,199
+Male,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Unemployed,,200
+Female,84.0,1934.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,17.0,Less than high school,"Production, transportation, and material moving occupations",,201
+Male,19.0,1999.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,202
+Male,87.0,1931.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,17.0,College and above,"Production, transportation, and material moving occupations",,203
+Female,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,College and above,"Management, professional, and related occupations",,204
+Female,53.0,1965.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,3.0,33.0,College and above,"Production, transportation, and material moving occupations",,205
+Male,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,,,High school,Service occupations,,206
+Female,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,17.0,College and above,Service occupations,,207
+Female,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,208
+Male,39.0,1979.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,38.0,College and above,"Management, professional, and related occupations",,209
+Female,59.0,1959.0,Black,Non-immigrant,Married,3.0,25.0,College and above,Sales and office occupations,,210
+Male,39.0,1979.0,Hispanic,Non-immigrant,Married,3.0,18.0,High school,Sales and office occupations,,211
+Female,50.0,1968.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,212
+Female,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,213
+Male,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,39.0,College and above,"Management, professional, and related occupations",,214
+Female,35.0,1983.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,19.0,College and above,"Management, professional, and related occupations",,215
+Female,33.0,1985.0,Black,Immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,216
+Female,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,28.0,College and above,Sales and office occupations,,217
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,32.0,College and above,"Production, transportation, and material moving occupations",,218
+Female,70.0,1948.0,Black,Non-immigrant,Married,2.0,20.0,High school,Service occupations,,219
+Male,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,College and above,"Natural resources, construction, and maintenance occupations",,220
+Male,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,,8.0,31.0,College and above,"Management, professional, and related occupations",,221
+Male,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,High school,"Natural resources, construction, and maintenance occupations",,222
+Female,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,7.0,23.0,College and above,Sales and office occupations,,223
+Female,67.0,1951.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,Sales and office occupations,,224
+Female,44.0,1974.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,27.0,College and above,"Management, professional, and related occupations",,225
+Male,46.0,1972.0,Black,Non-immigrant,Single,4.0,18.0,High school,Sales and office occupations,,226
+Female,35.0,1983.0,Black,Non-immigrant,Single,2.0,19.0,High school,Service occupations,,227
+Male,23.0,1995.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,228
+Male,70.0,1948.0,Black,Immigrant,Divorced/widowed,0.0,,High school,"Management, professional, and related occupations",,229
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,38.0,College and above,"Management, professional, and related occupations",,230
+Female,58.0,1960.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,231
+Female,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,25.0,High school,Sales and office occupations,,232
+Female,18.0,2000.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Unemployed,,233
+Male,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,32.0,College and above,"Management, professional, and related occupations",,234
+Female,80.0,1938.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,24.0,College and above,Service occupations,,235
+Male,26.0,1992.0,Black,Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,236
+Female,18.0,2000.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Unemployed,,237
+Male,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Unemployed,,238
+Female,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,College and above,Service occupations,,239
+Male,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,240
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,High school,Service occupations,,241
+Female,42.0,1976.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,3.0,24.0,College and above,"Management, professional, and related occupations",,242
+Female,29.0,1989.0,Black,Non-immigrant,Married,1.0,28.0,College and above,"Management, professional, and related occupations",,243
+Male,47.0,1971.0,Black,Non-immigrant,Married,6.0,29.0,High school,"Production, transportation, and material moving occupations",,244
+Male,43.0,1975.0,Hispanic,Non-immigrant,Divorced/widowed,2.0,28.0,High school,"Natural resources, construction, and maintenance occupations",,245
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,7.0,17.0,College and above,Service occupations,,246
+Male,36.0,1982.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,247
+Male,56.0,1962.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,17.0,High school,"Natural resources, construction, and maintenance occupations",,248
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,18.0,College and above,Service occupations,,249
+Female,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,250
+Female,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,High school,Service occupations,,251
+Female,58.0,1960.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,23.0,College and above,"Management, professional, and related occupations",,252
+Male,82.0,1936.0,Black,Non-immigrant,Divorced/widowed,2.0,30.0,High school,"Production, transportation, and material moving occupations",,253
+Female,33.0,1985.0,Hispanic,Non-immigrant,Married,4.0,17.0,College and above,Sales and office occupations,,254
+Male,35.0,1983.0,Hispanic,Non-immigrant,Single,0.0,,College and above,Unemployed,,255
+Female,59.0,1959.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,6.0,25.0,High school,Sales and office occupations,,256
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,High school,"Production, transportation, and material moving occupations",,257
+Female,42.0,1976.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,College and above,"Management, professional, and related occupations",,258
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,259
+Female,71.0,1947.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,19.0,High school,Sales and office occupations,,260
+Male,42.0,1976.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,7.0,18.0,College and above,"Production, transportation, and material moving occupations",,261
+Male,59.0,1959.0,Black,Non-immigrant,Divorced/widowed,1.0,32.0,College and above,Military Occupations,,262
+Female,32.0,1986.0,Black,Non-immigrant,Single,1.0,23.0,College and above,Service occupations,,263
+Female,41.0,1977.0,Hispanic,Non-immigrant,Single,1.0,30.0,College and above,Service occupations,,264
+Female,20.0,1998.0,Hispanic,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,265
+Female,74.0,1944.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,28.0,College and above,"Management, professional, and related occupations",,266
+Female,82.0,1936.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,21.0,College and above,"Management, professional, and related occupations",,267
+Male,41.0,1977.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,0.0,,College and above,"Natural resources, construction, and maintenance occupations",,268
+Female,43.0,1975.0,Hispanic,Immigrant,Married,3.0,28.0,College and above,"Management, professional, and related occupations",,269
+Female,35.0,1983.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,22.0,High school,Sales and office occupations,,270
+Female,32.0,1986.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,High school,Sales and office occupations,,271
+Female,49.0,1969.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,24.0,College and above,"Management, professional, and related occupations",,272
+Female,42.0,1976.0,Hispanic,Immigrant,Married,3.0,18.0,High school,"Management, professional, and related occupations",,273
+Male,24.0,1994.0,Hispanic,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,274
+Male,50.0,1968.0,Black,Non-immigrant,Married,1.0,21.0,College and above,"Management, professional, and related occupations",,275
+Male,67.0,1951.0,Black,Non-immigrant,Married,2.0,20.0,High school,"Natural resources, construction, and maintenance occupations",,276
+Male,71.0,1947.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,24.0,College and above,"Management, professional, and related occupations",,277
+Female,71.0,1947.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,"Production, transportation, and material moving occupations",,278
+Male,59.0,1959.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,24.0,College and above,Sales and office occupations,,279
+Female,37.0,1981.0,Black,Non-immigrant,Single,4.0,17.0,High school,"Management, professional, and related occupations",,280
+Female,59.0,1959.0,Black,Non-immigrant,Divorced/widowed,2.0,18.0,High school,"Production, transportation, and material moving occupations",,281
+Female,27.0,1991.0,Black,Non-immigrant,Single,2.0,20.0,College and above,Service occupations,,282
+Female,53.0,1965.0,Black,Non-immigrant,Married,1.0,25.0,College and above,Sales and office occupations,,283
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,22.0,College and above,"Management, professional, and related occupations",,284
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,32.0,College and above,"Management, professional, and related occupations",,285
+Female,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Natural resources, construction, and maintenance occupations",,286
+Male,51.0,1967.0,Hispanic,Immigrant,Married,6.0,18.0,Less than high school,"Natural resources, construction, and maintenance occupations",,287
+Female,49.0,1969.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,25.0,College and above,"Management, professional, and related occupations",,288
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,College and above,"Management, professional, and related occupations",,289
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,22.0,College and above,"Management, professional, and related occupations",,290
+Male,71.0,1947.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,7.0,17.0,College and above,"Natural resources, construction, and maintenance occupations",,291
+Male,70.0,1948.0,Hispanic,Immigrant,Married,4.0,25.0,High school,"Production, transportation, and material moving occupations",,292
+Female,55.0,1963.0,Black,Non-immigrant,Married,3.0,24.0,College and above,"Management, professional, and related occupations",,293
+Female,43.0,1975.0,Hispanic,Immigrant,Divorced/widowed,3.0,23.0,High school,"Natural resources, construction, and maintenance occupations",,294
+Female,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,College and above,"Management, professional, and related occupations",,295
+Male,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,25.0,College and above,"Management, professional, and related occupations",,296
+Male,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,College and above,"Natural resources, construction, and maintenance occupations",,297
+Male,59.0,1959.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,34.0,College and above,"Management, professional, and related occupations",,298
+Male,46.0,1972.0,Hispanic,Immigrant,Married,1.0,30.0,High school,Sales and office occupations,,299
+Female,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,35.0,College and above,"Management, professional, and related occupations",,300
+Female,79.0,1939.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,College and above,"Management, professional, and related occupations",,301
+Female,34.0,1984.0,Hispanic,Immigrant,Married,2.0,28.0,High school,Unemployed,,302
+Female,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,3.0,20.0,College and above,Service occupations,,303
+Female,64.0,1954.0,Black,Non-immigrant,Divorced/widowed,4.0,18.0,High school,Service occupations,,304
+Male,52.0,1966.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,36.0,College and above,Service occupations,,305
+Female,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,17.0,High school,Sales and office occupations,,306
+Female,29.0,1989.0,Black,Non-immigrant,Single,3.0,19.0,College and above,"Management, professional, and related occupations",,307
+Female,51.0,1967.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,308
+Male,24.0,1994.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,309
+Male,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,32.0,College and above,"Management, professional, and related occupations",,310
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,32.0,College and above,"Management, professional, and related occupations",,311
+Female,54.0,1964.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,25.0,College and above,"Management, professional, and related occupations",,312
+Male,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,High school,Service occupations,,313
+Male,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,20.0,High school,"Management, professional, and related occupations",,314
+Female,44.0,1974.0,Hispanic,Non-immigrant,Married,2.0,18.0,College and above,Sales and office occupations,,315
+Male,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Natural resources, construction, and maintenance occupations",,316
+Female,37.0,1981.0,Hispanic,Non-immigrant,Married,2.0,29.0,College and above,"Management, professional, and related occupations",,317
+Female,73.0,1945.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,31.0,High school,Sales and office occupations,,318
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,33.0,College and above,"Management, professional, and related occupations",,319
+Female,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,26.0,College and above,Sales and office occupations,,320
+Male,19.0,1999.0,Black,Non-immigrant,Single,0.0,,High school,Service occupations,,321
+Female,59.0,1959.0,Hispanic,Non-immigrant,Divorced/widowed,3.0,18.0,College and above,"Management, professional, and related occupations",,322
+Male,46.0,1972.0,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,College and above,"Natural resources, construction, and maintenance occupations",,323
+Female,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,324
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,College and above,"Management, professional, and related occupations",,325
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Production, transportation, and material moving occupations",,326
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,College and above,"Natural resources, construction, and maintenance occupations",,327
+Female,33.0,1985.0,Hispanic,Immigrant,Married,1.0,32.0,High school,"Management, professional, and related occupations",,328
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,22.0,College and above,"Production, transportation, and material moving occupations",,329
+Male,47.0,1971.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,33.0,High school,Sales and office occupations,,330
+Female,52.0,1966.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,35.0,College and above,"Management, professional, and related occupations",,331
+Female,25.0,1993.0,Black,Non-immigrant,Single,0.0,,College and above,Service occupations,,332
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,21.0,High school,"Management, professional, and related occupations",,333
+Female,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,31.0,College and above,"Management, professional, and related occupations",,334
+Female,26.0,1992.0,Black,Non-immigrant,Single,0.0,,High school,Sales and office occupations,,335
+Male,42.0,1976.0,Black,Non-immigrant,Married,6.0,20.0,High school,Service occupations,,336
+Female,45.0,1973.0,Black,Non-immigrant,Divorced/widowed,3.0,21.0,College and above,Service occupations,,337
+Female,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,High school,Service occupations,,338
+Female,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,28.0,College and above,"Management, professional, and related occupations",,339
+Female,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,College and above,"Management, professional, and related occupations",,340
+Female,42.0,1976.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,25.0,College and above,"Management, professional, and related occupations",,341
+Female,30.0,1988.0,Hispanic,Non-immigrant,Married,8.0,18.0,High school,"Management, professional, and related occupations",,342
+Female,22.0,1996.0,Hispanic,Non-immigrant,Single,0.0,,High school,Sales and office occupations,,343
+Male,82.0,1936.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,2.0,31.0,Less than high school,"Natural resources, construction, and maintenance occupations",,344
+Male,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,30.0,College and above,Sales and office occupations,,345
+Male,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,346
+Female,45.0,1973.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,33.0,College and above,"Management, professional, and related occupations",,347
+Female,43.0,1975.0,Hispanic,Non-immigrant,Single,4.0,17.0,Less than high school,Service occupations,,348
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,High school,"Production, transportation, and material moving occupations",,349
+Male,70.0,1948.0,Hispanic,Immigrant,Divorced/widowed,1.0,26.0,Less than high school,Unemployed,,350
+Female,83.0,1935.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,24.0,High school,Sales and office occupations,,351
+Female,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,39.0,Less than high school,Service occupations,,352
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,"Natural resources, construction, and maintenance occupations",,353
+Female,36.0,1982.0,Black,Non-immigrant,Divorced/widowed,3.0,25.0,College and above,"Natural resources, construction, and maintenance occupations",,354
+Male,68.0,1950.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,1.0,33.0,College and above,"Natural resources, construction, and maintenance occupations",,355
+Male,27.0,1991.0,Hispanic,Non-immigrant,Single,2.0,20.0,College and above,Service occupations,,356
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,Sales and office occupations,,357
+Male,38.0,1980.0,Hispanic,Immigrant,Married,2.0,24.0,College and above,"Management, professional, and related occupations",,358
+Female,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,17.0,High school,"Production, transportation, and material moving occupations",,359
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,30.0,College and above,"Management, professional, and related occupations",,360
+Female,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,Sales and office occupations,,361
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,Service occupations,,362
+Male,33.0,1985.0,Hispanic,Immigrant,Single,0.0,,Less than high school,Service occupations,,363
+Female,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,"Management, professional, and related occupations",,364
+Female,24.0,1994.0,Hispanic,Non-immigrant,Married,1.0,22.0,College and above,Unemployed,,365
+Male,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,30.0,College and above,"Management, professional, and related occupations",,366
+Male,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,19.0,High school,"Management, professional, and related occupations",,367
+Female,31.0,1987.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,3.0,23.0,High school,Sales and office occupations,,368
+Male,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,369
+Female,68.0,1950.0,Hispanic,Non-immigrant,Divorced/widowed,2.0,28.0,College and above,Sales and office occupations,,370
+Female,49.0,1969.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,College and above,Sales and office occupations,,371
+Male,49.0,1969.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,372
+Male,46.0,1972.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,1.0,32.0,College and above,Sales and office occupations,,373
+Female,23.0,1995.0,Hispanic,Non-immigrant,Married,1.0,20.0,College and above,Service occupations,,374
+Male,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,High school,"Production, transportation, and material moving occupations",,375
+Female,50.0,1968.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,376
+Male,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,College and above,"Natural resources, construction, and maintenance occupations",,377
+Female,31.0,1987.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,378
+Female,20.0,1998.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,379
+Male,86.0,1932.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,26.0,College and above,"Management, professional, and related occupations",,380
+Female,40.0,1978.0,Black,Non-immigrant,Divorced/widowed,6.0,17.0,High school,Sales and office occupations,,381
+Male,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,25.0,College and above,"Natural resources, construction, and maintenance occupations",,382
+Female,87.0,1931.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,19.0,High school,Service occupations,,383
+Male,65.0,1953.0,Hispanic,Immigrant,Married,6.0,21.0,Less than high school,Service occupations,,384
+Female,33.0,1985.0,Black,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,385
+Male,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,386
+Male,66.0,1952.0,Hispanic,Non-immigrant,Married,3.0,24.0,High school,"Production, transportation, and material moving occupations",,387
+Male,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,26.0,College and above,"Natural resources, construction, and maintenance occupations",,388
+Male,25.0,1993.0,Black,Non-immigrant,Single,0.0,,College and above,Service occupations,,389
+Female,35.0,1983.0,Hispanic,Non-immigrant,Divorced/widowed,3.0,26.0,College and above,"Management, professional, and related occupations",,390
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,30.0,College and above,Service occupations,,391
+Male,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,High school,"Production, transportation, and material moving occupations",,392
+Female,48.0,1970.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,40.0,College and above,Service occupations,,393
+Female,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,College and above,"Management, professional, and related occupations",,394
+Male,24.0,1994.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,395
+Female,28.0,1990.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,396
+Female,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,35.0,College and above,Sales and office occupations,,397
+Male,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,22.0,High school,"Natural resources, construction, and maintenance occupations",,398
+Male,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,25.0,College and above,Sales and office occupations,,399
+Female,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,24.0,High school,Service occupations,,400
+Female,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,28.0,College and above,Sales and office occupations,,401
+Female,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,29.0,College and above,"Natural resources, construction, and maintenance occupations",,402
+Male,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,403
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,35.0,College and above,Sales and office occupations,,404
+Female,39.0,1979.0,Black,Non-immigrant,Divorced/widowed,3.0,17.0,High school,Sales and office occupations,,405
+Female,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,406
+Female,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,30.0,High school,Sales and office occupations,,407
+Male,30.0,1988.0,Hispanic,Immigrant,Married,2.0,25.0,College and above,Service occupations,,408
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,409
+Male,86.0,1932.0,Black,Non-immigrant,Married,4.0,24.0,College and above,"Management, professional, and related occupations",,410
+Female,18.0,2000.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,411
+Male,72.0,1946.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,27.0,High school,"Production, transportation, and material moving occupations",,412
+Female,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,26.0,College and above,Sales and office occupations,,413
+Male,36.0,1982.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,33.0,College and above,"Management, professional, and related occupations",,414
+Female,28.0,1990.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,415
+Female,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,41.0,High school,Sales and office occupations,,416
+Male,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,High school,"Management, professional, and related occupations",,417
+Male,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,22.0,High school,"Management, professional, and related occupations",,418
+Female,53.0,1965.0,Black,Non-immigrant,Married,1.0,30.0,College and above,"Management, professional, and related occupations",,419
+Male,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,36.0,College and above,"Management, professional, and related occupations",,420
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,421
+Female,34.0,1984.0,Hispanic,Non-immigrant,Married,3.0,21.0,High school,"Management, professional, and related occupations",,422
+Female,41.0,1977.0,Hispanic,Non-immigrant,Married,2.0,32.0,College and above,"Management, professional, and related occupations",,423
+Male,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,28.0,College and above,"Management, professional, and related occupations",,424
+Male,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,20.0,High school,"Production, transportation, and material moving occupations",,425
+Female,28.0,1990.0,Hispanic,Non-immigrant,Married,1.0,20.0,High school,"Production, transportation, and material moving occupations",,426
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,25.0,High school,"Natural resources, construction, and maintenance occupations",,427
+Male,63.0,1955.0,Black,Non-immigrant,Single,6.0,18.0,High school,Service occupations,,428
+Female,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,High school,Service occupations,,429
+Female,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,28.0,College and above,"Management, professional, and related occupations",,430
+Male,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,22.0,High school,"Natural resources, construction, and maintenance occupations",,431
+Male,78.0,1940.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Production, transportation, and material moving occupations",,432
+Male,30.0,1988.0,Hispanic,Immigrant,Single,3.0,21.0,Less than high school,Service occupations,,433
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,31.0,High school,"Management, professional, and related occupations",,434
+Female,23.0,1995.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,Less than high school,Sales and office occupations,,435
+Male,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,24.0,Less than high school,"Management, professional, and related occupations",,436
+Male,28.0,1990.0,Hispanic,Immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,437
+Female,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,29.0,College and above,"Management, professional, and related occupations",,438
+Male,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,30.0,High school,"Natural resources, construction, and maintenance occupations",,439
+Female,36.0,1982.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,4.0,17.0,High school,Service occupations,,440
+Female,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,29.0,College and above,"Management, professional, and related occupations",,441
+Female,51.0,1967.0,Hispanic,Immigrant,Married,2.0,25.0,College and above,"Production, transportation, and material moving occupations",,442
+Male,22.0,1996.0,Black,Non-immigrant,Single,0.0,,High school,Sales and office occupations,,443
+Female,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,21.0,College and above,"Management, professional, and related occupations",,444
+Male,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,17.0,Less than high school,"Production, transportation, and material moving occupations",,445
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,446
+Female,39.0,1979.0,Black,Non-immigrant,Single,1.0,17.0,College and above,Sales and office occupations,,447
+Male,18.0,2000.0,Hispanic,Non-immigrant,Single,0.0,,High school,Unemployed,,448
+Female,72.0,1946.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,28.0,College and above,"Management, professional, and related occupations",,449
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,21.0,High school,"Management, professional, and related occupations",,450
+Female,28.0,1990.0,Black,Non-immigrant,Single,2.0,21.0,College and above,Unemployed,,451
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,22.0,College and above,Sales and office occupations,,452
+Male,65.0,1953.0,Hispanic,Immigrant,Married,3.0,24.0,College and above,Sales and office occupations,,453
+Female,37.0,1981.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,33.0,College and above,"Management, professional, and related occupations",,454
+Female,60.0,1958.0,Black,Non-immigrant,Divorced/widowed,5.0,17.0,High school,"Production, transportation, and material moving occupations",,455
+Female,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,456
+Female,51.0,1967.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,1.0,25.0,College and above,"Management, professional, and related occupations",,457
+Male,20.0,1998.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Production, transportation, and material moving occupations",,458
+Female,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,459
+Female,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,460
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,High school,Service occupations,,461
+Female,58.0,1960.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,462
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,21.0,High school,"Management, professional, and related occupations",,463
+Male,50.0,1968.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,High school,"Production, transportation, and material moving occupations",,464
+Male,73.0,1945.0,Black,Non-immigrant,Divorced/widowed,4.0,20.0,High school,"Natural resources, construction, and maintenance occupations",,465
+Female,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,High school,Sales and office occupations,,466
+Male,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,College and above,Sales and office occupations,,467
+Female,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Natural resources, construction, and maintenance occupations",,468
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,Service occupations,,469
+Female,18.0,2000.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,High school,Service occupations,,470
+Male,28.0,1990.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,471
+Male,39.0,1979.0,Black,Non-immigrant,Single,0.0,,College and above,Unemployed,,472
+Male,67.0,1951.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,College and above,"Management, professional, and related occupations",,473
+Female,28.0,1990.0,Hispanic,Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,474
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,1.0,19.0,Less than high school,"Production, transportation, and material moving occupations",,475
+Female,48.0,1970.0,Black,Non-immigrant,Single,1.0,27.0,College and above,"Production, transportation, and material moving occupations",,476
+Male,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,30.0,College and above,Sales and office occupations,,477
+Male,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,478
+Male,41.0,1977.0,Black,Immigrant,Divorced/widowed,3.0,28.0,College and above,"Production, transportation, and material moving occupations",,479
+Female,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,College and above,"Management, professional, and related occupations",,480
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,College and above,"Natural resources, construction, and maintenance occupations",,481
+Female,32.0,1986.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,31.0,High school,"Production, transportation, and material moving occupations",,482
+Male,83.0,1935.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,22.0,High school,"Management, professional, and related occupations",,483
+Male,41.0,1977.0,Hispanic,Non-immigrant,Single,2.0,17.0,Less than high school,"Natural resources, construction, and maintenance occupations",,484
+Female,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,22.0,High school,Sales and office occupations,,485
+Female,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,College and above,"Management, professional, and related occupations",,486
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,487
+Female,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,488
+Female,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,489
+Female,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,24.0,College and above,Sales and office occupations,,490
+Male,55.0,1963.0,Black,Non-immigrant,Single,1.0,20.0,High school,"Management, professional, and related occupations",,491
+Female,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,Service occupations,,492
+Male,59.0,1959.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Natural resources, construction, and maintenance occupations",,493
+Male,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,29.0,College and above,"Management, professional, and related occupations",,494
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,23.0,High school,"Management, professional, and related occupations",,495
+Male,74.0,1944.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,28.0,College and above,"Management, professional, and related occupations",,496
+Male,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,26.0,High school,"Natural resources, construction, and maintenance occupations",,497
+Male,79.0,1939.0,Black,Immigrant,Divorced/widowed,4.0,20.0,College and above,"Management, professional, and related occupations",,498
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,499
+Male,68.0,1950.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,29.0,College and above,"Management, professional, and related occupations",,500
+Male,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,45.0,High school,"Management, professional, and related occupations",,501
+Male,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,502
+Female,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,19.0,High school,Service occupations,,503
+Female,50.0,1968.0,Black,Non-immigrant,Divorced/widowed,1.0,19.0,College and above,Service occupations,,504
+Male,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,505
+Female,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,31.0,College and above,"Production, transportation, and material moving occupations",,506
+Male,73.0,1945.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,24.0,College and above,"Management, professional, and related occupations",,507
+Female,67.0,1951.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,40.0,College and above,Service occupations,,508
+Male,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,High school,"Management, professional, and related occupations",,509
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,Service occupations,,510
+Female,59.0,1959.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,24.0,College and above,"Management, professional, and related occupations",,511
+Female,47.0,1971.0,Hispanic,Immigrant,Married,4.0,22.0,High school,Service occupations,,512
+Female,74.0,1944.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,High school,Sales and office occupations,,513
+Male,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,Sales and office occupations,,514
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Natural resources, construction, and maintenance occupations",,515
+Female,86.0,1932.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,17.0,High school,,,516
+Female,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,517
+Male,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,518
+Male,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,19.0,High school,Service occupations,,519
+Male,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,22.0,College and above,"Natural resources, construction, and maintenance occupations",,520
+Male,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,521
+Female,30.0,1988.0,Hispanic,Immigrant,Married,4.0,18.0,Less than high school,Unemployed,,522
+Female,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,24.0,College and above,"Management, professional, and related occupations",,523
+Male,29.0,1989.0,"Non-Black, Non-Hispanic",Immigrant,Single,3.0,,College and above,"Management, professional, and related occupations",,524
+Female,35.0,1983.0,Black,Non-immigrant,Married,8.0,19.0,High school,Service occupations,,525
+Male,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,526
+Male,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,High school,"Natural resources, construction, and maintenance occupations",,527
+Male,54.0,1964.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,High school,"Production, transportation, and material moving occupations",,528
+Female,24.0,1994.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,17.0,Less than high school,Service occupations,,529
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,530
+Male,54.0,1964.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Production, transportation, and material moving occupations",,531
+Male,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,8.0,23.0,College and above,"Management, professional, and related occupations",,532
+Female,51.0,1967.0,Black,Non-immigrant,Married,1.0,20.0,College and above,"Management, professional, and related occupations",,533
+Female,41.0,1977.0,Black,Non-immigrant,Married,2.0,25.0,College and above,"Management, professional, and related occupations",,534
+Male,42.0,1976.0,Hispanic,Immigrant,Married,3.0,30.0,High school,"Production, transportation, and material moving occupations",,535
+Female,24.0,1994.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,536
+Male,44.0,1974.0,Black,Immigrant,Married,2.0,34.0,College and above,"Management, professional, and related occupations",,537
+Male,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,538
+Male,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,42.0,College and above,"Management, professional, and related occupations",,539
+Male,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,32.0,College and above,"Production, transportation, and material moving occupations",,540
+Male,48.0,1970.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,High school,"Natural resources, construction, and maintenance occupations",,541
+Female,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,College and above,"Management, professional, and related occupations",,542
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,543
+Male,65.0,1953.0,Black,Immigrant,Married,5.0,21.0,High school,"Natural resources, construction, and maintenance occupations",,544
+Male,25.0,1993.0,Black,Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,545
+Male,25.0,1993.0,Hispanic,Immigrant,Married,2.0,23.0,High school,"Natural resources, construction, and maintenance occupations",,546
+Female,32.0,1986.0,Black,Non-immigrant,Single,1.0,20.0,College and above,"Production, transportation, and material moving occupations",,547
+Female,75.0,1943.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,3.0,33.0,College and above,"Management, professional, and related occupations",,548
+Male,64.0,1954.0,Black,Non-immigrant,Married,3.0,30.0,College and above,"Management, professional, and related occupations",,549
+Male,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,31.0,College and above,"Natural resources, construction, and maintenance occupations",,550
+Male,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,High school,"Natural resources, construction, and maintenance occupations",,551
+Female,24.0,1994.0,Black,Non-immigrant,Single,3.0,19.0,College and above,Service occupations,,552
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,553
+Female,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,554
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,33.0,College and above,"Management, professional, and related occupations",,555
+Female,44.0,1974.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,1.0,37.0,High school,Sales and office occupations,,556
+Female,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,17.0,High school,"Management, professional, and related occupations",,557
+Female,56.0,1962.0,Hispanic,Non-immigrant,Divorced/widowed,1.0,23.0,High school,"Management, professional, and related occupations",,558
+Female,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,31.0,College and above,"Management, professional, and related occupations",,559
+Male,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,College and above,"Management, professional, and related occupations",,560
+Female,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,17.0,Less than high school,Service occupations,,561
+Male,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,8.0,29.0,College and above,"Management, professional, and related occupations",,562
+Female,36.0,1982.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,32.0,College and above,"Management, professional, and related occupations",,563
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,35.0,College and above,"Management, professional, and related occupations",,564
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,565
+Male,22.0,1996.0,Black,Non-immigrant,Single,1.0,21.0,High school,"Natural resources, construction, and maintenance occupations",,566
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,High school,"Management, professional, and related occupations",,567
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,568
+Female,73.0,1945.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,19.0,College and above,Sales and office occupations,,569
+Male,54.0,1964.0,Black,Non-immigrant,Divorced/widowed,3.0,18.0,High school,"Production, transportation, and material moving occupations",,570
+Male,72.0,1946.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,28.0,College and above,"Management, professional, and related occupations",,571
+Male,35.0,1983.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,33.0,College and above,"Management, professional, and related occupations",,572
+Female,29.0,1989.0,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,College and above,Unemployed,,573
+Male,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,574
+Female,52.0,1966.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,4.0,32.0,High school,Sales and office occupations,,575
+Female,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,25.0,College and above,Service occupations,,576
+Female,21.0,1997.0,Hispanic,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,577
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,31.0,College and above,Unemployed,,578
+Female,82.0,1936.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,20.0,College and above,Service occupations,,579
+Female,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,24.0,High school,Sales and office occupations,,580
+Male,47.0,1971.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,25.0,High school,"Management, professional, and related occupations",,581
+Female,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,26.0,College and above,"Management, professional, and related occupations",,582
+Male,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,32.0,College and above,"Production, transportation, and material moving occupations",,583
+Female,69.0,1949.0,Black,Non-immigrant,Married,2.0,21.0,College and above,"Management, professional, and related occupations",,584
+Male,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,45.0,High school,Service occupations,,585
+Female,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,College and above,Service occupations,,586
+Female,24.0,1994.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,587
+Female,67.0,1951.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,27.0,College and above,Sales and office occupations,,588
+Female,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,22.0,College and above,Service occupations,,589
+Male,52.0,1966.0,Hispanic,Immigrant,Married,4.0,21.0,College and above,"Natural resources, construction, and maintenance occupations",,590
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,17.0,College and above,"Management, professional, and related occupations",,591
+Female,35.0,1983.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,592
+Male,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,25.0,College and above,Sales and office occupations,,593
+Female,35.0,1983.0,Black,Non-immigrant,Married,3.0,20.0,College and above,Sales and office occupations,,594
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,30.0,High school,"Natural resources, construction, and maintenance occupations",,595
+Male,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Natural resources, construction, and maintenance occupations",,596
+Male,37.0,1981.0,Black,Immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,597
+Female,64.0,1954.0,Black,Immigrant,Divorced/widowed,1.0,25.0,College and above,Service occupations,,598
+Female,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,26.0,High school,Sales and office occupations,,599
+Male,42.0,1976.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,31.0,College and above,"Management, professional, and related occupations",,600
+Female,18.0,2000.0,Hispanic,Non-immigrant,Single,0.0,,High school,Unemployed,,601
+Male,49.0,1969.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,602
+Female,50.0,1968.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,18.0,High school,Sales and office occupations,,603
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,High school,Sales and office occupations,,604
+Female,42.0,1976.0,Hispanic,Immigrant,Married,3.0,24.0,High school,"Natural resources, construction, and maintenance occupations",,605
+Male,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Natural resources, construction, and maintenance occupations",,606
+Male,73.0,1945.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,,College and above,"Management, professional, and related occupations",,607
+Female,32.0,1986.0,Hispanic,Immigrant,Married,3.0,18.0,College and above,Sales and office occupations,,608
+Female,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,21.0,High school,Sales and office occupations,,609
+Female,50.0,1968.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,3.0,19.0,College and above,Sales and office occupations,,610
+Female,22.0,1996.0,Black,Non-immigrant,Single,0.0,,High school,Sales and office occupations,,611
+Male,89.0,1929.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,25.0,College and above,Sales and office occupations,,612
+Female,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,25.0,College and above,"Management, professional, and related occupations",,613
+Female,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,614
+Male,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,615
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,,College and above,Sales and office occupations,,616
+Female,38.0,1980.0,Hispanic,Immigrant,Married,3.0,29.0,College and above,Sales and office occupations,,617
+Male,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,High school,Service occupations,,618
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,619
+Female,18.0,2000.0,Hispanic,Non-immigrant,Single,0.0,,High school,Sales and office occupations,,620
+Male,72.0,1946.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,High school,Service occupations,,621
+Female,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,27.0,High school,"Management, professional, and related occupations",,622
+Male,49.0,1969.0,Hispanic,Non-immigrant,Divorced/widowed,4.0,21.0,College and above,"Production, transportation, and material moving occupations",,623
+Male,43.0,1975.0,Hispanic,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,624
+Female,28.0,1990.0,Black,Non-immigrant,Married,2.0,21.0,High school,Sales and office occupations,,625
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,22.0,High school,"Management, professional, and related occupations",,626
+Male,26.0,1992.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,627
+Male,57.0,1961.0,Hispanic,Non-immigrant,Married,2.0,25.0,High school,"Production, transportation, and material moving occupations",,628
+Female,26.0,1992.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,24.0,High school,"Management, professional, and related occupations",,629
+Female,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Production, transportation, and material moving occupations",,630
+Female,48.0,1970.0,Black,Non-immigrant,Married,4.0,21.0,College and above,"Management, professional, and related occupations",,631
+Female,41.0,1977.0,Hispanic,Non-immigrant,Married,2.0,26.0,High school,Sales and office occupations,,632
+Female,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,High school,"Production, transportation, and material moving occupations",,633
+Female,19.0,1999.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,634
+Female,86.0,1932.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,23.0,High school,Sales and office occupations,,635
+Male,36.0,1982.0,Hispanic,Immigrant,Single,1.0,28.0,High school,"Production, transportation, and material moving occupations",,636
+Male,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,40.0,College and above,"Management, professional, and related occupations",,637
+Female,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,20.0,High school,Unemployed,,638
+Male,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,29.0,College and above,"Management, professional, and related occupations",,639
+Male,46.0,1972.0,Hispanic,Immigrant,Single,0.0,,Less than high school,"Management, professional, and related occupations",,640
+Female,48.0,1970.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,29.0,College and above,"Management, professional, and related occupations",,641
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,31.0,College and above,Sales and office occupations,,642
+Male,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Natural resources, construction, and maintenance occupations",,643
+Female,47.0,1971.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,22.0,College and above,Sales and office occupations,,644
+Female,89.0,1929.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,,High school,Unemployed,,645
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,27.0,College and above,"Management, professional, and related occupations",,646
+Male,32.0,1986.0,Hispanic,Immigrant,Married,3.0,25.0,College and above,"Production, transportation, and material moving occupations",,647
+Female,28.0,1990.0,Black,Non-immigrant,Divorced/widowed,0.0,,College and above,Unemployed,,648
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,19.0,College and above,Service occupations,,649
+Female,35.0,1983.0,Hispanic,Non-immigrant,Married,3.0,17.0,College and above,"Production, transportation, and material moving occupations",,650
+Male,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Unemployed,,651
+Female,26.0,1992.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,652
+Male,51.0,1967.0,Hispanic,Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,653
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,31.0,College and above,"Management, professional, and related occupations",,654
+Male,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Production, transportation, and material moving occupations",,655
+Male,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,28.0,College and above,"Management, professional, and related occupations",,656
+Female,83.0,1935.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,Sales and office occupations,,657
+Male,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Natural resources, construction, and maintenance occupations",,658
+Male,51.0,1967.0,Black,Non-immigrant,Married,2.0,25.0,College and above,"Management, professional, and related occupations",,659
+Female,42.0,1976.0,Hispanic,Immigrant,Married,3.0,18.0,High school,Service occupations,,660
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,661
+Male,36.0,1982.0,Black,Non-immigrant,Married,3.0,22.0,College and above,"Management, professional, and related occupations",,662
+Female,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,663
+Female,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,High school,"Natural resources, construction, and maintenance occupations",,664
+Female,47.0,1971.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,41.0,College and above,"Management, professional, and related occupations",,665
+Male,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,666
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,College and above,"Management, professional, and related occupations",,667
+Female,32.0,1986.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,30.0,College and above,Sales and office occupations,,668
+Female,37.0,1981.0,Hispanic,Non-immigrant,Divorced/widowed,2.0,29.0,High school,Sales and office occupations,,669
+Male,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,21.0,College and above,"Production, transportation, and material moving occupations",,670
+Male,72.0,1946.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,38.0,High school,"Management, professional, and related occupations",,671
+Male,49.0,1969.0,Hispanic,Immigrant,Married,8.0,17.0,High school,Sales and office occupations,,672
+Male,89.0,1929.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,28.0,High school,"Production, transportation, and material moving occupations",,673
+Female,89.0,1929.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,7.0,19.0,High school,Service occupations,,674
+Male,34.0,1984.0,Hispanic,Immigrant,Married,2.0,31.0,High school,"Management, professional, and related occupations",,675
+Female,25.0,1993.0,Hispanic,Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,676
+Female,34.0,1984.0,Black,Non-immigrant,Married,0.0,,College and above,Service occupations,,677
+Female,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,18.0,High school,"Management, professional, and related occupations",,678
+Male,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Production, transportation, and material moving occupations",,679
+Female,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,35.0,College and above,"Management, professional, and related occupations",,680
+Male,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,29.0,College and above,"Management, professional, and related occupations",,681
+Male,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,682
+Male,68.0,1950.0,Black,Non-immigrant,Divorced/widowed,4.0,22.0,College and above,Military Occupations,,683
+Female,23.0,1995.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,684
+Female,53.0,1965.0,Black,Non-immigrant,Single,1.0,17.0,High school,"Production, transportation, and material moving occupations",,685
+Male,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,686
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,24.0,High school,"Natural resources, construction, and maintenance occupations",,687
+Female,36.0,1982.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,22.0,College and above,Service occupations,,688
+Female,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,33.0,College and above,"Management, professional, and related occupations",,689
+Female,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,32.0,College and above,Sales and office occupations,,690
+Female,23.0,1995.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,691
+Female,23.0,1995.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,692
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,20.0,High school,Service occupations,,693
+Female,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Unemployed,,694
+Male,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,7.0,21.0,College and above,Service occupations,,695
+Female,27.0,1991.0,Hispanic,Non-immigrant,Single,3.0,19.0,Less than high school,Service occupations,,696
+Female,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,20.0,High school,Sales and office occupations,,697
+Female,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,32.0,College and above,"Management, professional, and related occupations",,698
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,19.0,College and above,"Natural resources, construction, and maintenance occupations",,699
+Female,25.0,1993.0,Hispanic,Non-immigrant,Single,0.0,,College and above,Service occupations,,700
+Female,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,College and above,Sales and office occupations,,701
+Male,58.0,1960.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,18.0,College and above,"Natural resources, construction, and maintenance occupations",,702
+Female,34.0,1984.0,Black,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,703
+Male,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,21.0,College and above,"Production, transportation, and material moving occupations",,704
+Female,48.0,1970.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,705
+Female,80.0,1938.0,Hispanic,Immigrant,Married,5.0,18.0,High school,"Production, transportation, and material moving occupations",,706
+Female,38.0,1980.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,22.0,High school,Unemployed,,707
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,25.0,High school,"Management, professional, and related occupations",,708
+Male,76.0,1942.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,College and above,"Management, professional, and related occupations",,709
+Male,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,"Production, transportation, and material moving occupations",,710
+Female,46.0,1972.0,Hispanic,Immigrant,Divorced/widowed,3.0,18.0,High school,Service occupations,,711
+Female,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,High school,Sales and office occupations,,712
+Male,63.0,1955.0,Black,Non-immigrant,Divorced/widowed,7.0,17.0,High school,"Production, transportation, and material moving occupations",,713
+Female,18.0,2000.0,Hispanic,Non-immigrant,Single,0.0,,High school,Unemployed,,714
+Male,73.0,1945.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,39.0,College and above,"Management, professional, and related occupations",,715
+Female,48.0,1970.0,Black,Non-immigrant,Divorced/widowed,3.0,21.0,College and above,"Management, professional, and related occupations",,716
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,"Management, professional, and related occupations",,717
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,718
+Male,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,719
+Female,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,29.0,College and above,"Management, professional, and related occupations",,720
+Female,87.0,1931.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,34.0,High school,"Production, transportation, and material moving occupations",,721
+Female,88.0,1930.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,0.0,,High school,Sales and office occupations,,722
+Male,46.0,1972.0,Black,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,723
+Female,58.0,1960.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,724
+Female,24.0,1994.0,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,725
+Female,19.0,1999.0,Black,Non-immigrant,Single,0.0,,High school,Service occupations,,726
+Female,59.0,1959.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,College and above,"Management, professional, and related occupations",,727
+Female,74.0,1944.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,High school,"Management, professional, and related occupations",,728
+Male,44.0,1974.0,Hispanic,Non-immigrant,Single,5.0,28.0,High school,"Management, professional, and related occupations",,729
+Female,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,21.0,High school,Unemployed,,730
+Female,64.0,1954.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,18.0,College and above,"Management, professional, and related occupations",,731
+Female,75.0,1943.0,Black,Non-immigrant,Divorced/widowed,3.0,21.0,High school,Service occupations,,732
+Female,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,20.0,College and above,Sales and office occupations,,733
+Female,39.0,1979.0,Hispanic,Non-immigrant,Single,3.0,17.0,College and above,Unemployed,,734
+Female,28.0,1990.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Service occupations,,735
+Male,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,"Natural resources, construction, and maintenance occupations",,736
+Male,31.0,1987.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,3.0,20.0,College and above,Service occupations,,737
+Male,23.0,1995.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,738
+Female,28.0,1990.0,Black,Immigrant,Married,3.0,23.0,College and above,"Management, professional, and related occupations",,739
+Male,71.0,1947.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,21.0,College and above,"Management, professional, and related occupations",,740
+Female,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,31.0,High school,"Natural resources, construction, and maintenance occupations",,741
+Male,54.0,1964.0,Black,Non-immigrant,Married,2.0,20.0,College and above,Service occupations,,742
+Male,18.0,2000.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,743
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,2.0,25.0,High school,Sales and office occupations,,744
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,745
+Female,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,746
+Male,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,747
+Female,41.0,1977.0,Hispanic,Immigrant,Married,4.0,27.0,Less than high school,Unemployed,,748
+Female,33.0,1985.0,Black,Non-immigrant,Married,2.0,17.0,College and above,"Management, professional, and related occupations",,749
+Male,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,750
+Male,26.0,1992.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,751
+Male,26.0,1992.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,752
+Male,30.0,1988.0,Black,Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,753
+Male,19.0,1999.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,754
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,27.0,College and above,"Production, transportation, and material moving occupations",,755
+Male,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,34.0,College and above,"Management, professional, and related occupations",,756
+Female,35.0,1983.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,27.0,College and above,Sales and office occupations,,757
+Female,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Management, professional, and related occupations",,758
+Female,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,High school,Unemployed,,759
+Male,27.0,1991.0,Black,Non-immigrant,Married,0.0,,High school,"Production, transportation, and material moving occupations",,760
+Female,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,32.0,College and above,Service occupations,,761
+Female,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,High school,Sales and office occupations,,762
+Female,46.0,1972.0,Black,Non-immigrant,Married,1.0,28.0,College and above,"Management, professional, and related occupations",,763
+Male,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,19.0,High school,"Production, transportation, and material moving occupations",,764
+Male,47.0,1971.0,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,,High school,"Production, transportation, and material moving occupations",,765
+Male,54.0,1964.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,26.0,High school,"Management, professional, and related occupations",,766
+Male,59.0,1959.0,Black,Non-immigrant,Married,3.0,19.0,High school,Sales and office occupations,,767
+Female,25.0,1993.0,Black,Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,768
+Male,23.0,1995.0,Black,Non-immigrant,Single,1.0,18.0,High school,"Natural resources, construction, and maintenance occupations",,769
+Female,33.0,1985.0,Hispanic,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,770
+Male,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,28.0,College and above,Service occupations,,771
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,22.0,College and above,Sales and office occupations,,772
+Male,42.0,1976.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,27.0,High school,"Natural resources, construction, and maintenance occupations",,773
+Female,67.0,1951.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,22.0,High school,Sales and office occupations,,774
+Male,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,775
+Female,59.0,1959.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,College and above,"Management, professional, and related occupations",,776
+Female,34.0,1984.0,Black,Non-immigrant,Single,3.0,17.0,High school,"Management, professional, and related occupations",,777
+Male,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,Less than high school,"Management, professional, and related occupations",,778
+Male,37.0,1981.0,Black,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,779
+Female,78.0,1940.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,19.0,High school,"Production, transportation, and material moving occupations",,780
+Female,50.0,1968.0,Black,,,,,High school,,,781
+Male,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,782
+Female,50.0,1968.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,783
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,High school,"Management, professional, and related occupations",,784
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,785
+Male,26.0,1992.0,Black,Non-immigrant,Single,3.0,22.0,High school,"Production, transportation, and material moving occupations",,786
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,19.0,High school,"Natural resources, construction, and maintenance occupations",,787
+Male,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,788
+Female,47.0,1971.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,29.0,College and above,"Production, transportation, and material moving occupations",,789
+Male,62.0,1956.0,Black,Immigrant,Divorced/widowed,3.0,45.0,College and above,"Management, professional, and related occupations",,790
+Male,83.0,1935.0,Black,Non-immigrant,Married,7.0,21.0,High school,"Natural resources, construction, and maintenance occupations",,791
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,High school,"Management, professional, and related occupations",,792
+Male,58.0,1960.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,41.0,College and above,Sales and office occupations,,793
+Male,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,19.0,College and above,"Production, transportation, and material moving occupations",,794
+Male,38.0,1980.0,Hispanic,Non-immigrant,Single,1.0,25.0,High school,"Production, transportation, and material moving occupations",,795
+Male,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,38.0,High school,"Management, professional, and related occupations",,796
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,26.0,College and above,"Management, professional, and related occupations",,797
+Female,59.0,1959.0,Hispanic,Non-immigrant,Divorced/widowed,2.0,22.0,College and above,"Management, professional, and related occupations",,798
+Female,67.0,1951.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,33.0,College and above,Sales and office occupations,,799
+Female,45.0,1973.0,Hispanic,Immigrant,Divorced/widowed,3.0,18.0,Less than high school,Service occupations,,800
+Female,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,High school,Sales and office occupations,,801
+Male,43.0,1975.0,Hispanic,Immigrant,Married,3.0,23.0,High school,"Production, transportation, and material moving occupations",,802
+Female,60.0,1958.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,High school,Service occupations,,803
+Female,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,College and above,"Management, professional, and related occupations",,804
+Male,30.0,1988.0,Hispanic,Immigrant,Married,3.0,20.0,High school,"Natural resources, construction, and maintenance occupations",,805
+Male,47.0,1971.0,Hispanic,Immigrant,Married,3.0,19.0,High school,"Natural resources, construction, and maintenance occupations",,806
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,29.0,College and above,"Natural resources, construction, and maintenance occupations",,807
+Female,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,18.0,High school,Sales and office occupations,,808
+Male,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,College and above,"Management, professional, and related occupations",,809
+Male,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Sales and office occupations,,810
+Male,20.0,1998.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Unemployed,,811
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,High school,Sales and office occupations,,812
+Female,36.0,1982.0,Hispanic,Immigrant,Married,3.0,26.0,College and above,"Production, transportation, and material moving occupations",,813
+Male,42.0,1976.0,Hispanic,Non-immigrant,Divorced/widowed,0.0,,High school,"Production, transportation, and material moving occupations",,814
+Male,48.0,1970.0,Hispanic,Immigrant,Married,4.0,23.0,High school,"Production, transportation, and material moving occupations",,815
+Female,54.0,1964.0,Black,Non-immigrant,Married,3.0,17.0,College and above,"Management, professional, and related occupations",,816
+Female,25.0,1993.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,817
+Female,33.0,1985.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,28.0,College and above,"Management, professional, and related occupations",,818
+Male,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Production, transportation, and material moving occupations",,819
+Female,35.0,1983.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,820
+Male,73.0,1945.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,College and above,"Natural resources, construction, and maintenance occupations",,821
+Female,47.0,1971.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,21.0,College and above,Sales and office occupations,,822
+Male,84.0,1934.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,College and above,Sales and office occupations,,823
+Male,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Natural resources, construction, and maintenance occupations",,824
+Male,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,825
+Female,42.0,1976.0,Hispanic,Immigrant,Divorced/widowed,4.0,19.0,Less than high school,"Production, transportation, and material moving occupations",,826
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,827
+Female,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,High school,"Management, professional, and related occupations",,828
+Male,81.0,1937.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,23.0,College and above,"Management, professional, and related occupations",,829
+Female,67.0,1951.0,Black,Non-immigrant,Divorced/widowed,1.0,20.0,Less than high school,Service occupations,,830
+Female,66.0,1952.0,Black,Non-immigrant,Single,4.0,,High school,Service occupations,,831
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,25.0,College and above,"Management, professional, and related occupations",,832
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,35.0,College and above,"Production, transportation, and material moving occupations",,833
+Male,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,19.0,High school,Service occupations,,834
+Female,55.0,1963.0,Black,Non-immigrant,Single,1.0,19.0,High school,Service occupations,,835
+Male,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,24.0,High school,Service occupations,,836
+Female,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,33.0,High school,Service occupations,,837
+Female,89.0,1929.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,21.0,College and above,"Management, professional, and related occupations",,838
+Male,44.0,1974.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,30.0,College and above,Sales and office occupations,,839
+Male,22.0,1996.0,Black,Non-immigrant,Single,0.0,,College and above,Service occupations,,840
+Female,35.0,1983.0,Black,Non-immigrant,Single,1.0,22.0,High school,Service occupations,,841
+Female,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,,College and above,"Management, professional, and related occupations",,842
+Female,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,17.0,College and above,Service occupations,,843
+Male,61.0,1957.0,Hispanic,Immigrant,Divorced/widowed,3.0,28.0,College and above,"Management, professional, and related occupations",,844
+Male,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,22.0,College and above,Service occupations,,845
+Male,22.0,1996.0,Hispanic,Non-immigrant,Single,0.0,,College and above,Unemployed,,846
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,23.0,College and above,"Management, professional, and related occupations",,847
+Female,66.0,1952.0,Hispanic,Non-immigrant,Divorced/widowed,3.0,23.0,High school,Service occupations,,848
+Female,86.0,1932.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,23.0,High school,Service occupations,,849
+Female,27.0,1991.0,Black,Non-immigrant,Single,1.0,22.0,College and above,Sales and office occupations,,850
+Female,54.0,1964.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,19.0,College and above,Service occupations,,851
+Male,52.0,1966.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,24.0,College and above,"Management, professional, and related occupations",,852
+Male,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,College and above,"Management, professional, and related occupations",,853
+Male,54.0,1964.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,38.0,College and above,"Management, professional, and related occupations",,854
+Female,30.0,1988.0,Hispanic,Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,855
+Male,55.0,1963.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,33.0,College and above,"Management, professional, and related occupations",,856
+Male,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,Service occupations,,857
+Male,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,21.0,High school,"Management, professional, and related occupations",,858
+Female,45.0,1973.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,High school,Service occupations,,859
+Female,46.0,1972.0,Hispanic,Non-immigrant,Married,1.0,29.0,College and above,Service occupations,,860
+Male,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,30.0,College and above,"Management, professional, and related occupations",,861
+Male,52.0,1966.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,32.0,College and above,"Management, professional, and related occupations",,862
+Female,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,24.0,High school,Sales and office occupations,,863
+Female,20.0,1998.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,864
+Male,46.0,1972.0,Hispanic,Non-immigrant,Single,1.0,32.0,High school,"Natural resources, construction, and maintenance occupations",,865
+Male,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,19.0,College and above,"Production, transportation, and material moving occupations",,866
+Female,38.0,1980.0,Black,Non-immigrant,Single,3.0,18.0,High school,Service occupations,,867
+Male,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,868
+Female,43.0,1975.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,21.0,High school,Service occupations,,869
+Male,42.0,1976.0,Hispanic,Non-immigrant,Married,2.0,35.0,College and above,"Management, professional, and related occupations",,870
+Female,88.0,1930.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,22.0,College and above,Service occupations,,871
+Female,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Unemployed,,872
+Male,18.0,2000.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Unemployed,,873
+Female,56.0,1962.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,Sales and office occupations,,874
+Male,52.0,1966.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,36.0,College and above,"Management, professional, and related occupations",,875
+Male,19.0,1999.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Unemployed,,876
+Female,18.0,2000.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,877
+Female,27.0,1991.0,Black,Non-immigrant,Single,1.0,25.0,College and above,Sales and office occupations,,878
+Male,19.0,1999.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Unemployed,,879
+Female,31.0,1987.0,Black,Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,880
+Male,48.0,1970.0,Hispanic,Immigrant,Married,2.0,22.0,College and above,Sales and office occupations,,881
+Female,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,21.0,College and above,"Management, professional, and related occupations",,882
+Male,64.0,1954.0,Black,Non-immigrant,Married,3.0,26.0,College and above,"Production, transportation, and material moving occupations",,883
+Female,22.0,1996.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Production, transportation, and material moving occupations",,884
+Female,58.0,1960.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,34.0,College and above,"Management, professional, and related occupations",,885
+Male,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,30.0,College and above,"Management, professional, and related occupations",,886
+Female,70.0,1948.0,Black,Non-immigrant,Married,3.0,24.0,College and above,"Management, professional, and related occupations",,887
+Female,22.0,1996.0,Hispanic,Immigrant,Single,1.0,20.0,High school,Sales and office occupations,,888
+Male,24.0,1994.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,"Natural resources, construction, and maintenance occupations",,889
+Female,69.0,1949.0,"Non-Black, Non-Hispanic",Immigrant,Married,3.0,17.0,High school,Unemployed,,890
+Female,39.0,1979.0,Hispanic,Immigrant,Married,3.0,18.0,College and above,"Production, transportation, and material moving occupations",,891
+Male,32.0,1986.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,26.0,College and above,"Management, professional, and related occupations",,892
+Female,65.0,1953.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,31.0,College and above,"Management, professional, and related occupations",,893
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,34.0,College and above,Unemployed,,894
+Female,35.0,1983.0,Hispanic,Immigrant,Married,1.0,28.0,College and above,"Management, professional, and related occupations",,895
+Male,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,896
+Female,84.0,1934.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,24.0,High school,"Management, professional, and related occupations",,897
+Female,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,32.0,College and above,"Management, professional, and related occupations",,898
+Female,29.0,1989.0,Black,Non-immigrant,Married,3.0,17.0,College and above,Service occupations,,899
+Female,23.0,1995.0,Black,Non-immigrant,Single,3.0,20.0,High school,Sales and office occupations,,900
+Female,72.0,1946.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,24.0,College and above,Service occupations,,901
+Male,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,37.0,College and above,"Management, professional, and related occupations",,902
+Male,34.0,1984.0,Hispanic,Non-immigrant,Married,1.0,18.0,High school,"Natural resources, construction, and maintenance occupations",,903
+Male,21.0,1997.0,Black,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,904
+Female,31.0,1987.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,3.0,20.0,College and above,"Management, professional, and related occupations",,905
+Female,74.0,1944.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,32.0,College and above,"Management, professional, and related occupations",,906
+Female,26.0,1992.0,Black,Non-immigrant,Single,3.0,17.0,College and above,Unemployed,,907
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,College and above,"Natural resources, construction, and maintenance occupations",,908
+Female,52.0,1966.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,College and above,"Management, professional, and related occupations",,909
+Female,48.0,1970.0,Black,Non-immigrant,Divorced/widowed,2.0,35.0,College and above,"Management, professional, and related occupations",,910
+Male,27.0,1991.0,Hispanic,Non-immigrant,Single,0.0,,College and above,Service occupations,,911
+Female,53.0,1965.0,Black,Non-immigrant,Single,0.0,,High school,Sales and office occupations,,912
+Female,30.0,1988.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,913
+Male,25.0,1993.0,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,College and above,Sales and office occupations,,914
+Female,58.0,1960.0,Black,Non-immigrant,Divorced/widowed,3.0,22.0,College and above,"Management, professional, and related occupations",,915
+Female,36.0,1982.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,High school,"Natural resources, construction, and maintenance occupations",,916
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,24.0,High school,"Management, professional, and related occupations",,917
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,28.0,College and above,Sales and office occupations,,918
+Male,36.0,1982.0,Hispanic,Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,919
+Male,19.0,1999.0,Hispanic,Non-immigrant,Single,0.0,,High school,Service occupations,,920
+Female,56.0,1962.0,Black,Non-immigrant,Single,3.0,20.0,High school,"Production, transportation, and material moving occupations",,921
+Male,29.0,1989.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,922
+Male,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,Service occupations,,923
+Female,52.0,1966.0,Black,Non-immigrant,Married,3.0,18.0,College and above,Sales and office occupations,,924
+Male,46.0,1972.0,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,39.0,College and above,"Management, professional, and related occupations",,925
+Female,80.0,1938.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,19.0,High school,Sales and office occupations,,926
+Female,77.0,1941.0,Black,Non-immigrant,Married,4.0,17.0,College and above,Unemployed,,927
+Female,48.0,1970.0,Hispanic,Immigrant,Married,5.0,17.0,Less than high school,"Production, transportation, and material moving occupations",,928
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,College and above,"Management, professional, and related occupations",,929
+Female,29.0,1989.0,Hispanic,Non-immigrant,Single,2.0,20.0,College and above,Service occupations,,930
+Female,27.0,1991.0,Hispanic,Immigrant,Single,3.0,17.0,High school,Service occupations,,931
+Female,31.0,1987.0,Hispanic,Non-immigrant,Single,1.0,20.0,College and above,Sales and office occupations,,932
+Male,21.0,1997.0,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,College and above,Unemployed,,933
+Male,80.0,1938.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,8.0,,High school,"Natural resources, construction, and maintenance occupations",,934
+Female,34.0,1984.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,3.0,17.0,High school,Service occupations,,935
+Male,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,936
+Male,51.0,1967.0,Hispanic,Immigrant,Married,3.0,20.0,High school,"Management, professional, and related occupations",,937
+Female,57.0,1961.0,Black,Non-immigrant,Married,3.0,23.0,High school,Service occupations,,938
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,939
+Male,41.0,1977.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,31.0,College and above,"Production, transportation, and material moving occupations",,940
+Male,25.0,1993.0,Hispanic,Non-immigrant,Single,1.0,23.0,College and above,"Production, transportation, and material moving occupations",,941
+Male,51.0,1967.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,3.0,28.0,College and above,"Management, professional, and related occupations",,942
+Male,78.0,1940.0,Hispanic,Non-immigrant,Married,0.0,,High school,Service occupations,,943
+Female,21.0,1997.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,High school,Sales and office occupations,,944
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,28.0,College and above,Sales and office occupations,,945
+Male,33.0,1985.0,Hispanic,Non-immigrant,Single,0.0,,College and above,Sales and office occupations,,946
+Female,59.0,1959.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,24.0,College and above,"Management, professional, and related occupations",,947
+Male,77.0,1941.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,29.0,College and above,"Management, professional, and related occupations",,948
+Male,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,45.0,College and above,"Management, professional, and related occupations",,949
+Male,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,"Production, transportation, and material moving occupations",,950
+Male,31.0,1987.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,951
+Male,38.0,1980.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,37.0,High school,"Management, professional, and related occupations",,952
+Female,32.0,1986.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,2.0,18.0,College and above,Service occupations,,953
+Female,46.0,1972.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,,High school,Sales and office occupations,,954
+Female,84.0,1934.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,25.0,College and above,"Management, professional, and related occupations",,955
+Female,49.0,1969.0,Black,Non-immigrant,Single,2.0,27.0,College and above,"Management, professional, and related occupations",,956
+Male,19.0,1999.0,Hispanic,Immigrant,Single,0.0,,High school,Service occupations,,957
+Female,75.0,1943.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,20.0,High school,"Management, professional, and related occupations",,958
+Female,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,College and above,Sales and office occupations,,959
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,37.0,College and above,Sales and office occupations,,960
+Male,62.0,1956.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,29.0,High school,"Production, transportation, and material moving occupations",,961
+Male,78.0,1940.0,Black,Non-immigrant,Married,2.0,37.0,College and above,"Production, transportation, and material moving occupations",,962
+Male,69.0,1949.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,30.0,College and above,"Management, professional, and related occupations",,963
+Female,39.0,1979.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,23.0,High school,Military Occupations,,964
+Male,68.0,1950.0,Black,Non-immigrant,Married,8.0,19.0,High school,"Natural resources, construction, and maintenance occupations",,965
+Female,28.0,1990.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,966
+Female,36.0,1982.0,Black,Non-immigrant,Single,2.0,18.0,High school,Service occupations,,967
+Female,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,High school,"Management, professional, and related occupations",,968
+Female,53.0,1965.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,21.0,Less than high school,"Production, transportation, and material moving occupations",,969
+Female,21.0,1997.0,Hispanic,Non-immigrant,Single,0.0,,College and above,Service occupations,,970
+Female,37.0,1981.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,30.0,College and above,"Management, professional, and related occupations",,971
+Female,48.0,1970.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,23.0,College and above,"Management, professional, and related occupations",,972
+Female,68.0,1950.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,College and above,"Management, professional, and related occupations",,973
+Male,19.0,1999.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,974
+Male,86.0,1932.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,22.0,High school,"Natural resources, construction, and maintenance occupations",,975
+Female,36.0,1982.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,High school,Service occupations,,976
+Male,74.0,1944.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,High school,"Production, transportation, and material moving occupations",,977
+Male,33.0,1985.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Service occupations,,978
+Male,84.0,1934.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,25.0,College and above,"Management, professional, and related occupations",,979
+Male,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,23.0,High school,"Management, professional, and related occupations",,980
+Female,40.0,1978.0,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,24.0,High school,Sales and office occupations,,981
+Male,51.0,1967.0,Black,Non-immigrant,Single,1.0,33.0,College and above,"Management, professional, and related occupations",,982
+Female,39.0,1979.0,Black,Non-immigrant,Single,2.0,20.0,High school,Service occupations,,983
+Female,61.0,1957.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,High school,Sales and office occupations,,984
+Male,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,"Management, professional, and related occupations",,985
+Male,33.0,1985.0,Black,Non-immigrant,Married,4.0,23.0,College and above,"Natural resources, construction, and maintenance occupations",,986
+Male,27.0,1991.0,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,,College and above,Service occupations,,987
+Male,48.0,1970.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,,College and above,Sales and office occupations,,988
+Female,57.0,1961.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,19.0,High school,"Management, professional, and related occupations",,989
+Male,19.0,1999.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Unemployed,,990
+Female,60.0,1958.0,Hispanic,Immigrant,Divorced/widowed,3.0,18.0,High school,Service occupations,,991
+Male,63.0,1955.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,High school,Sales and office occupations,,992
+Female,51.0,1967.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,25.0,College and above,"Management, professional, and related occupations",,993
+Male,60.0,1958.0,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,,College and above,"Management, professional, and related occupations",,994
+Male,70.0,1948.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,22.0,High school,"Natural resources, construction, and maintenance occupations",,995
+Female,67.0,1951.0,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,College and above,"Management, professional, and related occupations",,996
+Male,66.0,1952.0,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,22.0,Less than high school,"Natural resources, construction, and maintenance occupations",,997
+Female,27.0,1991.0,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,25.0,High school,Service occupations,,998
+Female,81.0,1937.0,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,1.0,30.0,High school,"Management, professional, and related occupations",,999

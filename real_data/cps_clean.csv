@@ -1,0 +1,1001 @@
+gender,age,birth_year,race,marital_status,child_number,age_first_childbirth,education,laborforce,occupation,income,poverty_status,profile_id
+Female,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,0
+Male,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,College and above,Not in the labor force,,3650.0,Above poverty line,1
+Female,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,2212.0,Above poverty line,2
+Male,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,3
+Female,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,4
+Male,33,1947.0,Hispanic,Married,2,25.0,High school,In the labor force,"Operators, Fabricators, and Laborers",20108.0,Above poverty line,5
+Female,44,1936.0,Black,Married,0,,High school,Not in the labor force,,2.0,Above poverty line,6
+Male,30,1950.0,"Non-Black, Non-Hispanic",Married,4,23.0,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",0.0,Below poverty line,7
+Female,33,1947.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,28.0,College and above,In the labor force,Professional Specialty Occupations,18500.0,Above poverty line,8
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,9
+Female,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,10
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,11
+Female,34,1946.0,"Non-Black, Non-Hispanic",Divorced/widowed,2,21.0,High school,In the labor force,Clerical and Administrative Support Occupations,3618.0,Below poverty line,12
+Female,46,1934.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,614.0,Above poverty line,13
+Female,23,1957.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Service Occupations,4195.0,Above poverty line,14
+Female,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,15
+Male,33,1947.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,16000.0,Above poverty line,16
+Female,29,1951.0,"Non-Black, Non-Hispanic",Married,2,24.0,College and above,Not in the labor force,,83.0,Above poverty line,17
+Female,61,1919.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,7289.0,Above poverty line,18
+Male,63,1917.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",22584.0,Above poverty line,19
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,2,22.0,High school,In the labor force,Professional Specialty Occupations,5978.0,Above poverty line,20
+Male,23,1957.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",14000.0,Above poverty line,21
+Male,29,1951.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,28100.0,Above poverty line,22
+Female,62,1918.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,20864.0,Above poverty line,23
+Male,17,1963.0,Black,Single,0,,High school,Not in the labor force,,0.0,Above poverty line,24
+Female,77,1903.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,11825.0,Above poverty line,25
+Female,7,1973.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,26
+Male,54,1926.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,6642.0,Above poverty line,27
+Male,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,28
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,940.0,Above poverty line,29
+Female,47,1933.0,"Non-Black, Non-Hispanic",Married,2,31.0,High school,Not in the labor force,Service Occupations,24.0,Below poverty line,30
+Female,51,1929.0,"Non-Black, Non-Hispanic",Married,2,35.0,High school,Not in the labor force,,0.0,Above poverty line,31
+Male,8,1972.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,32
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,0.0,Above poverty line,33
+Male,18,1962.0,Black,Single,0,,High school,Not in the labor force,,0.0,Above poverty line,34
+Female,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,College and above,Not in the labor force,Professional Specialty Occupations,1850.0,Above poverty line,35
+Male,42,1938.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,7000.0,Above poverty line,36
+Female,49,1931.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,Service Occupations,7020.0,Above poverty line,37
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,38
+Female,60,1920.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,1090.0,Below poverty line,39
+Female,22,1958.0,Hispanic,Married,1,22.0,High school,Not in the labor force,,40.0,Above poverty line,40
+Male,37,1943.0,"Non-Black, Non-Hispanic",Married,2,22.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",19012.0,Above poverty line,41
+Male,9,1971.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,42
+Male,45,1935.0,"Non-Black, Non-Hispanic",Married,3,27.0,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",25014.0,Above poverty line,43
+Male,4,1976.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,44
+Female,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,0.0,Above poverty line,45
+Male,54,1926.0,"Non-Black, Non-Hispanic",Married,4,34.0,College and above,In the labor force,Managerial Occupations,42400.0,Above poverty line,46
+Female,63,1917.0,Black,Divorced/widowed,2,31.0,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",10207.0,Above poverty line,47
+Female,38,1942.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Service Occupations,9100.0,Above poverty line,48
+Male,50,1930.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Sales Occupations,11250.0,Above poverty line,49
+Male,49,1931.0,"Non-Black, Non-Hispanic",Married,2,39.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",10488.0,Above poverty line,50
+Male,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,51
+Male,25,1955.0,"Non-Black, Non-Hispanic",Married,1,24.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",24250.0,Above poverty line,52
+Male,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,1486.0,Above poverty line,53
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,1004.0,Above poverty line,54
+Female,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,55
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,365.0,Above poverty line,56
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,1,23.0,College and above,Not in the labor force,,100.0,Above poverty line,57
+Male,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",5706.0,Above poverty line,58
+Female,24,1956.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Service Occupations,8232.0,Above poverty line,59
+Female,24,1956.0,"Non-Black, Non-Hispanic",Married,1,24.0,High school,Not in the labor force,,5100.0,Above poverty line,60
+Male,54,1926.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Professional Specialty Occupations,16900.0,Above poverty line,61
+Female,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,62
+Male,44,1936.0,Hispanic,Married,0,,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",18720.0,Above poverty line,63
+Male,6,1974.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,64
+Female,41,1939.0,"Non-Black, Non-Hispanic",Married,2,19.0,High school,Not in the labor force,,0.0,Above poverty line,65
+Male,36,1944.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,20005.0,Above poverty line,66
+Female,15,1965.0,Black,Single,0,,High school,Not in the labor force,,0.0,Below poverty line,67
+Female,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Sales Occupations,1859.0,Above poverty line,68
+Female,51,1929.0,"Non-Black, Non-Hispanic",Married,1,25.0,High school,In the labor force,Clerical and Administrative Support Occupations,1633.0,Above poverty line,69
+Female,43,1937.0,Hispanic,Married,1,33.0,High school,Not in the labor force,,1351.0,Above poverty line,70
+Male,75,1905.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,22.0,Less than high school,Not in the labor force,,9418.0,Above poverty line,71
+Male,28,1952.0,Black,Married,3,19.0,College and above,In the labor force,Clerical and Administrative Support Occupations,11200.0,Above poverty line,72
+Male,41,1939.0,"Non-Black, Non-Hispanic",Married,2,24.0,High school,In the labor force,Managerial Occupations,19357.0,Above poverty line,73
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,74
+Male,33,1947.0,"Non-Black, Non-Hispanic",Married,2,28.0,High school,In the labor force,"Operators, Fabricators, and Laborers",23030.0,Above poverty line,75
+Male,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Service Occupations,6658.0,Above poverty line,76
+Male,8,1972.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,77
+Female,24,1956.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",4000.0,Above poverty line,78
+Female,39,1941.0,"Non-Black, Non-Hispanic",Married,2,29.0,College and above,Not in the labor force,,48.0,Above poverty line,79
+Male,57,1923.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",17026.0,Above poverty line,80
+Female,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,81
+Female,52,1928.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,10900.0,Above poverty line,82
+Male,31,1949.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,22040.0,Above poverty line,83
+Male,25,1955.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Sales Occupations,7305.0,Above poverty line,84
+Female,23,1957.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,13750.0,Above poverty line,85
+Male,30,1950.0,"Non-Black, Non-Hispanic",Married,1,25.0,College and above,In the labor force,Sales Occupations,23500.0,Above poverty line,86
+Male,19,1961.0,"Non-Black, Non-Hispanic",Married,1,19.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",5217.0,Above poverty line,87
+Male,53,1927.0,"Non-Black, Non-Hispanic",Married,4,28.0,College and above,In the labor force,Managerial Occupations,46243.0,Above poverty line,88
+Female,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,89
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,90
+Male,1,1979.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,91
+Female,7,1973.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,92
+Female,30,1950.0,"Non-Black, Non-Hispanic",Divorced/widowed,3,21.0,College and above,In the labor force,Clerical and Administrative Support Occupations,6430.0,Below poverty line,93
+Male,74,1906.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,5099.0,Above poverty line,94
+Female,18,1962.0,Hispanic,Single,0,,High school,Not in the labor force,,826.0,Above poverty line,95
+Male,29,1951.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",7292.0,Above poverty line,96
+Female,44,1936.0,"Non-Black, Non-Hispanic",Married,1,26.0,College and above,In the labor force,Clerical and Administrative Support Occupations,9031.0,Above poverty line,97
+Male,28,1952.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Managerial Occupations,17400.0,Above poverty line,98
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,99
+Male,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,100
+Female,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Managerial Occupations,24240.0,Above poverty line,101
+Female,10,1970.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,102
+Female,62,1918.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,6077.0,Above poverty line,103
+Female,77,1903.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,11971.0,Above poverty line,104
+Male,24,1956.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",27035.0,Above poverty line,105
+Female,59,1921.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,Service Occupations,1212.0,Below poverty line,106
+Male,30,1950.0,"Non-Black, Non-Hispanic",Married,2,24.0,College and above,In the labor force,Managerial Occupations,20440.0,Above poverty line,107
+Female,61,1919.0,"Non-Black, Non-Hispanic",Single,0,,College and above,Not in the labor force,,17356.0,Above poverty line,108
+Female,54,1926.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Managerial Occupations,17976.0,Above poverty line,109
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,1200.0,Above poverty line,110
+Female,54,1926.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",8624.0,Above poverty line,111
+Female,5,1975.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,112
+Female,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,113
+Female,40,1940.0,"Non-Black, Non-Hispanic",Married,1,19.0,High school,In the labor force,Clerical and Administrative Support Occupations,13260.0,Above poverty line,114
+Female,54,1926.0,"Non-Black, Non-Hispanic",Married,1,33.0,High school,In the labor force,"Operators, Fabricators, and Laborers",11250.0,Above poverty line,115
+Male,80,1900.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,3756.0,Above poverty line,116
+Male,27,1953.0,"Non-Black, Non-Hispanic",Married,1,27.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",20050.0,Above poverty line,117
+Female,20,1960.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Sales Occupations,9580.0,Above poverty line,118
+Female,56,1924.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,Clerical and Administrative Support Occupations,25800.0,Above poverty line,119
+Male,67,1913.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,3078.0,Below poverty line,120
+Male,24,1956.0,Hispanic,Single,0,,College and above,Not in the labor force,,3655.0,Above poverty line,121
+Female,29,1951.0,"Non-Black, Non-Hispanic",Married,1,28.0,College and above,In the labor force,Clerical and Administrative Support Occupations,3000.0,Above poverty line,122
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,1.0,Below poverty line,123
+Male,25,1955.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Managerial Occupations,14000.0,Above poverty line,124
+Female,40,1940.0,"Non-Black, Non-Hispanic",Married,1,25.0,High school,In the labor force,Sales Occupations,1088.0,Above poverty line,125
+Female,41,1939.0,"Non-Black, Non-Hispanic",Married,2,21.0,High school,In the labor force,Managerial Occupations,12047.0,Above poverty line,126
+Male,22,1958.0,Hispanic,Single,0,,High school,In the labor force,Service Occupations,1200.0,Below poverty line,127
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,6625.0,Above poverty line,128
+Female,20,1960.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,8000.0,Above poverty line,129
+Female,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,130
+Female,28,1952.0,"Non-Black, Non-Hispanic",Married,1,28.0,High school,Not in the labor force,,50.0,Above poverty line,131
+Female,76,1904.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,5291.0,Above poverty line,132
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,133
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,4,18.0,High school,Not in the labor force,"Operators, Fabricators, and Laborers",0.0,Below poverty line,134
+Female,23,1957.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,706.0,Above poverty line,135
+Male,53,1927.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,27477.0,Above poverty line,136
+Female,74,1906.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,2520.0,Above poverty line,137
+Male,60,1920.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,10441.0,Above poverty line,138
+Female,39,1941.0,"Non-Black, Non-Hispanic",Single,1,30.0,High school,In the labor force,Service Occupations,2900.0,Below poverty line,139
+Female,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,140
+Female,46,1934.0,Black,Married,3,24.0,High school,In the labor force,Professional Specialty Occupations,4010.0,Above poverty line,141
+Male,42,1938.0,"Non-Black, Non-Hispanic",Married,1,29.0,College and above,In the labor force,Service Occupations,18410.0,Above poverty line,142
+Female,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,143
+Female,19,1961.0,"Non-Black, Non-Hispanic",Married,1,18.0,Less than high school,Not in the labor force,,438.0,Below poverty line,144
+Female,64,1916.0,Black,Married,0,,High school,Not in the labor force,,1.0,Above poverty line,145
+Female,52,1928.0,"Non-Black, Non-Hispanic",Married,1,25.0,High school,Not in the labor force,,120.0,Above poverty line,146
+Female,76,1904.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,1317.0,Below poverty line,147
+Male,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,148
+Male,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,149
+Female,8,1972.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,150
+Female,55,1925.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,22655.0,Above poverty line,151
+Male,41,1939.0,"Non-Black, Non-Hispanic",Married,1,24.0,College and above,In the labor force,Service Occupations,18986.0,Above poverty line,152
+Female,27,1953.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",6585.0,Above poverty line,153
+Male,70,1910.0,Black,Married,0,,High school,Not in the labor force,,2592.0,Below poverty line,154
+Male,45,1935.0,"Non-Black, Non-Hispanic",Married,4,27.0,College and above,In the labor force,Clerical and Administrative Support Occupations,18855.0,Above poverty line,155
+Male,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,156
+Male,26,1954.0,Hispanic,Single,0,,High school,Not in the labor force,,0.0,Above poverty line,157
+Male,42,1938.0,"Non-Black, Non-Hispanic",Married,2,22.0,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",9200.0,Above poverty line,158
+Male,63,1917.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,5948.0,Above poverty line,159
+Male,9,1971.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,160
+Male,20,1960.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Technicians and Related Support Occupations,14782.0,Above poverty line,161
+Male,27,1953.0,"Non-Black, Non-Hispanic",Married,1,18.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",9200.0,Above poverty line,162
+Female,30,1950.0,"Non-Black, Non-Hispanic",Married,3,21.0,High school,Not in the labor force,,5943.0,Below poverty line,163
+Male,20,1960.0,"Non-Black, Non-Hispanic",Married,1,18.0,High school,Not in the labor force,"Precision Production, Craft, and Repair Occupations",2500.0,Below poverty line,164
+Male,1,1979.0,Black,Single,0,,Less than high school,,,,Above poverty line,165
+Female,63,1917.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,46200.0,Above poverty line,166
+Male,44,1936.0,"Non-Black, Non-Hispanic",Married,3,29.0,College and above,In the labor force,Professional Specialty Occupations,24075.0,Above poverty line,167
+Male,19,1961.0,Hispanic,Single,0,,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",1500.0,Above poverty line,168
+Female,46,1934.0,"Non-Black, Non-Hispanic",Married,3,26.0,High school,Not in the labor force,,143.0,Above poverty line,169
+Female,37,1943.0,Black,Divorced/widowed,3,26.0,High school,Not in the labor force,,18948.0,Above poverty line,170
+Male,56,1924.0,"Non-Black, Non-Hispanic",Married,1,38.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",22312.0,Above poverty line,171
+Female,26,1954.0,"Non-Black, Non-Hispanic",Married,3,22.0,High school,In the labor force,Clerical and Administrative Support Occupations,271.0,Above poverty line,172
+Male,27,1953.0,"Non-Black, Non-Hispanic",Married,3,24.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",23005.0,Above poverty line,173
+Male,59,1921.0,Hispanic,Married,0,,High school,Not in the labor force,,11286.0,Above poverty line,174
+Male,3,1977.0,Black,Single,0,,Less than high school,,,,Above poverty line,175
+Female,15,1965.0,Hispanic,Single,0,,High school,Not in the labor force,,0.0,Above poverty line,176
+Female,1,1979.0,Black,Single,0,,Less than high school,,,,Above poverty line,177
+Female,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,Sales Occupations,4100.0,Above poverty line,178
+Male,84,1896.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,10292.0,Above poverty line,179
+Female,79,1901.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,3120.0,Below poverty line,180
+Female,35,1945.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,18.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",7248.0,Above poverty line,181
+Female,48,1932.0,Hispanic,Married,1,38.0,Less than high school,Not in the labor force,,4446.0,Below poverty line,182
+Male,35,1945.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",20928.0,Above poverty line,183
+Female,42,1938.0,"Non-Black, Non-Hispanic",Married,4,24.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",9769.0,Above poverty line,184
+Female,55,1925.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,15622.0,Above poverty line,185
+Male,58,1922.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Managerial Occupations,21000.0,Above poverty line,186
+Male,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",8000.0,Above poverty line,187
+Female,47,1933.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,15500.0,Above poverty line,188
+Female,33,1947.0,Black,Married,3,20.0,High school,In the labor force,Sales Occupations,2307.0,Above poverty line,189
+Male,54,1926.0,Hispanic,Married,4,39.0,College and above,In the labor force,Managerial Occupations,32378.0,Above poverty line,190
+Female,26,1954.0,"Non-Black, Non-Hispanic",Married,4,20.0,High school,Not in the labor force,,0.0,Below poverty line,191
+Male,55,1925.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,In the labor force,Managerial Occupations,2500.0,Below poverty line,192
+Female,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,12044.0,Above poverty line,193
+Male,32,1948.0,"Non-Black, Non-Hispanic",Married,4,19.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",8000.0,Below poverty line,194
+Female,16,1964.0,Black,Single,0,,Less than high school,Not in the labor force,,0.0,Above poverty line,195
+Female,5,1975.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,196
+Female,66,1914.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,1901.0,Above poverty line,197
+Male,25,1955.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",5500.0,Above poverty line,198
+Male,9,1971.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,199
+Female,5,1975.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,200
+Female,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,201
+Male,31,1949.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,13012.0,Above poverty line,202
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,Service Occupations,1021.0,Above poverty line,203
+Female,14,1966.0,Black,Single,0,,Less than high school,Not in the labor force,,,Above poverty line,204
+Male,17,1963.0,Black,Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",450.0,Above poverty line,205
+Female,61,1919.0,Black,Married,1,37.0,High school,In the labor force,Service Occupations,7500.0,Above poverty line,206
+Male,17,1963.0,Hispanic,Single,0,,High school,In the labor force,Service Occupations,3690.0,Above poverty line,207
+Female,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,208
+Male,35,1945.0,Hispanic,Married,2,33.0,High school,In the labor force,Service Occupations,14075.0,Above poverty line,209
+Female,77,1903.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,5042.0,Above poverty line,210
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,211
+Male,8,1972.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,212
+Female,63,1917.0,Hispanic,Married,1,40.0,Less than high school,Not in the labor force,,0.0,Below poverty line,213
+Male,35,1945.0,"Non-Black, Non-Hispanic",Married,1,26.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",24317.0,Above poverty line,214
+Female,23,1957.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,5007.0,Above poverty line,215
+Male,65,1915.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,14500.0,Above poverty line,216
+Male,28,1952.0,Black,Married,3,19.0,High school,In the labor force,"Operators, Fabricators, and Laborers",16400.0,Above poverty line,217
+Female,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,,0.0,Above poverty line,218
+Male,49,1931.0,"Non-Black, Non-Hispanic",Married,1,48.0,High school,In the labor force,Service Occupations,12010.0,Above poverty line,219
+Female,32,1948.0,"Non-Black, Non-Hispanic",Married,2,23.0,College and above,In the labor force,Clerical and Administrative Support Occupations,1600.0,Above poverty line,220
+Male,5,1975.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,221
+Male,46,1934.0,Black,Married,0,,High school,Not in the labor force,,14000.0,Above poverty line,222
+Female,48,1932.0,"Non-Black, Non-Hispanic",Married,1,30.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",9975.0,Above poverty line,223
+Female,8,1972.0,Black,Single,0,,Less than high school,,,,Above poverty line,224
+Female,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,225
+Female,37,1943.0,Black,Married,4,20.0,College and above,In the labor force,Professional Specialty Occupations,6031.0,Above poverty line,226
+Male,25,1955.0,"Non-Black, Non-Hispanic",Married,1,15.0,College and above,In the labor force,Managerial Occupations,14180.0,Above poverty line,227
+Female,61,1919.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,2557.0,Below poverty line,228
+Male,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,"Farming, Forestry, and Fishing Occupations",11000.0,Above poverty line,229
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,25.0,Above poverty line,230
+Male,19,1961.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",7000.0,Above poverty line,231
+Male,54,1926.0,"Non-Black, Non-Hispanic",Married,2,35.0,High school,In the labor force,Managerial Occupations,15060.0,Above poverty line,232
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,12175.0,Above poverty line,233
+Female,42,1938.0,Hispanic,Married,2,22.0,High school,In the labor force,Managerial Occupations,9800.0,Above poverty line,234
+Male,54,1926.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Farming, Forestry, and Fishing Occupations",11501.0,Above poverty line,235
+Female,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,236
+Male,64,1916.0,"Non-Black, Non-Hispanic",Married,3,39.0,Less than high school,In the labor force,Service Occupations,7875.0,Above poverty line,237
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,238
+Female,14,1966.0,Hispanic,Single,0,,Less than high school,Not in the labor force,,,Above poverty line,239
+Male,27,1953.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,40100.0,Above poverty line,240
+Female,30,1950.0,Hispanic,Married,1,28.0,High school,In the labor force,Technicians and Related Support Occupations,11894.0,Above poverty line,241
+Female,29,1951.0,Black,Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,13011.0,Above poverty line,242
+Female,60,1920.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,3341.0,Above poverty line,243
+Male,29,1951.0,Hispanic,Divorced/widowed,0,,College and above,In the labor force,Technicians and Related Support Occupations,20130.0,Above poverty line,244
+Female,58,1922.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,0.0,Below poverty line,245
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,0.0,Below poverty line,246
+Female,35,1945.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,12230.0,Above poverty line,247
+Female,65,1915.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,1241.0,Above poverty line,248
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,3,20.0,High school,In the labor force,Managerial Occupations,14020.0,Above poverty line,249
+Female,32,1948.0,Hispanic,Divorced/widowed,1,21.0,High school,In the labor force,Technicians and Related Support Occupations,12281.0,Above poverty line,250
+Male,81,1899.0,Black,Married,0,,Less than high school,Not in the labor force,,2380.0,Above poverty line,251
+Female,13,1967.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,252
+Female,19,1961.0,Hispanic,Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,8000.0,Above poverty line,253
+Female,40,1940.0,"Non-Black, Non-Hispanic",Married,3,21.0,High school,In the labor force,Clerical and Administrative Support Occupations,18050.0,Above poverty line,254
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,50.0,Above poverty line,255
+Female,58,1922.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,1285.0,Above poverty line,256
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,2,29.0,High school,Not in the labor force,,0.0,Above poverty line,257
+Female,80,1900.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,6540.0,Above poverty line,258
+Female,0,1980.0,Black,Single,0,,Less than high school,,,,Above poverty line,259
+Female,27,1953.0,"Non-Black, Non-Hispanic",Divorced/widowed,2,18.0,High school,In the labor force,"Operators, Fabricators, and Laborers",13770.0,Above poverty line,260
+Female,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,261
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,262
+Male,1,1979.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,263
+Female,30,1950.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,12231.0,Above poverty line,264
+Male,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,265
+Male,9,1971.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,266
+Female,68,1912.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,3505.0,Above poverty line,267
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,1288.0,Above poverty line,268
+Male,34,1946.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,2863.0,Above poverty line,269
+Male,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",7784.0,Above poverty line,270
+Male,55,1925.0,"Non-Black, Non-Hispanic",Married,2,40.0,College and above,In the labor force,Managerial Occupations,41606.0,Above poverty line,271
+Female,37,1943.0,"Non-Black, Non-Hispanic",Married,2,21.0,High school,In the labor force,Clerical and Administrative Support Occupations,4241.0,Above poverty line,272
+Male,84,1896.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,2095.0,Above poverty line,273
+Male,68,1912.0,"Non-Black, Non-Hispanic",Married,1,31.0,High school,Not in the labor force,Professional Specialty Occupations,9738.0,Above poverty line,274
+Male,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,275
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,276
+Female,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,277
+Female,46,1934.0,"Non-Black, Non-Hispanic",Married,2,28.0,High school,In the labor force,Service Occupations,1209.0,Above poverty line,278
+Female,71,1909.0,Black,Divorced/widowed,0,,Less than high school,Not in the labor force,,2436.0,Below poverty line,279
+Male,4,1976.0,Black,Single,0,,Less than high school,,,,Above poverty line,280
+Male,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",6005.0,Above poverty line,281
+Female,35,1945.0,Hispanic,Married,1,34.0,High school,In the labor force,Service Occupations,10240.0,Above poverty line,282
+Female,21,1959.0,"Non-Black, Non-Hispanic",Single,2,18.0,High school,Not in the labor force,,2356.0,Below poverty line,283
+Female,45,1935.0,"Non-Black, Non-Hispanic",Married,1,27.0,High school,In the labor force,Service Occupations,3400.0,Above poverty line,284
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,Sales Occupations,95.0,Above poverty line,285
+Male,33,1947.0,"Non-Black, Non-Hispanic",Married,2,28.0,College and above,In the labor force,Managerial Occupations,10150.0,Above poverty line,286
+Female,16,1964.0,Black,Single,0,,High school,Not in the labor force,,4200.0,Above poverty line,287
+Male,78,1902.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,3036.0,Above poverty line,288
+Female,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,289
+Female,29,1951.0,"Non-Black, Non-Hispanic",Married,2,18.0,High school,In the labor force,Clerical and Administrative Support Occupations,16.0,Above poverty line,290
+Female,4,1976.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,291
+Female,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,3100.0,Above poverty line,292
+Female,25,1955.0,"Non-Black, Non-Hispanic",Married,2,20.0,High school,Not in the labor force,,1746.0,Above poverty line,293
+Male,26,1954.0,"Non-Black, Non-Hispanic",Married,2,24.0,High school,In the labor force,"Operators, Fabricators, and Laborers",17020.0,Above poverty line,294
+Female,69,1911.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,1692.0,Above poverty line,295
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,325.0,Above poverty line,296
+Male,20,1960.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Service Occupations,1500.0,Above poverty line,297
+Male,17,1963.0,Hispanic,Single,0,,High school,Not in the labor force,,100.0,Above poverty line,298
+Female,34,1946.0,"Non-Black, Non-Hispanic",Married,2,22.0,College and above,In the labor force,Clerical and Administrative Support Occupations,6300.0,Above poverty line,299
+Male,64,1916.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Managerial Occupations,66250.0,Above poverty line,300
+Female,50,1930.0,"Non-Black, Non-Hispanic",Married,4,26.0,High school,In the labor force,Service Occupations,1000.0,Above poverty line,301
+Male,44,1936.0,"Non-Black, Non-Hispanic",Married,4,25.0,College and above,In the labor force,Professional Specialty Occupations,39992.0,Above poverty line,302
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,10248.0,Above poverty line,303
+Female,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,304
+Female,64,1916.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,In the labor force,Sales Occupations,5643.0,Above poverty line,305
+Female,64,1916.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,4725.0,Above poverty line,306
+Male,76,1904.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,5145.0,Above poverty line,307
+Female,38,1942.0,"Non-Black, Non-Hispanic",Married,2,21.0,High school,In the labor force,"Operators, Fabricators, and Laborers",0.0,Above poverty line,308
+Female,65,1915.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,10268.0,Above poverty line,309
+Male,32,1948.0,"Non-Black, Non-Hispanic",Married,2,27.0,College and above,,Military Occupations,9000.0,Above poverty line,310
+Female,49,1931.0,"Non-Black, Non-Hispanic",Married,2,29.0,College and above,In the labor force,Clerical and Administrative Support Occupations,3037.0,Above poverty line,311
+Male,56,1924.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",30684.0,Above poverty line,312
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,313
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,314
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",125.0,Above poverty line,315
+Female,34,1946.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Service Occupations,5042.0,Above poverty line,316
+Female,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",2844.0,Above poverty line,317
+Female,67,1913.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,3036.0,Above poverty line,318
+Female,44,1936.0,"Non-Black, Non-Hispanic",Married,1,30.0,High school,Not in the labor force,,0.0,Above poverty line,319
+Male,23,1957.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,15025.0,Above poverty line,320
+Female,33,1947.0,"Non-Black, Non-Hispanic",Married,2,25.0,High school,In the labor force,Service Occupations,2050.0,Above poverty line,321
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,322
+Male,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,323
+Female,20,1960.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",7007.0,Above poverty line,324
+Female,20,1960.0,Black,Married,1,16.0,High school,In the labor force,"Operators, Fabricators, and Laborers",1200.0,Above poverty line,325
+Female,64,1916.0,Black,Married,3,27.0,Less than high school,In the labor force,Service Occupations,5474.0,Above poverty line,326
+Female,38,1942.0,"Non-Black, Non-Hispanic",Married,2,24.0,College and above,Not in the labor force,Technicians and Related Support Occupations,9521.0,Above poverty line,327
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,3200.0,Above poverty line,328
+Male,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",1100.0,Above poverty line,329
+Female,60,1920.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,Service Occupations,3112.0,Above poverty line,330
+Female,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",6600.0,Above poverty line,331
+Male,19,1961.0,Hispanic,Single,0,,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",6000.0,Above poverty line,332
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,2,23.0,College and above,In the labor force,,25193.0,Above poverty line,333
+Female,53,1927.0,Black,Married,0,,High school,Not in the labor force,,1372.0,Above poverty line,334
+Male,41,1939.0,"Non-Black, Non-Hispanic",Married,3,24.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",6280.0,Above poverty line,335
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,336
+Male,5,1975.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,337
+Female,12,1968.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,338
+Female,19,1961.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Service Occupations,1010.0,Above poverty line,339
+Female,61,1919.0,"Non-Black, Non-Hispanic",Married,1,27.0,High school,Not in the labor force,,500.0,Above poverty line,340
+Male,13,1967.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,341
+Female,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,Service Occupations,2484.0,Above poverty line,342
+Male,30,1950.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Technicians and Related Support Occupations,23500.0,Above poverty line,343
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,344
+Female,64,1916.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Service Occupations,5661.0,Above poverty line,345
+Female,2,1978.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,346
+Male,69,1911.0,Black,Married,0,,High school,Not in the labor force,,4608.0,Above poverty line,347
+Male,22,1958.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",15030.0,Above poverty line,348
+Female,43,1937.0,"Non-Black, Non-Hispanic",Married,3,28.0,College and above,In the labor force,Professional Specialty Occupations,1083.0,Above poverty line,349
+Male,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,7400.0,Above poverty line,350
+Female,26,1954.0,"Non-Black, Non-Hispanic",Married,2,16.0,High school,Not in the labor force,,108.0,Above poverty line,351
+Female,26,1954.0,"Non-Black, Non-Hispanic",Married,1,25.0,High school,Not in the labor force,Sales Occupations,0.0,Above poverty line,352
+Male,6,1974.0,Black,Single,0,,Less than high school,,,,Above poverty line,353
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,1,23.0,High school,Not in the labor force,"Operators, Fabricators, and Laborers",2200.0,Above poverty line,354
+Male,68,1912.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,5589.0,Above poverty line,355
+Male,27,1953.0,Black,Divorced/widowed,1,25.0,High school,In the labor force,"Operators, Fabricators, and Laborers",7691.0,Above poverty line,356
+Male,65,1915.0,"Non-Black, Non-Hispanic",Married,1,42.0,Less than high school,Not in the labor force,,6283.0,Above poverty line,357
+Male,40,1940.0,"Non-Black, Non-Hispanic",Married,2,32.0,High school,In the labor force,Sales Occupations,15000.0,Above poverty line,358
+Male,22,1958.0,Black,Single,0,,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",16000.0,Above poverty line,359
+Male,25,1955.0,Black,Divorced/widowed,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",7700.0,Above poverty line,360
+Female,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,361
+Female,52,1928.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",8677.0,Above poverty line,362
+Female,53,1927.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,11065.0,Above poverty line,363
+Male,3,1977.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,364
+Male,51,1929.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",16300.0,Above poverty line,365
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,366
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,367
+Male,11,1969.0,Black,Single,0,,Less than high school,,,,Below poverty line,368
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,250.0,Above poverty line,369
+Male,44,1936.0,"Non-Black, Non-Hispanic",Married,2,40.0,High school,In the labor force,"Operators, Fabricators, and Laborers",12000.0,Above poverty line,370
+Male,86,1894.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,6971.0,Above poverty line,371
+Male,51,1929.0,"Non-Black, Non-Hispanic",Married,2,31.0,College and above,In the labor force,Clerical and Administrative Support Occupations,21739.0,Above poverty line,372
+Female,60,1920.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,3228.0,Above poverty line,373
+Male,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,374
+Male,31,1949.0,"Non-Black, Non-Hispanic",Married,3,27.0,High school,In the labor force,Managerial Occupations,25018.0,Above poverty line,375
+Female,30,1950.0,"Non-Black, Non-Hispanic",Married,1,28.0,College and above,In the labor force,Professional Specialty Occupations,11005.0,Above poverty line,376
+Male,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,377
+Female,3,1977.0,Black,Single,0,,Less than high school,,,,Above poverty line,378
+Male,65,1915.0,Hispanic,Married,0,,High school,Not in the labor force,,9147.0,Above poverty line,379
+Female,77,1903.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,3776.0,Above poverty line,380
+Male,27,1953.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,4790.0,Above poverty line,381
+Female,52,1928.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,7500.0,Above poverty line,382
+Female,61,1919.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,500.0,Above poverty line,383
+Female,47,1933.0,"Non-Black, Non-Hispanic",Married,1,39.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",14696.0,Above poverty line,384
+Female,48,1932.0,"Non-Black, Non-Hispanic",Married,1,33.0,High school,In the labor force,Service Occupations,11044.0,Above poverty line,385
+Female,48,1932.0,"Non-Black, Non-Hispanic",Married,1,28.0,High school,In the labor force,Clerical and Administrative Support Occupations,4775.0,Above poverty line,386
+Female,3,1977.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,387
+Male,36,1944.0,"Non-Black, Non-Hispanic",Married,3,24.0,College and above,In the labor force,Professional Specialty Occupations,22175.0,Above poverty line,388
+Female,27,1953.0,Black,Married,4,21.0,College and above,Not in the labor force,,6.0,Above poverty line,389
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,1,28.0,College and above,In the labor force,Sales Occupations,24050.0,Above poverty line,390
+Female,23,1957.0,"Non-Black, Non-Hispanic",Married,1,23.0,High school,Not in the labor force,,96.0,Above poverty line,391
+Female,31,1949.0,Black,Divorced/widowed,2,29.0,College and above,Not in the labor force,,2200.0,Below poverty line,392
+Male,35,1945.0,Hispanic,Married,5,20.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",10000.0,Above poverty line,393
+Male,32,1948.0,"Non-Black, Non-Hispanic",Married,2,27.0,College and above,In the labor force,Managerial Occupations,31442.0,Above poverty line,394
+Male,35,1945.0,"Non-Black, Non-Hispanic",Married,2,29.0,High school,,Military Occupations,12144.0,Above poverty line,395
+Male,17,1963.0,Hispanic,Single,0,,High school,Not in the labor force,,160.0,Above poverty line,396
+Female,48,1932.0,"Non-Black, Non-Hispanic",Married,3,35.0,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",0.0,Below poverty line,397
+Male,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,398
+Female,25,1955.0,Black,Single,0,,College and above,In the labor force,Service Occupations,3000.0,Below poverty line,399
+Female,46,1934.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,0.0,Above poverty line,400
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,Sales Occupations,531.0,Above poverty line,401
+Male,18,1962.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",3466.0,Above poverty line,402
+Female,9,1971.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,403
+Male,45,1935.0,Black,Married,1,30.0,High school,In the labor force,Service Occupations,20418.0,Above poverty line,404
+Female,86,1894.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,2134.0,Below poverty line,405
+Male,30,1950.0,"Non-Black, Non-Hispanic",Married,2,17.0,College and above,In the labor force,Professional Specialty Occupations,28413.0,Above poverty line,406
+Female,49,1931.0,"Non-Black, Non-Hispanic",Married,1,38.0,High school,Not in the labor force,,1756.0,Above poverty line,407
+Male,25,1955.0,Hispanic,Married,3,18.0,High school,Not in the labor force,"Precision Production, Craft, and Repair Occupations",4500.0,Below poverty line,408
+Male,37,1943.0,Hispanic,Married,3,15.0,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",17000.0,Above poverty line,409
+Male,39,1941.0,"Non-Black, Non-Hispanic",Married,2,26.0,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",19050.0,Above poverty line,410
+Female,23,1957.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,8300.0,Above poverty line,411
+Male,48,1932.0,"Non-Black, Non-Hispanic",Married,2,30.0,College and above,In the labor force,Managerial Occupations,50125.0,Above poverty line,412
+Female,32,1948.0,"Non-Black, Non-Hispanic",Married,1,18.0,High school,In the labor force,Clerical and Administrative Support Occupations,8010.0,Above poverty line,413
+Male,66,1914.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,5714.0,Above poverty line,414
+Male,33,1947.0,"Non-Black, Non-Hispanic",Married,3,20.0,College and above,In the labor force,Professional Specialty Occupations,16097.0,Above poverty line,415
+Female,30,1950.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,10025.0,Above poverty line,416
+Male,20,1960.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,400.0,Above poverty line,417
+Female,50,1930.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,600.0,Above poverty line,418
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Sales Occupations,1580.0,Above poverty line,419
+Male,72,1908.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,7114.0,Above poverty line,420
+Female,49,1931.0,"Non-Black, Non-Hispanic",Married,1,30.0,High school,Not in the labor force,,0.0,Above poverty line,421
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,3067.0,Above poverty line,422
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,0.0,Above poverty line,423
+Female,67,1913.0,Black,Married,0,,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",500.0,Above poverty line,424
+Female,47,1933.0,"Non-Black, Non-Hispanic",Divorced/widowed,3,25.0,College and above,In the labor force,Clerical and Administrative Support Occupations,10171.0,Above poverty line,425
+Male,1,1979.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,426
+Female,14,1966.0,Hispanic,Single,0,,Less than high school,Not in the labor force,,,Above poverty line,427
+Male,24,1956.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Managerial Occupations,23075.0,Above poverty line,428
+Male,36,1944.0,"Non-Black, Non-Hispanic",Married,3,24.0,High school,In the labor force,"Operators, Fabricators, and Laborers",25450.0,Above poverty line,429
+Female,69,1911.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,1972.0,Above poverty line,430
+Male,2,1978.0,Black,Single,0,,Less than high school,,,,Below poverty line,431
+Female,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,432
+Female,30,1950.0,Black,Married,3,19.0,College and above,In the labor force,Managerial Occupations,7900.0,Above poverty line,433
+Male,5,1975.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,434
+Female,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,435
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,436
+Female,36,1944.0,Hispanic,Married,7,20.0,Less than high school,Not in the labor force,,3672.0,Above poverty line,437
+Male,29,1951.0,Hispanic,Single,0,,College and above,In the labor force,Sales Occupations,19864.0,Above poverty line,438
+Male,41,1939.0,Hispanic,Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",22700.0,Above poverty line,439
+Female,74,1906.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Sales Occupations,3854.0,Above poverty line,440
+Female,47,1933.0,Black,Married,0,,High school,In the labor force,Service Occupations,752.0,Above poverty line,441
+Female,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,301.0,Above poverty line,442
+Female,53,1927.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,9826.0,Above poverty line,443
+Female,66,1914.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,6464.0,Above poverty line,444
+Female,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,445
+Female,21,1959.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",10400.0,Above poverty line,446
+Female,43,1937.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,500.0,Above poverty line,447
+Female,21,1959.0,"Non-Black, Non-Hispanic",Married,1,20.0,College and above,Not in the labor force,,545.0,Above poverty line,448
+Female,24,1956.0,"Non-Black, Non-Hispanic",Single,0,,College and above,Not in the labor force,,4470.0,Above poverty line,449
+Male,23,1957.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",5012.0,Above poverty line,450
+Male,23,1957.0,"Non-Black, Non-Hispanic",Married,2,21.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",10000.0,Above poverty line,451
+Female,51,1929.0,"Non-Black, Non-Hispanic",Married,1,27.0,College and above,Not in the labor force,,860.0,Above poverty line,452
+Female,20,1960.0,Hispanic,Married,1,20.0,College and above,Not in the labor force,,640.0,Below poverty line,453
+Female,60,1920.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,3375.0,Below poverty line,454
+Female,67,1913.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,Sales Occupations,2706.0,Below poverty line,455
+Female,0,1980.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,456
+Female,52,1928.0,"Non-Black, Non-Hispanic",Married,3,30.0,High school,Not in the labor force,,1000.0,Above poverty line,457
+Female,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,458
+Male,24,1956.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",12170.0,Above poverty line,459
+Male,4,1976.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,460
+Female,41,1939.0,"Non-Black, Non-Hispanic",Married,3,24.0,High school,Not in the labor force,,65.0,Above poverty line,461
+Female,5,1975.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,462
+Female,57,1923.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,25.0,Above poverty line,463
+Female,29,1951.0,"Non-Black, Non-Hispanic",Married,3,21.0,High school,In the labor force,"Operators, Fabricators, and Laborers",6970.0,Above poverty line,464
+Male,6,1974.0,Black,Single,0,,Less than high school,,,,Above poverty line,465
+Female,38,1942.0,"Non-Black, Non-Hispanic",Married,4,25.0,High school,Not in the labor force,Clerical and Administrative Support Occupations,330.0,Above poverty line,466
+Female,10,1970.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,467
+Female,41,1939.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Managerial Occupations,17963.0,Above poverty line,468
+Female,58,1922.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Service Occupations,4753.0,Above poverty line,469
+Male,55,1925.0,Black,Divorced/widowed,0,,Less than high school,Not in the labor force,,352.0,Below poverty line,470
+Male,41,1939.0,Hispanic,Married,3,25.0,High school,In the labor force,"Operators, Fabricators, and Laborers",9072.0,Above poverty line,471
+Female,28,1952.0,"Non-Black, Non-Hispanic",Married,3,20.0,College and above,Not in the labor force,,76.0,Above poverty line,472
+Male,41,1939.0,"Non-Black, Non-Hispanic",Married,2,36.0,College and above,In the labor force,"Farming, Forestry, and Fishing Occupations",18285.0,Above poverty line,473
+Male,31,1949.0,"Non-Black, Non-Hispanic",Married,2,22.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",26768.0,Above poverty line,474
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,,,Above poverty line,475
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",0.0,Above poverty line,476
+Male,79,1901.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,10246.0,Above poverty line,477
+Female,47,1933.0,"Non-Black, Non-Hispanic",Married,3,28.0,High school,In the labor force,Clerical and Administrative Support Occupations,6150.0,Above poverty line,478
+Female,4,1976.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,479
+Female,16,1964.0,Black,Single,0,,High school,Not in the labor force,,0.0,Above poverty line,480
+Female,51,1929.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,14580.0,Above poverty line,481
+Female,4,1976.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,482
+Female,8,1972.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,483
+Male,38,1942.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",11509.0,Above poverty line,484
+Female,67,1913.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,Service Occupations,6527.0,Above poverty line,485
+Female,60,1920.0,Black,Divorced/widowed,0,,High school,Not in the labor force,,12885.0,Above poverty line,486
+Male,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,510.0,Above poverty line,487
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,800.0,Above poverty line,488
+Female,88,1892.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,20.0,Less than high school,Not in the labor force,,985.0,Above poverty line,489
+Female,63,1917.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,1228.0,Above poverty line,490
+Female,50,1930.0,"Non-Black, Non-Hispanic",Married,2,28.0,High school,In the labor force,Clerical and Administrative Support Occupations,8594.0,Above poverty line,491
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,0.0,Above poverty line,492
+Female,20,1960.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Sales Occupations,3185.0,Above poverty line,493
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",2523.0,Above poverty line,494
+Male,5,1975.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,495
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,496
+Female,72,1908.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,2695.0,Above poverty line,497
+Female,61,1919.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,1051.0,Below poverty line,498
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,4.0,Above poverty line,499
+Male,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,500
+Male,1,1979.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,501
+Male,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",2888.0,Below poverty line,502
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,1,27.0,College and above,In the labor force,Managerial Occupations,20011.0,Above poverty line,503
+Male,23,1957.0,"Non-Black, Non-Hispanic",Married,1,21.0,College and above,In the labor force,Service Occupations,12351.0,Above poverty line,504
+Male,65,1915.0,Black,Married,0,,High school,Not in the labor force,,4533.0,Above poverty line,505
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,1,22.0,High school,In the labor force,"Operators, Fabricators, and Laborers",12050.0,Above poverty line,506
+Male,35,1945.0,Hispanic,Married,1,18.0,Less than high school,In the labor force,Managerial Occupations,8800.0,Above poverty line,507
+Female,29,1951.0,"Non-Black, Non-Hispanic",Married,2,22.0,College and above,Not in the labor force,,3443.0,Above poverty line,508
+Female,37,1943.0,"Non-Black, Non-Hispanic",Married,2,28.0,College and above,In the labor force,Clerical and Administrative Support Occupations,2060.0,Above poverty line,509
+Male,55,1925.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Managerial Occupations,22070.0,Above poverty line,510
+Male,49,1931.0,"Non-Black, Non-Hispanic",Married,3,28.0,High school,Not in the labor force,,2045.0,Below poverty line,511
+Male,33,1947.0,"Non-Black, Non-Hispanic",Married,2,31.0,College and above,In the labor force,Professional Specialty Occupations,18500.0,Above poverty line,512
+Female,26,1954.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Professional Specialty Occupations,13150.0,Above poverty line,513
+Male,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,514
+Female,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,515
+Male,58,1922.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",10000.0,Above poverty line,516
+Female,33,1947.0,Black,Married,0,,College and above,In the labor force,Professional Specialty Occupations,11049.0,Above poverty line,517
+Female,43,1937.0,"Non-Black, Non-Hispanic",Married,1,27.0,Less than high school,Not in the labor force,,680.0,Above poverty line,518
+Male,31,1949.0,Hispanic,Married,2,22.0,College and above,In the labor force,Managerial Occupations,24200.0,Above poverty line,519
+Male,35,1945.0,"Non-Black, Non-Hispanic",Married,3,26.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",16005.0,Above poverty line,520
+Female,24,1956.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,8900.0,Above poverty line,521
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,522
+Female,67,1913.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,2748.0,Below poverty line,523
+Female,37,1943.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,19175.0,Above poverty line,524
+Female,67,1913.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,15884.0,Above poverty line,525
+Male,70,1910.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,6668.0,Above poverty line,526
+Male,69,1911.0,Black,Divorced/widowed,0,,Less than high school,In the labor force,Service Occupations,3800.0,Above poverty line,527
+Male,21,1959.0,"Non-Black, Non-Hispanic",Married,1,17.0,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",14150.0,Above poverty line,528
+Male,20,1960.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,11000.0,Above poverty line,529
+Female,79,1901.0,Black,Divorced/widowed,0,,Less than high school,Not in the labor force,,1848.0,Below poverty line,530
+Male,26,1954.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",18101.0,Above poverty line,531
+Male,44,1936.0,"Non-Black, Non-Hispanic",Married,0,,College and above,,Military Occupations,14167.0,Above poverty line,532
+Male,33,1947.0,"Non-Black, Non-Hispanic",Married,2,26.0,High school,In the labor force,Technicians and Related Support Occupations,21011.0,Above poverty line,533
+Female,70,1910.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,8817.0,Above poverty line,534
+Female,37,1943.0,"Non-Black, Non-Hispanic",Married,1,25.0,Less than high school,In the labor force,Clerical and Administrative Support Occupations,8003.0,Above poverty line,535
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,536
+Male,50,1930.0,Black,Married,0,,College and above,Not in the labor force,,1876.0,Below poverty line,537
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,3,20.0,High school,Not in the labor force,,767.0,Above poverty line,538
+Male,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,539
+Male,63,1917.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",25000.0,Above poverty line,540
+Male,15,1965.0,Black,Single,0,,High school,Not in the labor force,,0.0,Below poverty line,541
+Female,8,1972.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,542
+Female,59,1921.0,Hispanic,Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,6604.0,Above poverty line,543
+Male,9,1971.0,Black,Single,0,,Less than high school,,,,Below poverty line,544
+Female,41,1939.0,"Non-Black, Non-Hispanic",Married,4,21.0,High school,In the labor force,Clerical and Administrative Support Occupations,12000.0,Above poverty line,545
+Female,56,1924.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Managerial Occupations,751.0,Above poverty line,546
+Female,40,1940.0,"Non-Black, Non-Hispanic",Married,2,22.0,College and above,In the labor force,Clerical and Administrative Support Occupations,10900.0,Above poverty line,547
+Female,25,1955.0,"Non-Black, Non-Hispanic",Married,2,,College and above,In the labor force,Clerical and Administrative Support Occupations,8500.0,Above poverty line,548
+Female,21,1959.0,Black,Married,2,18.0,High school,Not in the labor force,Service Occupations,1500.0,Above poverty line,549
+Female,28,1952.0,Hispanic,Married,2,16.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",7981.0,Above poverty line,550
+Male,25,1955.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",10410.0,Above poverty line,551
+Female,28,1952.0,"Non-Black, Non-Hispanic",Married,3,19.0,High school,Not in the labor force,,396.0,Above poverty line,552
+Female,84,1896.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,Not in the labor force,,7656.0,Above poverty line,553
+Female,69,1911.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,2892.0,Below poverty line,554
+Male,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,College and above,Not in the labor force,,5920.0,Above poverty line,555
+Female,29,1951.0,"Non-Black, Non-Hispanic",Married,2,22.0,High school,In the labor force,Clerical and Administrative Support Occupations,29000.0,Above poverty line,556
+Male,34,1946.0,"Non-Black, Non-Hispanic",Married,3,23.0,College and above,In the labor force,Professional Specialty Occupations,27066.0,Above poverty line,557
+Male,21,1959.0,Hispanic,Married,1,20.0,High school,In the labor force,Service Occupations,8029.0,Above poverty line,558
+Female,65,1915.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,1486.0,Above poverty line,559
+Male,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,560
+Male,24,1956.0,Hispanic,Married,1,23.0,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",9029.0,Above poverty line,561
+Female,62,1918.0,Hispanic,Married,0,,Less than high school,Not in the labor force,,0.0,Above poverty line,562
+Female,32,1948.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,In the labor force,Professional Specialty Occupations,17940.0,Above poverty line,563
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,2,21.0,High school,In the labor force,"Operators, Fabricators, and Laborers",14600.0,Above poverty line,564
+Female,45,1935.0,"Non-Black, Non-Hispanic",Married,4,25.0,College and above,Not in the labor force,,600.0,Above poverty line,565
+Female,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Professional Specialty Occupations,52.0,Above poverty line,566
+Female,29,1951.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,4000.0,Above poverty line,567
+Male,32,1948.0,"Non-Black, Non-Hispanic",Married,2,22.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",31060.0,Above poverty line,568
+Male,6,1974.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,569
+Male,44,1936.0,"Non-Black, Non-Hispanic",Married,1,29.0,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",12100.0,Above poverty line,570
+Male,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,571
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,1,31.0,High school,In the labor force,Clerical and Administrative Support Occupations,14550.0,Above poverty line,572
+Female,14,1966.0,Black,Single,0,,Less than high school,Not in the labor force,,,Above poverty line,573
+Male,22,1958.0,"Non-Black, Non-Hispanic",Married,1,22.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",6261.0,Above poverty line,574
+Female,64,1916.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,Managerial Occupations,11630.0,Above poverty line,575
+Female,17,1963.0,Hispanic,Single,0,,High school,Not in the labor force,Sales Occupations,331.0,Above poverty line,576
+Male,7,1973.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,577
+Female,35,1945.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,30.0,High school,In the labor force,Service Occupations,11000.0,Above poverty line,578
+Male,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,,700.0,Above poverty line,579
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,580
+Female,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,581
+Female,39,1941.0,"Non-Black, Non-Hispanic",Married,3,23.0,College and above,In the labor force,Clerical and Administrative Support Occupations,3725.0,Above poverty line,582
+Male,26,1954.0,"Non-Black, Non-Hispanic",Married,0,,College and above,,Military Occupations,8405.0,Above poverty line,583
+Female,40,1940.0,"Non-Black, Non-Hispanic",Married,4,20.0,High school,Not in the labor force,,0.0,Above poverty line,584
+Female,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,7500.0,Above poverty line,585
+Male,49,1931.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,In the labor force,Professional Specialty Occupations,30765.0,Above poverty line,586
+Female,30,1950.0,"Non-Black, Non-Hispanic",Married,2,20.0,High school,In the labor force,"Operators, Fabricators, and Laborers",2500.0,Above poverty line,587
+Female,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,588
+Female,10,1970.0,Black,Single,0,,Less than high school,,,,Above poverty line,589
+Female,32,1948.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,11840.0,Above poverty line,590
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,2656.0,Above poverty line,591
+Female,51,1929.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,700.0,Above poverty line,592
+Male,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Sales Occupations,4142.0,Above poverty line,593
+Male,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,594
+Female,49,1931.0,"Non-Black, Non-Hispanic",Married,4,30.0,College and above,In the labor force,Professional Specialty Occupations,20024.0,Above poverty line,595
+Male,67,1913.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,9528.0,Above poverty line,596
+Male,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,597
+Male,75,1905.0,"Non-Black, Non-Hispanic",Married,1,41.0,High school,Not in the labor force,,8715.0,Above poverty line,598
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,10.0,Below poverty line,599
+Male,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,600
+Female,71,1909.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,2066.0,Above poverty line,601
+Male,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,602
+Male,8,1972.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,603
+Male,0,1980.0,Black,Single,0,,Less than high school,,,,Below poverty line,604
+Male,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,605
+Female,22,1958.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,5900.0,Above poverty line,606
+Male,24,1956.0,"Non-Black, Non-Hispanic",Married,2,22.0,College and above,In the labor force,Sales Occupations,10054.0,Above poverty line,607
+Female,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,2080.0,Above poverty line,608
+Female,26,1954.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,In the labor force,Service Occupations,4503.0,Above poverty line,609
+Female,27,1953.0,"Non-Black, Non-Hispanic",Divorced/widowed,2,23.0,High school,In the labor force,Service Occupations,11031.0,Above poverty line,610
+Female,68,1912.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,17173.0,Above poverty line,611
+Male,32,1948.0,Black,Married,3,20.0,High school,,Military Occupations,10778.0,Above poverty line,612
+Male,32,1948.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,11660.0,Above poverty line,613
+Male,38,1942.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",20000.0,Above poverty line,614
+Male,71,1909.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,14223.0,Above poverty line,615
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,2,20.0,High school,Not in the labor force,,3.0,Above poverty line,616
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,617
+Female,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,618
+Female,29,1951.0,Black,Married,1,27.0,High school,Not in the labor force,,1944.0,Below poverty line,619
+Male,50,1930.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",18700.0,Above poverty line,620
+Male,63,1917.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",25618.0,Above poverty line,621
+Female,64,1916.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,Service Occupations,2428.0,Below poverty line,622
+Female,29,1951.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,11779.0,Above poverty line,623
+Male,31,1949.0,Hispanic,Married,1,31.0,Less than high school,In the labor force,"Farming, Forestry, and Fishing Occupations",6912.0,Above poverty line,624
+Male,30,1950.0,"Non-Black, Non-Hispanic",Married,3,24.0,High school,In the labor force,"Operators, Fabricators, and Laborers",14114.0,Above poverty line,625
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,4200.0,Above poverty line,626
+Female,37,1943.0,"Non-Black, Non-Hispanic",Married,1,19.0,High school,In the labor force,Sales Occupations,6000.0,Above poverty line,627
+Female,46,1934.0,"Non-Black, Non-Hispanic",Married,2,27.0,High school,Not in the labor force,,360.0,Below poverty line,628
+Male,33,1947.0,"Non-Black, Non-Hispanic",Married,2,21.0,High school,In the labor force,"Operators, Fabricators, and Laborers",11000.0,Above poverty line,629
+Female,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,630
+Female,28,1952.0,"Non-Black, Non-Hispanic",Married,1,17.0,High school,Not in the labor force,Service Occupations,1713.0,Above poverty line,631
+Female,1,1979.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,632
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,3,30.0,High school,Not in the labor force,,1000.0,Above poverty line,633
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,634
+Female,28,1952.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,6914.0,Above poverty line,635
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,2,23.0,College and above,Not in the labor force,Sales Occupations,271.0,Above poverty line,636
+Female,72,1908.0,Black,Married,0,,Less than high school,Not in the labor force,,1955.0,Above poverty line,637
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",2525.0,Above poverty line,638
+Male,25,1955.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Managerial Occupations,2600.0,Below poverty line,639
+Male,44,1936.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",21000.0,Above poverty line,640
+Male,41,1939.0,"Non-Black, Non-Hispanic",Married,2,27.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",17200.0,Above poverty line,641
+Male,11,1969.0,Black,Single,0,,Less than high school,,,,Below poverty line,642
+Male,24,1956.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",63000.0,Above poverty line,643
+Male,88,1892.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,Not in the labor force,,4056.0,Above poverty line,644
+Male,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,645
+Female,85,1895.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,1489.0,Above poverty line,646
+Female,66,1914.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,2850.0,Above poverty line,647
+Male,7,1973.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,648
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,1556.0,Above poverty line,649
+Male,23,1957.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,In the labor force,Professional Specialty Occupations,6000.0,Above poverty line,650
+Male,59,1921.0,Black,Divorced/widowed,0,,Less than high school,Not in the labor force,,5649.0,Above poverty line,651
+Male,59,1921.0,Hispanic,Married,0,,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",12292.0,Above poverty line,652
+Male,52,1928.0,"Non-Black, Non-Hispanic",Divorced/widowed,3,27.0,High school,In the labor force,Managerial Occupations,8095.0,Above poverty line,653
+Male,50,1930.0,Black,Married,2,28.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",13000.0,Above poverty line,654
+Male,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,655
+Male,37,1943.0,"Non-Black, Non-Hispanic",Married,2,33.0,College and above,In the labor force,Professional Specialty Occupations,15786.0,Above poverty line,656
+Female,25,1955.0,Black,Married,1,25.0,High school,In the labor force,Clerical and Administrative Support Occupations,3000.0,Above poverty line,657
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,300.0,Above poverty line,658
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,2,22.0,High school,In the labor force,Managerial Occupations,5475.0,Above poverty line,659
+Male,3,1977.0,Black,Single,0,,Less than high school,,,,Above poverty line,660
+Female,64,1916.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,8472.0,Above poverty line,661
+Male,57,1923.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",15500.0,Above poverty line,662
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,663
+Male,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,664
+Female,29,1951.0,Black,Single,1,22.0,High school,In the labor force,Clerical and Administrative Support Occupations,6000.0,Above poverty line,665
+Male,54,1926.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,44452.0,Above poverty line,666
+Male,20,1960.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",6345.0,Above poverty line,667
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,668
+Female,65,1915.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,4213.0,Above poverty line,669
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",15964.0,Above poverty line,670
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,671
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,672
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,673
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,674
+Female,9,1971.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,675
+Male,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,Service Occupations,15908.0,Above poverty line,676
+Male,29,1951.0,"Non-Black, Non-Hispanic",Married,1,29.0,College and above,In the labor force,Professional Specialty Occupations,19526.0,Above poverty line,677
+Female,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,678
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",600.0,Above poverty line,679
+Male,71,1909.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,In the labor force,Service Occupations,7843.0,Above poverty line,680
+Male,29,1951.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Managerial Occupations,18100.0,Above poverty line,681
+Female,26,1954.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,6720.0,Above poverty line,682
+Female,78,1902.0,Black,Single,1,17.0,High school,Not in the labor force,,1440.0,Below poverty line,683
+Male,27,1953.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,22400.0,Above poverty line,684
+Female,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",12203.0,Above poverty line,685
+Female,33,1947.0,"Non-Black, Non-Hispanic",Married,2,24.0,College and above,In the labor force,Service Occupations,8800.0,Above poverty line,686
+Female,4,1976.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,687
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,688
+Female,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,689
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,690
+Female,2,1978.0,Black,Single,0,,Less than high school,,,,Below poverty line,691
+Male,70,1910.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,7001.0,Above poverty line,692
+Male,25,1955.0,Hispanic,Married,2,22.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",20000.0,Above poverty line,693
+Female,82,1898.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,4128.0,Above poverty line,694
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,2530.0,Above poverty line,695
+Female,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,696
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Managerial Occupations,21045.0,Above poverty line,697
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,"Operators, Fabricators, and Laborers",1485.0,Above poverty line,698
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,699
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,Service Occupations,700.0,Below poverty line,700
+Male,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,701
+Male,35,1945.0,"Non-Black, Non-Hispanic",Married,4,20.0,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",5506.0,Above poverty line,702
+Female,35,1945.0,"Non-Black, Non-Hispanic",Married,3,25.0,College and above,Not in the labor force,,26.0,Above poverty line,703
+Male,11,1969.0,Black,Single,0,,Less than high school,,,,Above poverty line,704
+Male,30,1950.0,"Non-Black, Non-Hispanic",Married,1,27.0,College and above,In the labor force,Managerial Occupations,27901.0,Above poverty line,705
+Male,23,1957.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,Clerical and Administrative Support Occupations,7560.0,Above poverty line,706
+Female,87,1893.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,18526.0,Above poverty line,707
+Male,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",20963.0,Above poverty line,708
+Male,42,1938.0,"Non-Black, Non-Hispanic",Married,4,23.0,High school,In the labor force,Technicians and Related Support Occupations,19780.0,Above poverty line,709
+Male,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",637.0,Above poverty line,710
+Female,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,711
+Female,81,1899.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,2755.0,Below poverty line,712
+Female,23,1957.0,Hispanic,Single,0,,Less than high school,In the labor force,Service Occupations,0.0,Below poverty line,713
+Male,53,1927.0,"Non-Black, Non-Hispanic",Married,2,26.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",14383.0,Above poverty line,714
+Female,4,1976.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,715
+Male,57,1923.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,6133.0,Above poverty line,716
+Female,18,1962.0,Black,Single,0,,High school,In the labor force,Service Occupations,1956.0,Below poverty line,717
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,2,33.0,College and above,Not in the labor force,,14058.0,Above poverty line,718
+Male,21,1959.0,"Non-Black, Non-Hispanic",Single,0,,High school,,Military Occupations,9935.0,Above poverty line,719
+Male,2,1978.0,Black,Single,0,,Less than high school,,,,Below poverty line,720
+Male,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",1225.0,Above poverty line,721
+Male,26,1954.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Sales Occupations,13143.0,Above poverty line,722
+Male,4,1976.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,723
+Male,45,1935.0,"Non-Black, Non-Hispanic",Married,2,25.0,College and above,In the labor force,Professional Specialty Occupations,21710.0,Above poverty line,724
+Female,40,1940.0,"Non-Black, Non-Hispanic",Married,2,28.0,High school,In the labor force,Clerical and Administrative Support Occupations,3444.0,Above poverty line,725
+Female,4,1976.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,726
+Male,36,1944.0,"Non-Black, Non-Hispanic",Married,4,21.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",9800.0,Above poverty line,727
+Male,24,1956.0,Hispanic,Single,0,,High school,In the labor force,Sales Occupations,12000.0,Above poverty line,728
+Male,65,1915.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,3656.0,Above poverty line,729
+Male,41,1939.0,"Non-Black, Non-Hispanic",Married,2,27.0,College and above,In the labor force,Technicians and Related Support Occupations,20005.0,Above poverty line,730
+Female,34,1946.0,"Non-Black, Non-Hispanic",Married,3,21.0,High school,In the labor force,"Farming, Forestry, and Fishing Occupations",7025.0,Above poverty line,731
+Female,65,1915.0,Hispanic,Married,0,,Less than high school,Not in the labor force,,1840.0,Above poverty line,732
+Female,45,1935.0,"Non-Black, Non-Hispanic",Married,6,26.0,College and above,In the labor force,Clerical and Administrative Support Occupations,7809.0,Above poverty line,733
+Male,58,1922.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,5456.0,Above poverty line,734
+Female,69,1911.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,6159.0,Above poverty line,735
+Male,43,1937.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Service Occupations,9049.0,Above poverty line,736
+Male,9,1971.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,737
+Male,24,1956.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,"Operators, Fabricators, and Laborers",3942.0,Above poverty line,738
+Male,31,1949.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",6000.0,Above poverty line,739
+Female,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,740
+Female,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,4609.0,Above poverty line,741
+Male,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",3331.0,Above poverty line,742
+Female,63,1917.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,4606.0,Above poverty line,743
+Male,51,1929.0,"Non-Black, Non-Hispanic",Married,1,32.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",14000.0,Above poverty line,744
+Female,45,1935.0,"Non-Black, Non-Hispanic",Married,3,29.0,High school,In the labor force,Clerical and Administrative Support Occupations,12500.0,Above poverty line,745
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,,Above poverty line,746
+Male,27,1953.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",13530.0,Above poverty line,747
+Female,58,1922.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,1200.0,Above poverty line,748
+Female,23,1957.0,"Non-Black, Non-Hispanic",Married,1,20.0,High school,In the labor force,"Operators, Fabricators, and Laborers",4100.0,Above poverty line,749
+Female,37,1943.0,"Non-Black, Non-Hispanic",Divorced/widowed,2,19.0,High school,Not in the labor force,"Operators, Fabricators, and Laborers",3239.0,Below poverty line,750
+Male,39,1941.0,"Non-Black, Non-Hispanic",Married,2,29.0,High school,In the labor force,Managerial Occupations,37182.0,Above poverty line,751
+Female,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,752
+Female,72,1908.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,Not in the labor force,,4680.0,Above poverty line,753
+Male,57,1923.0,"Non-Black, Non-Hispanic",Married,1,31.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",9384.0,Above poverty line,754
+Female,42,1938.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,Service Occupations,0.0,Above poverty line,755
+Male,27,1953.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Managerial Occupations,14643.0,Above poverty line,756
+Female,53,1927.0,"Non-Black, Non-Hispanic",Married,1,22.0,High school,In the labor force,"Operators, Fabricators, and Laborers",7048.0,Above poverty line,757
+Female,69,1911.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,3398.0,Below poverty line,758
+Female,35,1945.0,"Non-Black, Non-Hispanic",Married,2,28.0,College and above,Not in the labor force,,400.0,Above poverty line,759
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,760
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,761
+Female,1,1979.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,762
+Male,8,1972.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,763
+Male,3,1977.0,Black,Single,0,,Less than high school,,,,Below poverty line,764
+Male,10,1970.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,765
+Male,84,1896.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,1473.0,Above poverty line,766
+Female,28,1952.0,"Non-Black, Non-Hispanic",Married,2,19.0,College and above,In the labor force,Clerical and Administrative Support Occupations,1270.0,Above poverty line,767
+Female,67,1913.0,Black,Divorced/widowed,0,,Less than high school,Not in the labor force,,3000.0,Below poverty line,768
+Female,32,1948.0,"Non-Black, Non-Hispanic",Married,3,16.0,High school,Not in the labor force,,13000.0,Above poverty line,769
+Male,41,1939.0,"Non-Black, Non-Hispanic",Married,3,26.0,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",25425.0,Above poverty line,770
+Female,29,1951.0,"Non-Black, Non-Hispanic",Married,1,20.0,High school,In the labor force,Clerical and Administrative Support Occupations,14020.0,Above poverty line,771
+Female,31,1949.0,"Non-Black, Non-Hispanic",Married,4,18.0,High school,Not in the labor force,,0.0,Above poverty line,772
+Male,26,1954.0,"Non-Black, Non-Hispanic",Married,2,23.0,High school,In the labor force,"Operators, Fabricators, and Laborers",10401.0,Above poverty line,773
+Female,27,1953.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,18568.0,Above poverty line,774
+Male,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,775
+Male,35,1945.0,"Non-Black, Non-Hispanic",Married,1,30.0,College and above,In the labor force,Managerial Occupations,26000.0,Above poverty line,776
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,"Farming, Forestry, and Fishing Occupations",0.0,Above poverty line,777
+Male,12,1968.0,Black,Single,0,,Less than high school,,,,Above poverty line,778
+Female,38,1942.0,"Non-Black, Non-Hispanic",Divorced/widowed,2,25.0,High school,In the labor force,Professional Specialty Occupations,6700.0,Above poverty line,779
+Female,42,1938.0,Black,Divorced/widowed,1,26.0,College and above,In the labor force,Professional Specialty Occupations,15000.0,Above poverty line,780
+Female,57,1923.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,Not in the labor force,,8600.0,Above poverty line,781
+Female,13,1967.0,Black,Single,0,,Less than high school,,,,Above poverty line,782
+Female,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,783
+Female,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,2000.0,Below poverty line,784
+Male,63,1917.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,54400.0,Above poverty line,785
+Female,48,1932.0,"Non-Black, Non-Hispanic",Married,2,23.0,High school,Not in the labor force,,2811.0,Above poverty line,786
+Male,71,1909.0,"Non-Black, Non-Hispanic",Married,1,31.0,Less than high school,In the labor force,"Farming, Forestry, and Fishing Occupations",8150.0,Above poverty line,787
+Male,47,1933.0,"Non-Black, Non-Hispanic",Married,2,27.0,College and above,In the labor force,Professional Specialty Occupations,34368.0,Above poverty line,788
+Male,27,1953.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,Service Occupations,5410.0,Above poverty line,789
+Male,32,1948.0,Hispanic,Married,4,17.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",15085.0,Above poverty line,790
+Female,42,1938.0,"Non-Black, Non-Hispanic",Married,3,26.0,High school,In the labor force,Managerial Occupations,8920.0,Above poverty line,791
+Female,40,1940.0,"Non-Black, Non-Hispanic",Married,3,27.0,High school,Not in the labor force,,200.0,Above poverty line,792
+Female,17,1963.0,Hispanic,Single,0,,High school,In the labor force,,0.0,Above poverty line,793
+Male,5,1975.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,794
+Male,36,1944.0,"Non-Black, Non-Hispanic",Married,1,31.0,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",20826.0,Above poverty line,795
+Male,38,1942.0,Hispanic,Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",21016.0,Above poverty line,796
+Male,25,1955.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",14133.0,Above poverty line,797
+Male,53,1927.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,34.0,College and above,In the labor force,Professional Specialty Occupations,10000.0,Above poverty line,798
+Male,39,1941.0,Black,Married,2,28.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",19510.0,Above poverty line,799
+Male,26,1954.0,Black,Single,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",16600.0,Above poverty line,800
+Male,38,1942.0,"Non-Black, Non-Hispanic",Married,2,30.0,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",19200.0,Above poverty line,801
+Female,66,1914.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,Clerical and Administrative Support Occupations,11348.0,Above poverty line,802
+Female,58,1922.0,"Non-Black, Non-Hispanic",Married,1,36.0,College and above,Not in the labor force,,111.0,Above poverty line,803
+Male,27,1953.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,10000.0,Above poverty line,804
+Female,25,1955.0,Black,Married,2,16.0,High school,In the labor force,Clerical and Administrative Support Occupations,12001.0,Above poverty line,805
+Male,34,1946.0,"Non-Black, Non-Hispanic",Married,2,28.0,High school,In the labor force,Managerial Occupations,50135.0,Above poverty line,806
+Male,5,1975.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,807
+Male,23,1957.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",13876.0,Above poverty line,808
+Male,50,1930.0,Hispanic,Divorced/widowed,0,,College and above,In the labor force,Professional Specialty Occupations,10500.0,Above poverty line,809
+Female,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,810
+Female,30,1950.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",15037.0,Above poverty line,811
+Male,42,1938.0,"Non-Black, Non-Hispanic",Married,2,26.0,College and above,In the labor force,Professional Specialty Occupations,29600.0,Above poverty line,812
+Male,5,1975.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,813
+Female,57,1923.0,"Non-Black, Non-Hispanic",Married,1,39.0,College and above,In the labor force,Managerial Occupations,22853.0,Above poverty line,814
+Female,62,1918.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Service Occupations,7392.0,Above poverty line,815
+Male,0,1980.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,816
+Female,47,1933.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,10250.0,Above poverty line,817
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,818
+Male,43,1937.0,"Non-Black, Non-Hispanic",Married,4,27.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",10675.0,Above poverty line,819
+Female,20,1960.0,Hispanic,Single,1,19.0,High school,In the labor force,"Operators, Fabricators, and Laborers",2650.0,Above poverty line,820
+Male,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,821
+Male,51,1929.0,"Non-Black, Non-Hispanic",Married,1,27.0,High school,In the labor force,"Operators, Fabricators, and Laborers",7029.0,Above poverty line,822
+Female,45,1935.0,"Non-Black, Non-Hispanic",Married,3,23.0,High school,In the labor force,Sales Occupations,1300.0,Above poverty line,823
+Female,78,1902.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,2159.0,Above poverty line,824
+Male,4,1976.0,Black,Single,0,,Less than high school,,,,Below poverty line,825
+Male,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,826
+Male,23,1957.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,9001.0,Above poverty line,827
+Male,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,7300.0,Above poverty line,828
+Female,51,1929.0,Hispanic,Divorced/widowed,4,27.0,High school,In the labor force,"Operators, Fabricators, and Laborers",2000.0,Below poverty line,829
+Female,28,1952.0,Black,Married,2,19.0,High school,In the labor force,"Operators, Fabricators, and Laborers",4032.0,Below poverty line,830
+Female,33,1947.0,"Non-Black, Non-Hispanic",Married,2,20.0,High school,In the labor force,Clerical and Administrative Support Occupations,6000.0,Above poverty line,831
+Male,6,1974.0,Hispanic,Single,0,,Less than high school,,,,Below poverty line,832
+Female,35,1945.0,"Non-Black, Non-Hispanic",Married,5,18.0,High school,In the labor force,Clerical and Administrative Support Occupations,3200.0,Above poverty line,833
+Male,52,1928.0,"Non-Black, Non-Hispanic",Married,4,32.0,College and above,In the labor force,Professional Specialty Occupations,35150.0,Above poverty line,834
+Female,41,1939.0,"Non-Black, Non-Hispanic",Married,3,22.0,High school,Not in the labor force,,0.0,Above poverty line,835
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,5,20.0,High school,Not in the labor force,,1440.0,Below poverty line,836
+Female,30,1950.0,"Non-Black, Non-Hispanic",Married,1,20.0,High school,In the labor force,Service Occupations,0.0,Above poverty line,837
+Female,80,1900.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,Less than high school,Not in the labor force,,2772.0,Below poverty line,838
+Male,32,1948.0,"Non-Black, Non-Hispanic",Married,3,26.0,College and above,In the labor force,Professional Specialty Occupations,21088.0,Above poverty line,839
+Female,30,1950.0,"Non-Black, Non-Hispanic",Married,3,17.0,High school,Not in the labor force,,4000.0,Above poverty line,840
+Male,50,1930.0,Hispanic,Married,3,21.0,High school,In the labor force,Professional Specialty Occupations,16000.0,Above poverty line,841
+Male,27,1953.0,"Non-Black, Non-Hispanic",Married,2,24.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",16000.0,Above poverty line,842
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,530.0,Above poverty line,843
+Female,1,1979.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,844
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,Service Occupations,869.0,Above poverty line,845
+Female,35,1945.0,"Non-Black, Non-Hispanic",Married,2,22.0,High school,In the labor force,Service Occupations,1610.0,Above poverty line,846
+Male,33,1947.0,"Non-Black, Non-Hispanic",Married,2,21.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",12043.0,Above poverty line,847
+Male,5,1975.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,848
+Male,22,1958.0,Hispanic,Married,1,22.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",7000.0,Above poverty line,849
+Female,36,1944.0,"Non-Black, Non-Hispanic",Married,1,31.0,College and above,In the labor force,Professional Specialty Occupations,150.0,Above poverty line,850
+Female,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,6448.0,Above poverty line,851
+Male,2,1978.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,852
+Female,67,1913.0,"Non-Black, Non-Hispanic",Married,1,41.0,Less than high school,Not in the labor force,,1837.0,Above poverty line,853
+Female,1,1979.0,Black,Single,0,,Less than high school,,,,Above poverty line,854
+Male,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,855
+Male,65,1915.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,2346.0,Below poverty line,856
+Male,56,1924.0,Black,Married,1,45.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",15698.0,Above poverty line,857
+Female,55,1925.0,Hispanic,Married,0,,Less than high school,In the labor force,Technicians and Related Support Occupations,9200.0,Above poverty line,858
+Female,20,1960.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,4500.0,Above poverty line,859
+Male,65,1915.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,12759.0,Above poverty line,860
+Female,25,1955.0,"Non-Black, Non-Hispanic",Married,2,21.0,College and above,Not in the labor force,,110.0,Above poverty line,861
+Female,15,1965.0,Black,Single,0,,Less than high school,Not in the labor force,,0.0,Above poverty line,862
+Female,29,1951.0,"Non-Black, Non-Hispanic",Married,5,12.0,High school,In the labor force,Sales Occupations,3050.0,Above poverty line,863
+Male,47,1933.0,"Non-Black, Non-Hispanic",Married,2,31.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",18012.0,Above poverty line,864
+Female,64,1916.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,1534.0,Above poverty line,865
+Male,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",1650.0,Below poverty line,866
+Male,37,1943.0,"Non-Black, Non-Hispanic",Married,2,29.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",20429.0,Above poverty line,867
+Male,33,1947.0,"Non-Black, Non-Hispanic",Married,2,20.0,College and above,In the labor force,"Precision Production, Craft, and Repair Occupations",19058.0,Above poverty line,868
+Male,66,1914.0,"Non-Black, Non-Hispanic",Married,2,41.0,High school,Not in the labor force,"Precision Production, Craft, and Repair Occupations",4732.0,Above poverty line,869
+Male,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,870
+Female,57,1923.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,Sales Occupations,1300.0,Below poverty line,871
+Male,35,1945.0,"Non-Black, Non-Hispanic",Married,2,26.0,High school,In the labor force,"Operators, Fabricators, and Laborers",27081.0,Above poverty line,872
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,873
+Male,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Below poverty line,874
+Female,67,1913.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,2656.0,Below poverty line,875
+Male,31,1949.0,"Non-Black, Non-Hispanic",Married,2,24.0,College and above,,Military Occupations,27000.0,Above poverty line,876
+Male,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,877
+Female,40,1940.0,"Non-Black, Non-Hispanic",Married,2,25.0,High school,In the labor force,"Operators, Fabricators, and Laborers",1109.0,Above poverty line,878
+Female,58,1922.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Professional Specialty Occupations,13000.0,Above poverty line,879
+Male,46,1934.0,"Non-Black, Non-Hispanic",Married,1,30.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",30050.0,Above poverty line,880
+Female,25,1955.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Service Occupations,9584.0,Above poverty line,881
+Male,41,1939.0,Hispanic,Single,0,,High school,In the labor force,Professional Specialty Occupations,6200.0,Above poverty line,882
+Female,11,1969.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,883
+Female,41,1939.0,"Non-Black, Non-Hispanic",Divorced/widowed,3,24.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",14200.0,Above poverty line,884
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,885
+Male,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",5584.0,Above poverty line,886
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,1,27.0,High school,Not in the labor force,,3800.0,Above poverty line,887
+Male,46,1934.0,"Non-Black, Non-Hispanic",Married,7,27.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",22010.0,Above poverty line,888
+Male,40,1940.0,Hispanic,Married,4,30.0,College and above,In the labor force,Clerical and Administrative Support Occupations,16542.0,Above poverty line,889
+Male,39,1941.0,"Non-Black, Non-Hispanic",Married,3,22.0,College and above,In the labor force,Managerial Occupations,17050.0,Above poverty line,890
+Female,21,1959.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,4500.0,Above poverty line,891
+Female,34,1946.0,Hispanic,Married,0,,Less than high school,Not in the labor force,,0.0,Below poverty line,892
+Male,1,1979.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,893
+Female,25,1955.0,"Non-Black, Non-Hispanic",Married,1,20.0,Less than high school,Not in the labor force,,5.0,Above poverty line,894
+Male,44,1936.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,28.0,High school,In the labor force,"Operators, Fabricators, and Laborers",10400.0,Above poverty line,895
+Male,27,1953.0,"Non-Black, Non-Hispanic",Married,2,24.0,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",15008.0,Above poverty line,896
+Male,25,1955.0,"Non-Black, Non-Hispanic",Single,0,,College and above,In the labor force,Professional Specialty Occupations,24300.0,Above poverty line,897
+Male,41,1939.0,Hispanic,Single,0,,High school,Not in the labor force,"Farming, Forestry, and Fishing Occupations",3346.0,Above poverty line,898
+Male,35,1945.0,"Non-Black, Non-Hispanic",Married,2,29.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",24065.0,Above poverty line,899
+Female,8,1972.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,900
+Male,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,"Operators, Fabricators, and Laborers",1470.0,Above poverty line,901
+Male,31,1949.0,Black,Married,5,18.0,High school,In the labor force,"Operators, Fabricators, and Laborers",9000.0,Below poverty line,902
+Female,21,1959.0,Black,Married,2,19.0,High school,In the labor force,Clerical and Administrative Support Occupations,5180.0,Above poverty line,903
+Male,23,1957.0,"Non-Black, Non-Hispanic",Married,1,21.0,Less than high school,In the labor force,"Precision Production, Craft, and Repair Occupations",5600.0,Above poverty line,904
+Female,1,1979.0,Black,Single,0,,Less than high school,,,,Above poverty line,905
+Male,67,1913.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",4880.0,Below poverty line,906
+Female,39,1941.0,"Non-Black, Non-Hispanic",Married,4,21.0,High school,In the labor force,Service Occupations,10851.0,Above poverty line,907
+Female,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Service Occupations,620.0,Above poverty line,908
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,710.0,Above poverty line,909
+Male,36,1944.0,"Non-Black, Non-Hispanic",Married,2,31.0,College and above,In the labor force,Sales Occupations,25000.0,Above poverty line,910
+Female,2,1978.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,911
+Female,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,959.0,Above poverty line,912
+Female,55,1925.0,"Non-Black, Non-Hispanic",Married,1,39.0,High school,In the labor force,Clerical and Administrative Support Occupations,9015.0,Above poverty line,913
+Female,4,1976.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,914
+Male,70,1910.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,2539.0,Above poverty line,915
+Female,15,1965.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,916
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,15.0,Above poverty line,917
+Male,20,1960.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",7375.0,Above poverty line,918
+Male,29,1951.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",7075.0,Above poverty line,919
+Female,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,920
+Female,23,1957.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,20.0,College and above,In the labor force,Sales Occupations,2330.0,Below poverty line,921
+Male,32,1948.0,"Non-Black, Non-Hispanic",Married,3,21.0,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",20400.0,Above poverty line,922
+Female,33,1947.0,"Non-Black, Non-Hispanic",Married,3,19.0,High school,In the labor force,Service Occupations,1286.0,Above poverty line,923
+Male,63,1917.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,3825.0,Below poverty line,924
+Female,16,1964.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,0.0,Above poverty line,925
+Male,62,1918.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,17000.0,Above poverty line,926
+Female,30,1950.0,"Non-Black, Non-Hispanic",Married,4,19.0,High school,Not in the labor force,,500.0,Above poverty line,927
+Male,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,928
+Male,3,1977.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,929
+Female,77,1903.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,College and above,Not in the labor force,Managerial Occupations,8600.0,Above poverty line,930
+Female,19,1961.0,Black,Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,3276.0,Above poverty line,931
+Female,61,1919.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,In the labor force,"Farming, Forestry, and Fishing Occupations",7050.0,Above poverty line,932
+Male,61,1919.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",10830.0,Above poverty line,933
+Male,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,750.0,Below poverty line,934
+Male,1,1979.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,935
+Male,65,1915.0,"Non-Black, Non-Hispanic",Married,0,,College and above,Not in the labor force,,30643.0,Above poverty line,936
+Female,35,1945.0,Black,Married,2,23.0,High school,Not in the labor force,,0.0,Above poverty line,937
+Male,14,1966.0,Black,Single,0,,Less than high school,Not in the labor force,,,Above poverty line,938
+Female,4,1976.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,939
+Male,50,1930.0,"Non-Black, Non-Hispanic",Married,1,30.0,Less than high school,In the labor force,Clerical and Administrative Support Occupations,24100.0,Above poverty line,940
+Female,76,1904.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,Not in the labor force,,2496.0,Below poverty line,941
+Male,39,1941.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,Clerical and Administrative Support Occupations,7000.0,Above poverty line,942
+Male,24,1956.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",7861.0,Above poverty line,943
+Male,29,1951.0,"Non-Black, Non-Hispanic",Married,1,27.0,College and above,In the labor force,"Operators, Fabricators, and Laborers",10002.0,Above poverty line,944
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,0,,College and above,,Military Occupations,6579.0,Above poverty line,945
+Male,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,946
+Male,41,1939.0,"Non-Black, Non-Hispanic",Married,1,35.0,High school,In the labor force,"Operators, Fabricators, and Laborers",5500.0,Above poverty line,947
+Male,14,1966.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,In the labor force,"Farming, Forestry, and Fishing Occupations",,Above poverty line,948
+Male,0,1980.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,949
+Female,12,1968.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,950
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,951
+Female,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,College and above,Not in the labor force,,94.0,Above poverty line,952
+Male,19,1961.0,"Non-Black, Non-Hispanic",Single,0,,College and above,Not in the labor force,,2333.0,Above poverty line,953
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,1,23.0,College and above,In the labor force,Technicians and Related Support Occupations,7285.0,Above poverty line,954
+Male,59,1921.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Professional Specialty Occupations,18280.0,Above poverty line,955
+Female,56,1924.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,,0.0,Above poverty line,956
+Female,53,1927.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,0.0,Above poverty line,957
+Female,29,1951.0,Black,Single,0,,High school,Not in the labor force,,1600.0,Below poverty line,958
+Female,7,1973.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,959
+Male,3,1977.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,960
+Male,62,1918.0,Black,Married,0,,High school,Not in the labor force,,0.0,Below poverty line,961
+Female,30,1950.0,"Non-Black, Non-Hispanic",Married,3,23.0,College and above,In the labor force,Service Occupations,9303.0,Above poverty line,962
+Male,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",19105.0,Above poverty line,963
+Female,22,1958.0,"Non-Black, Non-Hispanic",Single,0,,High school,In the labor force,Clerical and Administrative Support Occupations,861.0,Above poverty line,964
+Male,69,1911.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,7039.0,Above poverty line,965
+Male,49,1931.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,In the labor force,"Precision Production, Craft, and Repair Occupations",14518.0,Above poverty line,966
+Female,57,1923.0,"Non-Black, Non-Hispanic",Divorced/widowed,2,27.0,High school,Not in the labor force,,3276.0,Above poverty line,967
+Female,49,1931.0,"Non-Black, Non-Hispanic",Married,0,,High school,In the labor force,"Operators, Fabricators, and Laborers",3700.0,Above poverty line,968
+Female,51,1929.0,"Non-Black, Non-Hispanic",Married,1,33.0,High school,In the labor force,"Operators, Fabricators, and Laborers",8193.0,Above poverty line,969
+Female,14,1966.0,Black,Single,0,,Less than high school,Not in the labor force,,,Above poverty line,970
+Female,35,1945.0,"Non-Black, Non-Hispanic",Married,2,18.0,High school,In the labor force,Managerial Occupations,10744.0,Above poverty line,971
+Female,28,1952.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,0.0,Above poverty line,972
+Female,19,1961.0,"Non-Black, Non-Hispanic",Single,1,17.0,High school,In the labor force,Service Occupations,3700.0,Above poverty line,973
+Male,65,1915.0,"Non-Black, Non-Hispanic",Married,0,,Less than high school,Not in the labor force,"Precision Production, Craft, and Repair Occupations",4080.0,Above poverty line,974
+Female,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,1140.0,Above poverty line,975
+Male,17,1963.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,884.0,Above poverty line,976
+Female,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,977
+Male,62,1918.0,"Non-Black, Non-Hispanic",Married,1,38.0,High school,In the labor force,Technicians and Related Support Occupations,7500.0,Above poverty line,978
+Female,3,1977.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,979
+Male,28,1952.0,Black,Single,0,,High school,Not in the labor force,Clerical and Administrative Support Occupations,220.0,Above poverty line,980
+Female,46,1934.0,"Non-Black, Non-Hispanic",Married,1,20.0,High school,In the labor force,Service Occupations,3889.0,Above poverty line,981
+Female,27,1953.0,"Non-Black, Non-Hispanic",Married,2,23.0,High school,Not in the labor force,,89.0,Above poverty line,982
+Female,26,1954.0,Hispanic,Married,2,17.0,High school,Not in the labor force,,5476.0,Below poverty line,983
+Female,57,1923.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,4140.0,Above poverty line,984
+Female,9,1971.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Below poverty line,985
+Female,18,1962.0,"Non-Black, Non-Hispanic",Single,0,,High school,Not in the labor force,,1500.0,Above poverty line,986
+Male,32,1948.0,"Non-Black, Non-Hispanic",Married,2,29.0,College and above,In the labor force,Professional Specialty Occupations,9942.0,Above poverty line,987
+Male,47,1933.0,"Non-Black, Non-Hispanic",Married,2,26.0,High school,In the labor force,Clerical and Administrative Support Occupations,13143.0,Above poverty line,988
+Female,13,1967.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,989
+Male,25,1955.0,"Non-Black, Non-Hispanic",Divorced/widowed,0,,High school,Not in the labor force,,11500.0,Above poverty line,990
+Female,61,1919.0,"Non-Black, Non-Hispanic",Married,0,,High school,Not in the labor force,,25.0,Above poverty line,991
+Female,0,1980.0,Black,Single,0,,Less than high school,,,,Below poverty line,992
+Male,6,1974.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,993
+Female,2,1978.0,Hispanic,Single,0,,Less than high school,,,,Above poverty line,994
+Female,10,1970.0,"Non-Black, Non-Hispanic",Single,0,,Less than high school,,,,Above poverty line,995
+Female,64,1916.0,"Non-Black, Non-Hispanic",Divorced/widowed,1,42.0,College and above,Not in the labor force,,1689.0,Below poverty line,996
+Male,24,1956.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Sales Occupations,8220.0,Above poverty line,997
+Male,78,1902.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,"Farming, Forestry, and Fishing Occupations",11154.0,Above poverty line,998
+Male,28,1952.0,"Non-Black, Non-Hispanic",Married,0,,College and above,In the labor force,Clerical and Administrative Support Occupations,13825.0,Above poverty line,999

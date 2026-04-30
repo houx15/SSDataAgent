@@ -1,0 +1,68 @@
+[
+  {
+    "dataset": "cps",
+    "input": "used_dataset/samples_cps.csv",
+    "output": "data/cleaned/cps_clean.csv",
+    "rows": 1000,
+    "cols": 13,
+    "columns": [
+      "gender",
+      "age",
+      "birth_year",
+      "race",
+      "marital_status",
+      "child_number",
+      "age_first_childbirth",
+      "education",
+      "laborforce",
+      "occupation",
+      "income",
+      "poverty_status",
+      "profile_id"
+    ]
+  },
+  {
+    "dataset": "gss",
+    "input": "used_dataset/sampled_gss.csv",
+    "output": "data/cleaned/gss_clean.csv",
+    "rows": 1000,
+    "cols": 12,
+    "columns": [
+      "gender",
+      "age",
+      "birth_year",
+      "race",
+      "immigrant_status",
+      "marital_status",
+      "child_number",
+      "age_first_childbirth",
+      "education",
+      "occupation",
+      "income",
+      "profile_id"
+    ]
+  },
+  {
+    "dataset": "acs",
+    "input": "used_dataset/sampled_acs.csv",
+    "output": "data/cleaned/acs_clean.csv",
+    "rows": 1000,
+    "cols": 14,
+    "columns": [
+      "gender",
+      "age",
+      "birth_year",
+      "race",
+      "immigrant_status",
+      "marital_status",
+      "child_number",
+      "age_first_marriage",
+      "age_first_childbirth",
+      "education",
+      "occupation",
+      "income",
+      "health_work_difficulty",
+      "profile_id"
+    ]
+  }
+]

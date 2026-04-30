@@ -1,0 +1,1001 @@
+gender,age,birth_year,race,immigrant_status,marital_status,child_number,age_first_marriage,age_first_childbirth,education,occupation,income,health_work_difficulty,profile_id
+Male,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,705.0,Health doesn't affect work,0
+Female,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,1
+Female,38,1941,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,18.0,19.0,High school,,0.0,Health doesn't affect work,2
+Male,78,1901,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,27.0,,College and above,,355.0,Health affects work,3
+Male,21,1959,Black,Non-immigrant,Married,0.0,21.0,19.0,High school,"Precision Production, Craft, and Repair Occupations",8305.0,Health doesn't affect work,4
+Male,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,24.0,,High school,"Operators, Fabricators, and Laborers",18510.0,Health doesn't affect work,5
+Male,53,1926,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,28.0,37.0,High school,Clerical and Administrative Support Occupations,20875.0,Health doesn't affect work,6
+Female,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,Clerical and Administrative Support Occupations,5370.0,Health doesn't affect work,7
+Female,39,1941,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,27.0,High school,Service Occupations,4005.0,Health doesn't affect work,8
+Male,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,"Operators, Fabricators, and Laborers",4205.0,Health doesn't affect work,9
+Female,54,1925,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,2.0,28.0,34.0,High school,Sales Occupations,10505.0,Health doesn't affect work,10
+Female,50,1930,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,20.0,,College and above,Clerical and Administrative Support Occupations,14820.0,Health doesn't affect work,11
+Female,48,1931,Black,Non-immigrant,Divorced/widowed,8.0,14.0,28.0,Less than high school,,4805.0,Health doesn't affect work,12
+Male,3,1976,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,13
+Male,37,1942,Hispanic,Non-immigrant,Married,0.0,19.0,19.0,College and above,Sales Occupations,42310.0,Health doesn't affect work,14
+Female,33,1946,Black,Non-immigrant,Married,4.0,20.0,18.0,High school,"Operators, Fabricators, and Laborers",6740.0,Health doesn't affect work,15
+Male,4,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,16
+Female,27,1952,Hispanic,Immigrant,Divorced/widowed,0.0,19.0,,College and above,Service Occupations,12005.0,Health doesn't affect work,17
+Female,29,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,22.0,25.0,High school,Sales Occupations,3005.0,Health doesn't affect work,18
+Female,12,1967,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,19
+Female,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,20
+Male,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Farming, Forestry, and Fishing Occupations",1380.0,Health doesn't affect work,21
+Female,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,0.0,Health doesn't affect work,22
+Male,64,1915,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,College and above,,18415.0,Health affects work,23
+Female,64,1915,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,3810.0,Health affects work,24
+Male,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,14.0,26.0,High school,Sales Occupations,0.0,Health doesn't affect work,25
+Female,43,1937,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Service Occupations,4750.0,Health affects work,26
+Male,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Military Occupations,5505.0,Health doesn't affect work,27
+Male,1,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,28
+Female,1,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,29
+Male,36,1943,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,27.0,High school,"Operators, Fabricators, and Laborers",30005.0,Health doesn't affect work,30
+Male,39,1940,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,22.0,College and above,"Operators, Fabricators, and Laborers",25005.0,Health doesn't affect work,31
+Female,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,College and above,Professional Specialty Occupations,9670.0,Health doesn't affect work,32
+Female,35,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,22.0,High school,Clerical and Administrative Support Occupations,7975.0,Health doesn't affect work,33
+Female,0,1980,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,34
+Female,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,35
+Male,40,1939,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,25.0,College and above,Professional Specialty Occupations,21160.0,Health doesn't affect work,36
+Male,57,1923,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,22.0,38.0,Less than high school,"Operators, Fabricators, and Laborers",12005.0,Health doesn't affect work,37
+Male,61,1918,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,29.0,33.0,High school,"Precision Production, Craft, and Repair Occupations",25010.0,Health doesn't affect work,38
+Male,71,1909,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,,High school,,4005.0,Health affects work,39
+Male,44,1936,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,28.0,31.0,College and above,Professional Specialty Occupations,10160.0,Health doesn't affect work,40
+Female,18,1961,Black,Non-immigrant,Single,1.0,,17.0,High school,Sales Occupations,1235.0,Health doesn't affect work,41
+Male,56,1923,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,26.0,30.0,College and above,Professional Specialty Occupations,19910.0,Health doesn't affect work,42
+Male,18,1961,Hispanic,Immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",7005.0,Health doesn't affect work,43
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,6005.0,Health doesn't affect work,44
+Female,25,1954,Hispanic,Non-immigrant,Married,2.0,19.0,20.0,High school,Clerical and Administrative Support Occupations,8085.0,Health doesn't affect work,45
+Female,61,1919,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,3005.0,Health doesn't affect work,46
+Male,74,1905,Hispanic,Non-immigrant,Married,0.0,20.0,,Less than high school,,2405.0,Health affects work,47
+Female,48,1931,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,,High school,Sales Occupations,5235.0,Health doesn't affect work,48
+Male,57,1922,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,High school,"Precision Production, Craft, and Repair Occupations",26010.0,Health doesn't affect work,49
+Male,30,1949,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,25.0,,College and above,Service Occupations,17005.0,Health doesn't affect work,50
+Female,27,1953,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,4710.0,Health affects work,51
+Male,56,1923,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,,College and above,Professional Specialty Occupations,36660.0,Health doesn't affect work,52
+Male,30,1950,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,College and above,Managerial Occupations,15505.0,Health doesn't affect work,53
+Male,36,1943,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,26.0,,High school,Managerial Occupations,28005.0,Health doesn't affect work,54
+Female,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,0.0,Health doesn't affect work,55
+Male,15,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,56
+Male,35,1944,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,24.0,College and above,Professional Specialty Occupations,20005.0,Health doesn't affect work,57
+Male,60,1919,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,Less than high school,"Farming, Forestry, and Fishing Occupations",0.0,Health affects work,58
+Male,80,1900,Black,Non-immigrant,Married,0.0,30.0,52.0,Less than high school,"Operators, Fabricators, and Laborers",14440.0,Health doesn't affect work,59
+Male,60,1919,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,Less than high school,,13370.0,Health affects work,60
+Female,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,27.0,High school,Managerial Occupations,15005.0,Health doesn't affect work,61
+Female,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,62
+Male,53,1927,Black,Non-immigrant,Married,0.0,40.0,32.0,High school,"Operators, Fabricators, and Laborers",16210.0,Health doesn't affect work,63
+Female,63,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,25.0,,High school,Clerical and Administrative Support Occupations,15150.0,Health doesn't affect work,64
+Male,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,65
+Male,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,High school,"Operators, Fabricators, and Laborers",20660.0,Health doesn't affect work,66
+Male,34,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,27.0,High school,"Precision Production, Craft, and Repair Occupations",26705.0,Health doesn't affect work,67
+Female,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,21.0,High school,Clerical and Administrative Support Occupations,15005.0,Health doesn't affect work,68
+Male,29,1950,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,College and above,Sales Occupations,16460.0,Health doesn't affect work,69
+Female,52,1927,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,15845.0,Health doesn't affect work,70
+Male,37,1943,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,25.0,High school,"Operators, Fabricators, and Laborers",12505.0,Health doesn't affect work,71
+Male,75,1904,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,,Less than high school,,7765.0,Health doesn't affect work,72
+Male,47,1932,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,36.0,High school,Service Occupations,11055.0,Health doesn't affect work,73
+Female,9,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,74
+Female,15,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,75
+Male,30,1949,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,24.0,,College and above,Technicians and Related Support Occupations,17710.0,Health doesn't affect work,76
+Female,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,27.0,30.0,High school,Sales Occupations,0.0,Health doesn't affect work,77
+Male,23,1957,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,18005.0,Health doesn't affect work,78
+Female,50,1929,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,30.0,,High school,,0.0,Health doesn't affect work,79
+Female,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,245.0,Health doesn't affect work,80
+Male,23,1957,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,11005.0,Health doesn't affect work,81
+Female,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,16.0,,High school,,0.0,Health doesn't affect work,82
+Female,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,15.0,,High school,Sales Occupations,8045.0,Health doesn't affect work,83
+Female,1,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,84
+Female,37,1942,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,20.0,High school,Service Occupations,5005.0,Health doesn't affect work,85
+Female,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,6270.0,Health doesn't affect work,86
+Female,50,1929,Black,Non-immigrant,Single,0.0,,,Less than high school,,1895.0,Health doesn't affect work,87
+Male,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,21.0,High school,Sales Occupations,9005.0,Health doesn't affect work,88
+Male,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,89
+Female,1,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,90
+Male,8,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,91
+Male,50,1929,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,37.0,,College and above,Managerial Occupations,17405.0,Health doesn't affect work,92
+Female,55,1924,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,26050.0,Health doesn't affect work,93
+Female,64,1915,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,7.0,19.0,,High school,Clerical and Administrative Support Occupations,3005.0,Health doesn't affect work,94
+Female,39,1940,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,16.0,22.0,Less than high school,,0.0,Health affects work,95
+Female,23,1956,Hispanic,Non-immigrant,Married,3.0,14.0,15.0,Less than high school,"Operators, Fabricators, and Laborers",0.0,Health doesn't affect work,96
+Female,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,97
+Male,29,1950,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,28.0,,High school,Technicians and Related Support Occupations,18660.0,Health doesn't affect work,98
+Female,20,1960,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,20.0,Less than high school,"Operators, Fabricators, and Laborers",2405.0,Health doesn't affect work,99
+Female,22,1957,Black,Non-immigrant,Single,1.0,,22.0,High school,Sales Occupations,4610.0,Health doesn't affect work,100
+Female,15,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health doesn't affect work,101
+Female,50,1929,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,16.0,32.0,High school,"Operators, Fabricators, and Laborers",16615.0,Health doesn't affect work,102
+Male,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,,College and above,Military Occupations,15495.0,Health doesn't affect work,103
+Male,17,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,104
+Female,16,1963,Black,Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,965.0,Health doesn't affect work,105
+Female,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,19.0,20.0,High school,"Operators, Fabricators, and Laborers",5110.0,Health doesn't affect work,106
+Female,57,1923,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,,High school,,2275.0,Health doesn't affect work,107
+Male,52,1927,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,Less than high school,Professional Specialty Occupations,21530.0,Health doesn't affect work,108
+Male,39,1941,Hispanic,Non-immigrant,Married,0.0,22.0,27.0,Less than high school,Managerial Occupations,20005.0,Health doesn't affect work,109
+Female,28,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,20.0,High school,,0.0,Health doesn't affect work,110
+Male,38,1942,Black,Non-immigrant,Married,0.0,23.0,33.0,College and above,Clerical and Administrative Support Occupations,18205.0,Health doesn't affect work,111
+Female,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,3640.0,Health doesn't affect work,112
+Female,70,1910,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,6.0,31.0,,Less than high school,,2495.0,Health affects work,113
+Female,88,1891,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,8.0,22.0,,Less than high school,,3045.0,Health doesn't affect work,114
+Female,60,1920,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,29.0,,High school,,2735.0,Health doesn't affect work,115
+Female,37,1942,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,10290.0,Health doesn't affect work,116
+Female,85,1894,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,22.0,,College and above,Professional Specialty Occupations,7905.0,Health doesn't affect work,117
+Female,70,1910,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,26.0,,High school,,6910.0,Health affects work,118
+Female,71,1908,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,19.0,,High school,"Operators, Fabricators, and Laborers",10245.0,Health doesn't affect work,119
+Male,30,1949,Black,Non-immigrant,Single,0.0,,,High school,Service Occupations,12070.0,Health doesn't affect work,120
+Female,19,1961,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,Service Occupations,1955.0,Health doesn't affect work,121
+Female,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,26.0,College and above,Technicians and Related Support Occupations,9060.0,Health doesn't affect work,122
+Male,46,1933,Hispanic,Immigrant,Married,0.0,36.0,24.0,Less than high school,"Operators, Fabricators, and Laborers",8005.0,Health doesn't affect work,123
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,25.0,High school,Sales Occupations,11265.0,Health doesn't affect work,124
+Female,12,1967,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,125
+Male,40,1939,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,37.0,High school,Managerial Occupations,525.0,Health doesn't affect work,126
+Female,31,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,College and above,Sales Occupations,10005.0,Health doesn't affect work,127
+Female,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,College and above,Managerial Occupations,2030.0,Health doesn't affect work,128
+Male,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,29.0,High school,"Operators, Fabricators, and Laborers",13505.0,Health doesn't affect work,129
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,4685.0,Health doesn't affect work,130
+Male,49,1930,Hispanic,Immigrant,Married,0.0,38.0,46.0,Less than high school,"Operators, Fabricators, and Laborers",6005.0,Health doesn't affect work,131
+Male,7,1972,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,132
+Female,38,1941,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,15.0,20.0,High school,Professional Specialty Occupations,305.0,Health doesn't affect work,133
+Male,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,24.0,High school,Military Occupations,10020.0,Health doesn't affect work,134
+Male,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Managerial Occupations,18310.0,Health doesn't affect work,135
+Male,31,1948,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,27.0,29.0,High school,Managerial Occupations,21015.0,Health doesn't affect work,136
+Female,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,20.0,High school,Service Occupations,170.0,Health doesn't affect work,137
+Female,53,1926,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,20.0,,High school,Sales Occupations,1460.0,Health affects work,138
+Female,8,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,139
+Female,7,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,140
+Male,5,1975,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,141
+Female,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,20.0,25.0,College and above,Clerical and Administrative Support Occupations,3505.0,Health doesn't affect work,142
+Male,46,1933,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,42.0,,High school,"Farming, Forestry, and Fishing Occupations",6510.0,Health doesn't affect work,143
+Male,32,1947,Hispanic,Immigrant,Married,0.0,30.0,,High school,"Precision Production, Craft, and Repair Occupations",7005.0,Health doesn't affect work,144
+Male,58,1921,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,College and above,Professional Specialty Occupations,75000.0,Health doesn't affect work,145
+Female,9,1971,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,146
+Female,48,1931,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,22.0,24.0,High school,Clerical and Administrative Support Occupations,20215.0,Health doesn't affect work,147
+Male,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,0.0,Health doesn't affect work,148
+Female,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,19.0,High school,Service Occupations,1445.0,Health doesn't affect work,149
+Female,6,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,150
+Male,25,1955,Hispanic,Non-immigrant,Married,0.0,22.0,,High school,Clerical and Administrative Support Occupations,19005.0,Health doesn't affect work,151
+Male,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,20.0,High school,"Operators, Fabricators, and Laborers",12005.0,Health doesn't affect work,152
+Male,48,1931,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,36.0,College and above,Managerial Occupations,27515.0,Health doesn't affect work,153
+Male,35,1944,Hispanic,Immigrant,Married,0.0,19.0,20.0,High school,"Operators, Fabricators, and Laborers",22705.0,Health doesn't affect work,154
+Female,12,1967,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,155
+Male,3,1976,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,156
+Male,43,1937,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,25480.0,Health doesn't affect work,157
+Male,65,1915,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,19.0,,College and above,Professional Specialty Occupations,18005.0,Health doesn't affect work,158
+Male,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,30.0,College and above,"Precision Production, Craft, and Repair Occupations",29005.0,Health doesn't affect work,159
+Female,53,1927,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,6.0,19.0,,High school,,2430.0,Health affects work,160
+Female,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,161
+Female,0,1979,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,162
+Female,87,1893,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,34.0,,College and above,,5110.0,Health doesn't affect work,163
+Female,72,1907,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,30.0,,Less than high school,,5705.0,Health doesn't affect work,164
+Male,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,13560.0,Health doesn't affect work,165
+Female,70,1909,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,4805.0,Health doesn't affect work,166
+Male,72,1907,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,,Less than high school,,7265.0,Health doesn't affect work,167
+Female,63,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,,High school,,1590.0,Health doesn't affect work,168
+Male,8,1971,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,169
+Male,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",7805.0,Health doesn't affect work,170
+Female,76,1904,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,High school,,1955.0,Health doesn't affect work,171
+Male,72,1908,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,33.0,,Less than high school,,2955.0,Health doesn't affect work,172
+Female,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,173
+Male,78,1902,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,High school,,7370.0,Health affects work,174
+Female,72,1908,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,21.0,24.0,High school,,11655.0,Health doesn't affect work,175
+Female,10,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,176
+Male,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",9365.0,Health doesn't affect work,177
+Female,11,1968,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,178
+Female,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,3360.0,Health doesn't affect work,179
+Male,6,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,180
+Male,6,1973,Hispanic,Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,181
+Female,13,1966,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,182
+Female,1,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,183
+Female,35,1944,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,25.0,College and above,Sales Occupations,2405.0,Health doesn't affect work,184
+Female,20,1959,Hispanic,Immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,185
+Male,4,1975,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,186
+Male,25,1955,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",20140.0,Health doesn't affect work,187
+Female,49,1930,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,21.0,29.0,College and above,Service Occupations,6005.0,Health doesn't affect work,188
+Male,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,189
+Male,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",6605.0,Health doesn't affect work,190
+Female,40,1940,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,31.0,32.0,College and above,Professional Specialty Occupations,7005.0,Health affects work,191
+Female,31,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,18.0,High school,,0.0,Health doesn't affect work,192
+Female,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,25.0,32.0,College and above,Managerial Occupations,22015.0,Health doesn't affect work,193
+Male,24,1956,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,High school,"Operators, Fabricators, and Laborers",13005.0,Health doesn't affect work,194
+Male,60,1919,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,Less than high school,"Farming, Forestry, and Fishing Occupations",10005.0,Health affects work,195
+Female,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,25.0,,College and above,"Operators, Fabricators, and Laborers",4555.0,Health doesn't affect work,196
+Male,23,1957,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Sales Occupations,6110.0,Health doesn't affect work,197
+Female,54,1925,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,21.0,25.0,High school,Service Occupations,7735.0,Health doesn't affect work,198
+Male,7,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,199
+Female,60,1919,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,22.0,,High school,"Operators, Fabricators, and Laborers",9085.0,Health doesn't affect work,200
+Male,9,1971,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,201
+Female,31,1948,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,17.0,,Less than high school,Sales Occupations,6070.0,Health doesn't affect work,202
+Female,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,17.0,20.0,High school,Clerical and Administrative Support Occupations,14355.0,Health doesn't affect work,203
+Male,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,,High school,"Precision Production, Craft, and Repair Occupations",21005.0,Health doesn't affect work,204
+Male,34,1946,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,22.0,24.0,High school,"Precision Production, Craft, and Repair Occupations",40005.0,Health doesn't affect work,205
+Male,69,1911,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,35.0,Less than high school,,5155.0,Health doesn't affect work,206
+Female,80,1900,Hispanic,Immigrant,Divorced/widowed,11.0,18.0,,Less than high school,,7010.0,Health doesn't affect work,207
+Female,9,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,208
+Male,11,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,209
+Male,15,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health doesn't affect work,210
+Male,38,1941,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,23.0,College and above,Professional Specialty Occupations,16010.0,Health doesn't affect work,211
+Male,78,1901,Black,Non-immigrant,Married,0.0,26.0,,Less than high school,,5510.0,Health doesn't affect work,212
+Female,3,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,213
+Female,43,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,17.0,31.0,High school,Managerial Occupations,4005.0,Health doesn't affect work,214
+Female,10,1969,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,215
+Female,77,1902,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,45.0,,College and above,,14140.0,Health doesn't affect work,216
+Female,3,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,217
+Female,4,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,218
+Female,9,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,219
+Female,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,165.0,Health doesn't affect work,220
+Male,70,1909,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,32.0,,High school,Sales Occupations,10505.0,Health doesn't affect work,221
+Male,22,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",7655.0,Health doesn't affect work,222
+Female,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,7370.0,Health doesn't affect work,223
+Female,13,1966,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,224
+Female,13,1967,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,225
+Male,68,1911,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,,High school,Managerial Occupations,8995.0,Health affects work,226
+Female,1,1978,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,227
+Female,5,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,228
+Male,86,1893,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,20.0,,Less than high school,,5510.0,Health doesn't affect work,229
+Female,58,1921,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,22.0,37.0,College and above,,9010.0,Health doesn't affect work,230
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Sales Occupations,25005.0,Health doesn't affect work,231
+Female,22,1957,Black,Non-immigrant,Single,0.0,,18.0,College and above,Clerical and Administrative Support Occupations,8005.0,Health doesn't affect work,232
+Male,45,1934,Hispanic,Immigrant,Married,0.0,20.0,22.0,Less than high school,"Operators, Fabricators, and Laborers",6930.0,Health affects work,233
+Male,5,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,234
+Male,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,0.0,Health doesn't affect work,235
+Male,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,32.0,High school,"Precision Production, Craft, and Repair Occupations",10355.0,Health doesn't affect work,236
+Male,32,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,29.0,College and above,Professional Specialty Occupations,20020.0,Health doesn't affect work,237
+Female,68,1911,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,Less than high school,,2425.0,Health doesn't affect work,238
+Male,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Operators, Fabricators, and Laborers",17505.0,Health doesn't affect work,239
+Male,57,1922,Hispanic,Non-immigrant,Married,0.0,25.0,35.0,High school,"Precision Production, Craft, and Repair Occupations",22485.0,Health doesn't affect work,240
+Male,55,1924,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,34.0,High school,Sales Occupations,40410.0,Health doesn't affect work,241
+Female,67,1912,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,15.0,,High school,Clerical and Administrative Support Occupations,7075.0,Health doesn't affect work,242
+Male,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,243
+Male,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,5005.0,Health doesn't affect work,244
+Female,33,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,22.0,25.0,College and above,Managerial Occupations,21205.0,Health doesn't affect work,245
+Female,8,1971,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,246
+Female,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,15.0,20.0,High school,Clerical and Administrative Support Occupations,0.0,Health doesn't affect work,247
+Male,25,1955,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,1505.0,Health doesn't affect work,248
+Male,69,1911,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,31.0,39.0,College and above,,14310.0,Health doesn't affect work,249
+Male,50,1929,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,37.0,High school,"Precision Production, Craft, and Repair Occupations",20220.0,Health doesn't affect work,250
+Female,11,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,251
+Male,61,1918,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,38.0,High school,"Operators, Fabricators, and Laborers",15440.0,Health doesn't affect work,252
+Female,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,Service Occupations,0.0,Health doesn't affect work,253
+Female,40,1939,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,27.0,College and above,Sales Occupations,16410.0,Health doesn't affect work,254
+Male,59,1920,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,36.0,43.0,High school,"Farming, Forestry, and Fishing Occupations",20010.0,Health doesn't affect work,255
+Female,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,25.0,,College and above,,6640.0,Health affects work,256
+Male,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Professional Specialty Occupations,14005.0,Health doesn't affect work,257
+Female,29,1950,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,17.0,20.0,High school,Clerical and Administrative Support Occupations,3505.0,Health doesn't affect work,258
+Female,62,1917,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,23.0,33.0,High school,Service Occupations,2405.0,Health doesn't affect work,259
+Female,22,1958,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,High school,Clerical and Administrative Support Occupations,9950.0,Health doesn't affect work,260
+Female,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,20.0,21.0,High school,Service Occupations,3005.0,Health doesn't affect work,261
+Male,56,1923,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,,High school,"Precision Production, Craft, and Repair Occupations",14325.0,Health doesn't affect work,262
+Female,30,1949,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,24.0,College and above,Professional Specialty Occupations,8325.0,Health doesn't affect work,263
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,19.0,High school,Clerical and Administrative Support Occupations,6005.0,Health doesn't affect work,264
+Female,7,1972,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,265
+Male,71,1908,Black,Non-immigrant,Married,0.0,33.0,,Less than high school,Service Occupations,7205.0,Health doesn't affect work,266
+Female,5,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,267
+Male,5,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,268
+Female,38,1941,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,38.0,College and above,Service Occupations,0.0,Health doesn't affect work,269
+Female,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,22.0,23.0,High school,"Operators, Fabricators, and Laborers",4685.0,Health affects work,270
+Female,65,1914,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,,High school,,1830.0,Health doesn't affect work,271
+Female,8,1971,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,272
+Female,57,1923,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,19.0,,High school,,3920.0,Health affects work,273
+Male,65,1914,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,,College and above,"Precision Production, Craft, and Repair Occupations",3795.0,Health affects work,274
+Female,59,1920,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,36.0,39.0,Less than high school,,0.0,Health doesn't affect work,275
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,21.0,High school,"Operators, Fabricators, and Laborers",23010.0,Health doesn't affect work,276
+Female,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,277
+Female,0,1979,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,278
+Female,56,1923,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,,High school,Clerical and Administrative Support Occupations,23010.0,Health doesn't affect work,279
+Female,75,1905,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,12.0,15.0,,Less than high school,Sales Occupations,3360.0,Health affects work,280
+Male,19,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",1415.0,Health doesn't affect work,281
+Female,55,1924,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,23.0,34.0,College and above,,0.0,Health doesn't affect work,282
+Male,12,1968,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,283
+Male,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,284
+Female,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,285
+Female,28,1951,Black,Non-immigrant,Married,0.0,19.0,,College and above,Clerical and Administrative Support Occupations,11450.0,Health doesn't affect work,286
+Female,25,1955,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,,College and above,Clerical and Administrative Support Occupations,2505.0,Health doesn't affect work,287
+Male,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,20.0,,High school,"Precision Production, Craft, and Repair Occupations",20005.0,Health doesn't affect work,288
+Male,14,1966,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,289
+Female,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,13310.0,Health doesn't affect work,290
+Female,64,1916,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,26.0,43.0,High school,Clerical and Administrative Support Occupations,14605.0,Health doesn't affect work,291
+Male,4,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,292
+Male,6,1973,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,293
+Female,61,1918,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,17.0,,High school,,0.0,Health affects work,294
+Male,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Sales Occupations,10810.0,Health doesn't affect work,295
+Male,74,1905,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,Less than high school,,3960.0,Health affects work,296
+Male,32,1947,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,28.0,30.0,College and above,Professional Specialty Occupations,5005.0,Health doesn't affect work,297
+Female,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,5005.0,Health doesn't affect work,298
+Male,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,"Operators, Fabricators, and Laborers",7005.0,Health doesn't affect work,299
+Female,5,1974,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,300
+Male,27,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,24.0,High school,"Farming, Forestry, and Fishing Occupations",25005.0,Health doesn't affect work,301
+Male,44,1935,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,26.0,High school,,6005.0,Health doesn't affect work,302
+Male,37,1942,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Precision Production, Craft, and Repair Occupations",13425.0,Health doesn't affect work,303
+Male,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",5505.0,Health doesn't affect work,304
+Male,46,1933,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,29.0,College and above,Technicians and Related Support Occupations,21640.0,Health doesn't affect work,305
+Male,36,1943,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,33.0,,College and above,"Operators, Fabricators, and Laborers",14805.0,Health doesn't affect work,306
+Female,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,25.0,26.0,College and above,Service Occupations,0.0,Health doesn't affect work,307
+Female,60,1919,Hispanic,Immigrant,Married,8.0,20.0,38.0,Less than high school,,0.0,Health affects work,308
+Female,68,1912,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,18.0,,Less than high school,,2825.0,Health doesn't affect work,309
+Female,29,1950,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,3820.0,Health doesn't affect work,310
+Female,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,311
+Male,20,1960,Black,Non-immigrant,Single,0.0,,,High school,Service Occupations,3005.0,Health doesn't affect work,312
+Female,4,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,313
+Female,44,1936,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,23.0,High school,,0.0,Health doesn't affect work,314
+Male,44,1935,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Farming, Forestry, and Fishing Occupations",9005.0,Health doesn't affect work,315
+Female,48,1932,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,30.0,High school,Clerical and Administrative Support Occupations,4305.0,Health doesn't affect work,316
+Female,5,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,317
+Female,15,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,425.0,Health doesn't affect work,318
+Male,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,319
+Female,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,320
+Male,6,1974,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,321
+Male,72,1907,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,,Less than high school,"Precision Production, Craft, and Repair Occupations",10125.0,Health doesn't affect work,322
+Female,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,323
+Female,48,1932,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,18.0,,High school,,0.0,Health doesn't affect work,324
+Female,77,1902,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,,6760.0,Health doesn't affect work,325
+Male,69,1910,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,35.0,,High school,Sales Occupations,6780.0,Health doesn't affect work,326
+Male,17,1962,Black,Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",4975.0,Health doesn't affect work,327
+Male,75,1904,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,30.0,,High school,,17065.0,Health affects work,328
+Male,50,1930,Black,Non-immigrant,Married,0.0,21.0,,High school,"Precision Production, Craft, and Repair Occupations",8005.0,Health doesn't affect work,329
+Male,46,1933,Hispanic,Immigrant,Married,0.0,38.0,24.0,College and above,"Farming, Forestry, and Fishing Occupations",4510.0,Health doesn't affect work,330
+Male,29,1951,Black,Non-immigrant,Divorced/widowed,0.0,22.0,,College and above,"Operators, Fabricators, and Laborers",4445.0,Health doesn't affect work,331
+Female,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",4105.0,Health doesn't affect work,332
+Male,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,333
+Male,13,1967,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,334
+Female,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,335
+Male,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,336
+Female,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,337
+Female,2,1977,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,338
+Male,49,1930,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,19.0,,High school,"Precision Production, Craft, and Repair Occupations",30005.0,Health doesn't affect work,339
+Male,23,1956,Black,Non-immigrant,Married,0.0,21.0,13.0,High school,"Operators, Fabricators, and Laborers",5765.0,Health doesn't affect work,340
+Female,19,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,1.0,,18.0,High school,Clerical and Administrative Support Occupations,2005.0,Health doesn't affect work,341
+Male,26,1953,Black,Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,3825.0,Health doesn't affect work,342
+Female,47,1932,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,3805.0,Health affects work,343
+Male,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health doesn't affect work,344
+Male,0,1979,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,345
+Female,15,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,346
+Male,49,1930,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,31.0,College and above,"Precision Production, Craft, and Repair Occupations",36005.0,Health doesn't affect work,347
+Female,79,1900,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,48.0,,High school,,2460.0,Health affects work,348
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,0.0,Health doesn't affect work,349
+Male,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,26.0,College and above,Managerial Occupations,17810.0,Health doesn't affect work,350
+Male,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,25.0,High school,Clerical and Administrative Support Occupations,19020.0,Health doesn't affect work,351
+Female,53,1927,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,,High school,Clerical and Administrative Support Occupations,9880.0,Health doesn't affect work,352
+Female,23,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,22.0,High school,Clerical and Administrative Support Occupations,0.0,Health doesn't affect work,353
+Male,60,1919,Black,Non-immigrant,Divorced/widowed,0.0,21.0,,Less than high school,"Operators, Fabricators, and Laborers",10005.0,Health doesn't affect work,354
+Male,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,16.0,,High school,"Precision Production, Craft, and Repair Occupations",18695.0,Health doesn't affect work,355
+Male,0,1979,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,356
+Male,56,1923,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,,High school,"Operators, Fabricators, and Laborers",28290.0,Health doesn't affect work,357
+Male,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,26.0,College and above,Managerial Occupations,32790.0,Health doesn't affect work,358
+Female,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,15.0,21.0,College and above,,0.0,Health doesn't affect work,359
+Male,39,1941,Black,Non-immigrant,Divorced/widowed,0.0,23.0,,High school,Service Occupations,1310.0,Health doesn't affect work,360
+Female,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,24.0,28.0,High school,,0.0,Health doesn't affect work,361
+Male,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Operators, Fabricators, and Laborers",5215.0,Health doesn't affect work,362
+Female,39,1940,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,6.0,16.0,19.0,High school,,3130.0,Health doesn't affect work,363
+Male,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Operators, Fabricators, and Laborers",3045.0,Health doesn't affect work,364
+Male,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,365
+Female,41,1939,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,30.0,35.0,High school,,0.0,Health doesn't affect work,366
+Female,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,27.0,College and above,Professional Specialty Occupations,14585.0,Health doesn't affect work,367
+Female,4,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,368
+Female,10,1970,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,369
+Male,51,1928,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,21.0,,Less than high school,,0.0,Health doesn't affect work,370
+Male,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,371
+Male,37,1942,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,26.0,College and above,Sales Occupations,14510.0,Health doesn't affect work,372
+Male,14,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,373
+Male,19,1960,Black,Non-immigrant,Single,0.0,,,High school,Military Occupations,21005.0,Health doesn't affect work,374
+Male,71,1908,Black,Non-immigrant,Married,0.0,60.0,,High school,,690.0,Health doesn't affect work,375
+Female,55,1924,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,,High school,,0.0,Health doesn't affect work,376
+Male,15,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health doesn't affect work,377
+Female,30,1949,Black,Non-immigrant,Married,2.0,14.0,27.0,Less than high school,Service Occupations,6005.0,Health doesn't affect work,378
+Female,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,379
+Female,8,1971,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,380
+Female,47,1933,Hispanic,Non-immigrant,Married,4.0,16.0,34.0,Less than high school,"Operators, Fabricators, and Laborers",4005.0,Health doesn't affect work,381
+Male,8,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,382
+Female,19,1961,Black,Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,355.0,Health doesn't affect work,383
+Male,67,1912,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,High school,,19810.0,Health doesn't affect work,384
+Male,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,465.0,Health doesn't affect work,385
+Male,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",11965.0,Health doesn't affect work,386
+Female,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,387
+Female,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,,College and above,Service Occupations,835.0,Health doesn't affect work,388
+Male,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,,College and above,"Operators, Fabricators, and Laborers",9125.0,Health doesn't affect work,389
+Female,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,390
+Male,3,1977,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,391
+Female,53,1926,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,23.0,32.0,High school,Clerical and Administrative Support Occupations,17005.0,Health doesn't affect work,392
+Female,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,13005.0,Health doesn't affect work,393
+Female,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,394
+Male,35,1945,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,,6745.0,Health affects work,395
+Female,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,,High school,Sales Occupations,3005.0,Health doesn't affect work,396
+Male,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,397
+Female,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,17.0,18.0,High school,Clerical and Administrative Support Occupations,11435.0,Health doesn't affect work,398
+Male,79,1900,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,Less than high school,,4760.0,Health affects work,399
+Male,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Service Occupations,5025.0,Health doesn't affect work,400
+Female,8,1971,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,401
+Female,22,1958,Black,Non-immigrant,Single,1.0,,,High school,Clerical and Administrative Support Occupations,2455.0,Health doesn't affect work,402
+Female,63,1916,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,,High school,Clerical and Administrative Support Occupations,6180.0,Health doesn't affect work,403
+Male,66,1913,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,30.0,,Less than high school,"Operators, Fabricators, and Laborers",9360.0,Health affects work,404
+Male,46,1933,Black,Non-immigrant,Married,0.0,25.0,27.0,High school,"Precision Production, Craft, and Repair Occupations",16875.0,Health doesn't affect work,405
+Male,48,1931,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,30.0,High school,"Precision Production, Craft, and Repair Occupations",20980.0,Health affects work,406
+Female,31,1948,Black,Non-immigrant,Single,2.0,,22.0,High school,,5505.0,Health doesn't affect work,407
+Female,5,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,408
+Female,31,1949,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,31.0,College and above,Managerial Occupations,13510.0,Health doesn't affect work,409
+Male,37,1942,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,30.0,College and above,Sales Occupations,42465.0,Health doesn't affect work,410
+Female,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,2205.0,Health doesn't affect work,411
+Male,25,1955,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Precision Production, Craft, and Repair Occupations",14005.0,Health doesn't affect work,412
+Male,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,21410.0,Health doesn't affect work,413
+Male,0,1980,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,414
+Male,30,1949,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,8010.0,Health doesn't affect work,415
+Female,8,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,416
+Female,71,1908,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,33.0,,College and above,,0.0,Health doesn't affect work,417
+Female,55,1924,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,,High school,,0.0,Health doesn't affect work,418
+Male,50,1930,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,High school,Sales Occupations,17005.0,Health doesn't affect work,419
+Male,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,26.0,30.0,College and above,Professional Specialty Occupations,23410.0,Health doesn't affect work,420
+Female,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,21.0,High school,Sales Occupations,4405.0,Health doesn't affect work,421
+Male,47,1933,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,24.0,32.0,High school,"Operators, Fabricators, and Laborers",0.0,Health doesn't affect work,422
+Female,57,1922,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,18.0,,High school,Clerical and Administrative Support Occupations,14725.0,Health doesn't affect work,423
+Female,1,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,424
+Female,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,7005.0,Health doesn't affect work,425
+Female,64,1916,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,2255.0,Health affects work,426
+Male,48,1931,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,14.0,25.0,High school,,555.0,Health doesn't affect work,427
+Male,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,428
+Male,15,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health doesn't affect work,429
+Male,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,High school,Sales Occupations,9355.0,Health affects work,430
+Male,18,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",2705.0,Health doesn't affect work,431
+Male,52,1927,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,,High school,"Operators, Fabricators, and Laborers",10205.0,Health doesn't affect work,432
+Male,19,1961,Black,Non-immigrant,Single,0.0,,,High school,,1405.0,Health doesn't affect work,433
+Male,31,1948,Hispanic,Non-immigrant,Married,0.0,19.0,22.0,College and above,Clerical and Administrative Support Occupations,21005.0,Health doesn't affect work,434
+Male,43,1936,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,37.0,,College and above,"Precision Production, Craft, and Repair Occupations",10405.0,Health doesn't affect work,435
+Male,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,436
+Female,16,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health doesn't affect work,437
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,17.0,,High school,"Operators, Fabricators, and Laborers",6920.0,Health doesn't affect work,438
+Male,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Operators, Fabricators, and Laborers",8305.0,Health doesn't affect work,439
+Female,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,19.0,20.0,High school,"Operators, Fabricators, and Laborers",11710.0,Health doesn't affect work,440
+Female,50,1930,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,20.0,30.0,College and above,Clerical and Administrative Support Occupations,22010.0,Health doesn't affect work,441
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,0.0,Health doesn't affect work,442
+Female,33,1947,Hispanic,Non-immigrant,Married,2.0,21.0,24.0,High school,Clerical and Administrative Support Occupations,0.0,Health doesn't affect work,443
+Female,42,1937,Black,Non-immigrant,Married,3.0,15.0,24.0,High school,"Operators, Fabricators, and Laborers",11005.0,Health doesn't affect work,444
+Female,31,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,19.0,High school,Managerial Occupations,8005.0,Health doesn't affect work,445
+Female,39,1940,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,23.0,High school,Professional Specialty Occupations,0.0,Health doesn't affect work,446
+Female,77,1902,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,,5980.0,Health doesn't affect work,447
+Male,7,1972,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,448
+Female,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,24.0,High school,Clerical and Administrative Support Occupations,0.0,Health doesn't affect work,449
+Male,3,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,450
+Male,61,1918,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,30.0,,Less than high school,"Operators, Fabricators, and Laborers",22340.0,Health doesn't affect work,451
+Male,73,1907,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,31.0,,Less than high school,,8955.0,Health doesn't affect work,452
+Male,47,1933,Black,Non-immigrant,Married,0.0,39.0,28.0,Less than high school,"Precision Production, Craft, and Repair Occupations",80.0,Health affects work,453
+Female,40,1939,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,17.0,20.0,High school,Service Occupations,605.0,Health affects work,454
+Male,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Farming, Forestry, and Fishing Occupations",1505.0,Health doesn't affect work,455
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,,High school,Military Occupations,8405.0,Health doesn't affect work,456
+Male,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,College and above,Professional Specialty Occupations,24300.0,Health affects work,457
+Female,58,1922,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,37.0,High school,"Farming, Forestry, and Fishing Occupations",4255.0,Health doesn't affect work,458
+Male,1,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,459
+Male,5,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,460
+Male,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,30.0,High school,"Precision Production, Craft, and Repair Occupations",22600.0,Health doesn't affect work,461
+Female,37,1942,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,19.0,20.0,College and above,Managerial Occupations,3005.0,Health doesn't affect work,462
+Female,12,1967,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,463
+Female,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,464
+Female,76,1904,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,29.0,,High school,,7330.0,Health doesn't affect work,465
+Male,8,1971,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,466
+Female,3,1977,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,467
+Female,2,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,468
+Male,63,1916,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,High school,,11335.0,Health doesn't affect work,469
+Female,43,1936,"Non-Black, Non-Hispanic",Immigrant,Married,1.0,19.0,24.0,Less than high school,Service Occupations,8205.0,Health doesn't affect work,470
+Female,1,1978,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,471
+Female,79,1900,Black,Non-immigrant,Divorced/widowed,10.0,17.0,28.0,Less than high school,,2630.0,Health affects work,472
+Female,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,473
+Female,74,1905,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,,Less than high school,,2800.0,Health affects work,474
+Male,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,17.0,25.0,High school,"Precision Production, Craft, and Repair Occupations",27505.0,Health doesn't affect work,475
+Female,64,1915,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,0.0,46.0,,Less than high school,"Precision Production, Craft, and Repair Occupations",1205.0,Health doesn't affect work,476
+Female,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,2260.0,Health doesn't affect work,477
+Male,10,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,478
+Male,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,479
+Female,69,1910,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,39.0,,Less than high school,Technicians and Related Support Occupations,9455.0,Health doesn't affect work,480
+Female,79,1900,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,24.0,,High school,,3510.0,Health doesn't affect work,481
+Male,10,1969,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,482
+Female,59,1920,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,30.0,43.0,High school,Clerical and Administrative Support Occupations,13695.0,Health doesn't affect work,483
+Male,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,30.0,College and above,"Operators, Fabricators, and Laborers",9005.0,Health doesn't affect work,484
+Female,36,1943,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,10005.0,Health doesn't affect work,485
+Female,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,19.0,High school,Clerical and Administrative Support Occupations,0.0,Health doesn't affect work,486
+Female,81,1898,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,3.0,20.0,30.0,Less than high school,,3580.0,Health doesn't affect work,487
+Female,52,1927,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,26.0,39.0,Less than high school,,1835.0,Health affects work,488
+Female,68,1911,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,7.0,18.0,21.0,High school,,8780.0,Health affects work,489
+Female,13,1966,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,490
+Male,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,18.0,College and above,"Precision Production, Craft, and Repair Occupations",10005.0,Health doesn't affect work,491
+Female,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,26.0,23.0,College and above,Clerical and Administrative Support Occupations,7005.0,Health doesn't affect work,492
+Female,23,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,College and above,Service Occupations,455.0,Health doesn't affect work,493
+Female,2,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,494
+Female,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,18.0,,High school,Clerical and Administrative Support Occupations,2145.0,Health affects work,495
+Female,51,1929,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,,High school,,0.0,Health doesn't affect work,496
+Male,61,1918,Black,Non-immigrant,Divorced/widowed,0.0,34.0,37.0,Less than high school,"Precision Production, Craft, and Repair Occupations",4150.0,Health doesn't affect work,497
+Female,29,1950,Black,Non-immigrant,Married,4.0,14.0,14.0,High school,Service Occupations,5735.0,Health affects work,498
+Male,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Managerial Occupations,75.0,Health doesn't affect work,499
+Female,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,500
+Female,70,1909,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,22.0,,High school,,6010.0,Health doesn't affect work,501
+Male,16,1963,Hispanic,Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",1160.0,Health doesn't affect work,502
+Female,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",8005.0,Health doesn't affect work,503
+Female,57,1922,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,24.0,,High school,"Operators, Fabricators, and Laborers",6210.0,Health affects work,504
+Female,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,27.0,College and above,Managerial Occupations,13065.0,Health doesn't affect work,505
+Male,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,High school,"Precision Production, Craft, and Repair Occupations",10960.0,Health affects work,506
+Female,2,1978,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,507
+Female,79,1901,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,High school,,7095.0,Health affects work,508
+Female,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,12335.0,Health doesn't affect work,509
+Female,20,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Service Occupations,1005.0,Health doesn't affect work,510
+Female,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,20.0,29.0,College and above,Managerial Occupations,24005.0,Health doesn't affect work,511
+Female,54,1926,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,40.0,High school,Sales Occupations,6510.0,Health affects work,512
+Male,59,1920,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,Less than high school,"Operators, Fabricators, and Laborers",18375.0,Health doesn't affect work,513
+Male,71,1908,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,27.0,,Less than high school,,3180.0,Health affects work,514
+Female,25,1955,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,14070.0,Health doesn't affect work,515
+Female,34,1946,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Managerial Occupations,24360.0,Health doesn't affect work,516
+Female,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,21.0,,Less than high school,,215.0,Health doesn't affect work,517
+Male,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,56.0,Less than high school,"Operators, Fabricators, and Laborers",12180.0,Health doesn't affect work,518
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Farming, Forestry, and Fishing Occupations",1050.0,Health doesn't affect work,519
+Female,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,,High school,Clerical and Administrative Support Occupations,8925.0,Health doesn't affect work,520
+Female,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,521
+Female,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,14.0,,College and above,,1805.0,Health doesn't affect work,522
+Male,5,1974,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,523
+Female,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,15.0,18.0,College and above,,0.0,Health doesn't affect work,524
+Female,40,1939,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,21.0,24.0,College and above,Professional Specialty Occupations,355.0,Health doesn't affect work,525
+Female,30,1950,Black,Immigrant,Married,0.0,25.0,19.0,High school,Clerical and Administrative Support Occupations,10005.0,Health doesn't affect work,526
+Female,34,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,19.0,22.0,High school,,0.0,Health doesn't affect work,527
+Male,36,1943,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Managerial Occupations,15810.0,Health doesn't affect work,528
+Male,19,1960,Black,Non-immigrant,Single,0.0,,,College and above,Sales Occupations,4310.0,Health doesn't affect work,529
+Female,44,1935,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,20.0,27.0,High school,,0.0,Health doesn't affect work,530
+Female,17,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,2055.0,Health doesn't affect work,531
+Female,50,1930,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,19.0,35.0,High school,Clerical and Administrative Support Occupations,10005.0,Health doesn't affect work,532
+Female,54,1925,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,32.0,High school,,0.0,Health doesn't affect work,533
+Female,48,1932,Hispanic,Non-immigrant,Divorced/widowed,5.0,27.0,35.0,High school,Service Occupations,6540.0,Health doesn't affect work,534
+Male,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,Military Occupations,6005.0,Health doesn't affect work,535
+Female,33,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,21.0,22.0,College and above,Professional Specialty Occupations,215.0,Health doesn't affect work,536
+Female,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,537
+Male,33,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,17.0,19.0,College and above,"Precision Production, Craft, and Repair Occupations",16505.0,Health doesn't affect work,538
+Male,38,1942,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,23.0,,College and above,Managerial Occupations,47010.0,Health doesn't affect work,539
+Female,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,9005.0,Health doesn't affect work,540
+Female,25,1954,Black,Non-immigrant,Married,2.0,19.0,19.0,High school,"Operators, Fabricators, and Laborers",1005.0,Health doesn't affect work,541
+Female,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,542
+Female,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Service Occupations,1905.0,Health doesn't affect work,543
+Female,89,1890,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,6.0,15.0,31.0,Less than high school,,3010.0,Health doesn't affect work,544
+Male,2,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,545
+Female,16,1964,Hispanic,Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,546
+Male,19,1961,Black,Non-immigrant,Single,0.0,,,High school,Military Occupations,805.0,Health doesn't affect work,547
+Male,23,1956,Black,Non-immigrant,Married,0.0,18.0,,College and above,Clerical and Administrative Support Occupations,7005.0,Health doesn't affect work,548
+Male,65,1914,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,21.0,,High school,"Precision Production, Craft, and Repair Occupations",6690.0,Health doesn't affect work,549
+Male,80,1900,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,,Less than high school,,3145.0,Health affects work,550
+Female,62,1918,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,31.0,,Less than high school,"Operators, Fabricators, and Laborers",9960.0,Health doesn't affect work,551
+Female,63,1916,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Managerial Occupations,25645.0,Health doesn't affect work,552
+Female,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,515.0,Health doesn't affect work,553
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,18.0,High school,"Precision Production, Craft, and Repair Occupations",16615.0,Health doesn't affect work,554
+Female,57,1923,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,24.0,,High school,,0.0,Health affects work,555
+Female,2,1977,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,556
+Female,30,1950,Black,Non-immigrant,Single,1.0,,25.0,High school,Clerical and Administrative Support Occupations,8005.0,Health affects work,557
+Male,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,25.0,College and above,"Operators, Fabricators, and Laborers",23335.0,Health doesn't affect work,558
+Male,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,24.0,Less than high school,"Precision Production, Craft, and Repair Occupations",350.0,Health doesn't affect work,559
+Female,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,560
+Male,18,1962,Black,Non-immigrant,Single,0.0,,,High school,,3245.0,Health doesn't affect work,561
+Male,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,26.0,High school,"Operators, Fabricators, and Laborers",17235.0,Health doesn't affect work,562
+Female,15,1964,Black,Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,563
+Female,71,1908,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,,Less than high school,,2055.0,Health doesn't affect work,564
+Female,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,565
+Male,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,566
+Male,40,1940,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,17.0,18.0,High school,"Precision Production, Craft, and Repair Occupations",26425.0,Health doesn't affect work,567
+Female,11,1968,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,568
+Female,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,20.0,28.0,High school,,0.0,Health doesn't affect work,569
+Male,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",12005.0,Health doesn't affect work,570
+Female,50,1929,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,26.0,34.0,College and above,Professional Specialty Occupations,14005.0,Health doesn't affect work,571
+Female,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,17.0,17.0,High school,Service Occupations,2005.0,Health doesn't affect work,572
+Male,51,1928,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,17.0,High school,"Farming, Forestry, and Fishing Occupations",25570.0,Health doesn't affect work,573
+Male,42,1937,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,27820.0,Health doesn't affect work,574
+Female,78,1901,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,28.0,,High school,,1805.0,Health doesn't affect work,575
+Male,19,1960,Black,Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,576
+Male,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,49.0,,High school,"Precision Production, Craft, and Repair Occupations",11415.0,Health doesn't affect work,577
+Male,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,1030.0,Health doesn't affect work,578
+Male,28,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,19.0,High school,"Precision Production, Craft, and Repair Occupations",9205.0,Health doesn't affect work,579
+Male,56,1924,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,High school,"Precision Production, Craft, and Repair Occupations",20290.0,Health doesn't affect work,580
+Female,6,1973,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,581
+Female,71,1908,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,,Less than high school,,3545.0,Health affects work,582
+Male,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,27.0,College and above,Managerial Occupations,12005.0,Health doesn't affect work,583
+Male,56,1923,Black,Non-immigrant,Divorced/widowed,0.0,26.0,,Less than high school,"Operators, Fabricators, and Laborers",4005.0,Health doesn't affect work,584
+Male,45,1935,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,33.0,High school,"Precision Production, Craft, and Repair Occupations",9510.0,Health doesn't affect work,585
+Female,18,1961,Black,Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,1445.0,Health doesn't affect work,586
+Male,16,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,587
+Female,62,1917,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,20355.0,Health doesn't affect work,588
+Female,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,22.0,College and above,"Operators, Fabricators, and Laborers",0.0,Health doesn't affect work,589
+Female,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,16.0,18.0,Less than high school,,0.0,Health doesn't affect work,590
+Male,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,College and above,Clerical and Administrative Support Occupations,13505.0,Health doesn't affect work,591
+Female,76,1903,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,35.0,,College and above,,3770.0,Health affects work,592
+Female,69,1910,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,19.0,,High school,Sales Occupations,2805.0,Health doesn't affect work,593
+Male,19,1960,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,College and above,Sales Occupations,6005.0,Health doesn't affect work,594
+Female,53,1927,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,21.0,37.0,College and above,Sales Occupations,0.0,Health doesn't affect work,595
+Female,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Sales Occupations,1885.0,Health doesn't affect work,596
+Male,52,1927,Black,Immigrant,Married,0.0,52.0,,Less than high school,"Precision Production, Craft, and Repair Occupations",15005.0,Health doesn't affect work,597
+Female,27,1953,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,19.0,20.0,High school,Managerial Occupations,7410.0,Health doesn't affect work,598
+Female,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,22.0,25.0,College and above,Clerical and Administrative Support Occupations,0.0,Health doesn't affect work,599
+Male,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,24.0,High school,Clerical and Administrative Support Occupations,10005.0,Health doesn't affect work,600
+Male,51,1928,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,32.0,College and above,Professional Specialty Occupations,75000.0,Health doesn't affect work,601
+Female,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,20.0,24.0,High school,Sales Occupations,1805.0,Health doesn't affect work,602
+Male,40,1940,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,23.0,College and above,Managerial Occupations,33005.0,Health doesn't affect work,603
+Female,56,1923,Hispanic,Immigrant,Married,10.0,29.0,32.0,Less than high school,"Operators, Fabricators, and Laborers",1505.0,Health affects work,604
+Male,36,1944,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,24.0,College and above,Professional Specialty Occupations,55365.0,Health doesn't affect work,605
+Male,54,1925,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,26.0,35.0,College and above,Managerial Occupations,29010.0,Health doesn't affect work,606
+Female,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,,High school,Sales Occupations,0.0,Health doesn't affect work,607
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",7180.0,Health doesn't affect work,608
+Male,13,1967,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,609
+Male,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",5005.0,Health doesn't affect work,610
+Female,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,High school,"Operators, Fabricators, and Laborers",4805.0,Health doesn't affect work,611
+Female,38,1941,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,21.0,High school,"Operators, Fabricators, and Laborers",5105.0,Health doesn't affect work,612
+Female,1,1978,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,613
+Male,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,17165.0,Health doesn't affect work,614
+Female,13,1966,Hispanic,Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,615
+Female,2,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,616
+Male,57,1922,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,28.0,32.0,High school,Service Occupations,25270.0,Health doesn't affect work,617
+Male,11,1968,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,618
+Male,55,1924,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,24.0,Less than high school,"Operators, Fabricators, and Laborers",12575.0,Health doesn't affect work,619
+Female,49,1931,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,16.0,,High school,Clerical and Administrative Support Occupations,8420.0,Health doesn't affect work,620
+Male,37,1942,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,24.0,College and above,Professional Specialty Occupations,22025.0,Health doesn't affect work,621
+Male,69,1910,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,26.0,,Less than high school,,3855.0,Health affects work,622
+Male,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,623
+Female,75,1905,"Non-Black, Non-Hispanic",Immigrant,Divorced/widowed,0.0,16.0,,Less than high school,,3605.0,Health doesn't affect work,624
+Male,5,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,625
+Male,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,29.0,30.0,College and above,"Precision Production, Craft, and Repair Occupations",59805.0,Health doesn't affect work,626
+Male,46,1933,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,25.0,College and above,Managerial Occupations,50005.0,Health doesn't affect work,627
+Female,9,1971,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,628
+Female,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,,High school,"Operators, Fabricators, and Laborers",1205.0,Health doesn't affect work,629
+Male,52,1927,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,29.0,High school,"Farming, Forestry, and Fishing Occupations",20005.0,Health doesn't affect work,630
+Male,3,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,631
+Female,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,18.0,College and above,Clerical and Administrative Support Occupations,8505.0,Health doesn't affect work,632
+Female,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,22.0,28.0,College and above,,0.0,Health doesn't affect work,633
+Female,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,20.0,Less than high school,,235.0,Health doesn't affect work,634
+Female,49,1930,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,22.0,27.0,High school,,0.0,Health doesn't affect work,635
+Female,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,8005.0,Health doesn't affect work,636
+Male,31,1949,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,25.0,College and above,Professional Specialty Occupations,18570.0,Health doesn't affect work,637
+Female,59,1921,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,21.0,,High school,,0.0,Health affects work,638
+Male,79,1900,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,High school,,15415.0,Health doesn't affect work,639
+Female,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,205.0,Health doesn't affect work,640
+Male,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,24.0,College and above,Professional Specialty Occupations,35005.0,Health doesn't affect work,641
+Male,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,23.0,High school,"Operators, Fabricators, and Laborers",23005.0,Health doesn't affect work,642
+Female,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,643
+Female,78,1902,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,High school,,3505.0,Health affects work,644
+Male,45,1934,Black,Non-immigrant,Married,0.0,23.0,28.0,High school,Clerical and Administrative Support Occupations,13005.0,Health doesn't affect work,645
+Male,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,23.0,High school,"Operators, Fabricators, and Laborers",22005.0,Health doesn't affect work,646
+Female,35,1944,Black,Immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",22455.0,Health doesn't affect work,647
+Female,10,1970,Hispanic,Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,648
+Female,57,1922,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,25.0,19.0,High school,,0.0,Health doesn't affect work,649
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,Clerical and Administrative Support Occupations,7005.0,Health doesn't affect work,650
+Male,69,1910,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,,Less than high school,,6950.0,Health doesn't affect work,651
+Male,7,1972,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,652
+Male,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,High school,"Precision Production, Craft, and Repair Occupations",20060.0,Health doesn't affect work,653
+Male,55,1924,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,College and above,Professional Specialty Occupations,17005.0,Health doesn't affect work,654
+Female,34,1946,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,19.0,21.0,College and above,Professional Specialty Occupations,12430.0,Health doesn't affect work,655
+Female,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,15.0,Health doesn't affect work,656
+Female,26,1954,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,,College and above,Professional Specialty Occupations,16220.0,Health doesn't affect work,657
+Male,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,6005.0,Health doesn't affect work,658
+Female,37,1943,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,17.0,20.0,High school,"Precision Production, Craft, and Repair Occupations",5010.0,Health doesn't affect work,659
+Female,40,1939,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,17.0,,High school,Professional Specialty Occupations,0.0,Health doesn't affect work,660
+Female,9,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,661
+Male,74,1905,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,,High school,,5320.0,Health affects work,662
+Male,13,1967,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,663
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,20.0,,College and above,"Farming, Forestry, and Fishing Occupations",6255.0,Health doesn't affect work,664
+Female,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health affects work,665
+Female,16,1964,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,High school,Sales Occupations,1955.0,Health doesn't affect work,666
+Male,53,1926,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,34.0,High school,Professional Specialty Occupations,21510.0,Health doesn't affect work,667
+Female,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,Clerical and Administrative Support Occupations,6505.0,Health doesn't affect work,668
+Male,9,1970,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,669
+Male,83,1897,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,36.0,,Less than high school,,12505.0,Health doesn't affect work,670
+Female,46,1933,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,17.0,,High school,Service Occupations,0.0,Health doesn't affect work,671
+Male,38,1942,Black,Non-immigrant,Married,0.0,24.0,,High school,Military Occupations,12255.0,Health doesn't affect work,672
+Female,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,8.0,17.0,24.0,High school,Service Occupations,7305.0,Health doesn't affect work,673
+Female,78,1901,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,26.0,,High school,,3065.0,Health doesn't affect work,674
+Male,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,675
+Female,54,1925,Black,Non-immigrant,Married,0.0,28.0,,College and above,Professional Specialty Occupations,15030.0,Health doesn't affect work,676
+Male,3,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,677
+Male,79,1900,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,22.0,,High school,,10660.0,Health doesn't affect work,678
+Male,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,33.0,College and above,Managerial Occupations,23910.0,Health doesn't affect work,679
+Male,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,23.0,High school,"Operators, Fabricators, and Laborers",9985.0,Health doesn't affect work,680
+Female,44,1936,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Professional Specialty Occupations,15730.0,Health doesn't affect work,681
+Male,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,26.0,College and above,"Precision Production, Craft, and Repair Occupations",26040.0,Health doesn't affect work,682
+Female,10,1969,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,683
+Male,27,1952,Black,Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,684
+Male,5,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,685
+Female,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,24.0,High school,,0.0,Health doesn't affect work,686
+Male,32,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,26.0,28.0,High school,"Operators, Fabricators, and Laborers",16005.0,Health doesn't affect work,687
+Male,19,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Professional Specialty Occupations,405.0,Health doesn't affect work,688
+Female,86,1893,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,22.0,,Less than high school,,2530.0,Health affects work,689
+Male,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,690
+Male,52,1927,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,33.0,High school,"Precision Production, Craft, and Repair Occupations",10440.0,Health doesn't affect work,691
+Male,4,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,692
+Female,60,1919,Black,Non-immigrant,Divorced/widowed,0.0,17.0,,High school,,2885.0,Health affects work,693
+Female,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,21.0,College and above,Clerical and Administrative Support Occupations,3005.0,Health doesn't affect work,694
+Male,51,1928,Black,Non-immigrant,Married,0.0,25.0,,High school,"Precision Production, Craft, and Repair Occupations",1405.0,Health doesn't affect work,695
+Female,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,18.0,19.0,High school,Clerical and Administrative Support Occupations,8505.0,Health doesn't affect work,696
+Male,29,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,29.0,College and above,Professional Specialty Occupations,20005.0,Health doesn't affect work,697
+Male,17,1962,Hispanic,Non-immigrant,Single,0.0,,,High school,Managerial Occupations,1105.0,Health doesn't affect work,698
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health doesn't affect work,699
+Male,10,1970,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,700
+Female,15,1964,Hispanic,Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,701
+Male,5,1975,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,702
+Male,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,"Operators, Fabricators, and Laborers",9005.0,Health doesn't affect work,703
+Male,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,2940.0,Health doesn't affect work,704
+Female,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,"Operators, Fabricators, and Laborers",6020.0,Health doesn't affect work,705
+Female,32,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,,High school,Clerical and Administrative Support Occupations,10005.0,Health doesn't affect work,706
+Male,18,1961,Black,Non-immigrant,Single,0.0,,,Less than high school,"Operators, Fabricators, and Laborers",1405.0,Health doesn't affect work,707
+Female,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,17.0,18.0,High school,Service Occupations,0.0,Health doesn't affect work,708
+Male,43,1936,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,24.0,High school,"Precision Production, Craft, and Repair Occupations",30130.0,Health doesn't affect work,709
+Male,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,710
+Female,11,1968,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,711
+Male,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,712
+Female,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,College and above,Sales Occupations,3005.0,Health doesn't affect work,713
+Male,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",0.0,Health doesn't affect work,714
+Female,8,1972,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,715
+Male,37,1942,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,23.0,24.0,College and above,Managerial Occupations,24005.0,Health doesn't affect work,716
+Female,52,1928,Black,Non-immigrant,Married,2.0,18.0,19.0,College and above,Professional Specialty Occupations,18005.0,Health affects work,717
+Female,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,718
+Female,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,33.0,,College and above,Professional Specialty Occupations,13080.0,Health doesn't affect work,719
+Male,55,1924,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,32.0,,High school,"Precision Production, Craft, and Repair Occupations",13005.0,Health doesn't affect work,720
+Male,15,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,2205.0,Health doesn't affect work,721
+Male,74,1906,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,26.0,54.0,Less than high school,"Operators, Fabricators, and Laborers",0.0,Health doesn't affect work,722
+Male,2,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,723
+Female,39,1940,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,College and above,Professional Specialty Occupations,21305.0,Health doesn't affect work,724
+Female,52,1927,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,1.0,19.0,,College and above,Sales Occupations,2410.0,Health doesn't affect work,725
+Male,8,1971,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,726
+Female,12,1967,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,727
+Female,35,1944,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,23.0,23.0,High school,Clerical and Administrative Support Occupations,15570.0,Health doesn't affect work,728
+Female,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,10020.0,Health doesn't affect work,729
+Female,30,1949,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,19.0,28.0,Less than high school,"Operators, Fabricators, and Laborers",0.0,Health doesn't affect work,730
+Male,5,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,731
+Female,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,,High school,"Operators, Fabricators, and Laborers",3010.0,Health affects work,732
+Male,17,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,"Farming, Forestry, and Fishing Occupations",945.0,Health doesn't affect work,733
+Female,33,1946,Black,Immigrant,Divorced/widowed,0.0,29.0,,College and above,Professional Specialty Occupations,21005.0,Health doesn't affect work,734
+Female,30,1949,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,22.0,21.0,High school,Sales Occupations,14635.0,Health doesn't affect work,735
+Male,37,1942,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,28.0,College and above,Managerial Occupations,22805.0,Health doesn't affect work,736
+Female,30,1949,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,22.0,29.0,College and above,Professional Specialty Occupations,21005.0,Health doesn't affect work,737
+Male,24,1955,Black,Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",14295.0,Health doesn't affect work,738
+Male,24,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,14005.0,Health doesn't affect work,739
+Female,21,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,5005.0,Health doesn't affect work,740
+Female,54,1925,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,2.0,19.0,,Less than high school,"Operators, Fabricators, and Laborers",5710.0,Health affects work,741
+Female,6,1973,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,742
+Female,58,1921,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,21.0,,High school,Sales Occupations,0.0,Health doesn't affect work,743
+Female,31,1948,Black,Non-immigrant,Married,8.0,19.0,17.0,High school,,0.0,Health doesn't affect work,744
+Male,7,1972,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,745
+Female,82,1897,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,22.0,,Less than high school,,2390.0,Health doesn't affect work,746
+Female,35,1944,"Non-Black, Non-Hispanic",Non-immigrant,Married,7.0,18.0,18.0,Less than high school,Service Occupations,2965.0,Health doesn't affect work,747
+Male,25,1955,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Operators, Fabricators, and Laborers",13765.0,Health doesn't affect work,748
+Female,35,1944,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,19.0,20.0,High school,Technicians and Related Support Occupations,16505.0,Health doesn't affect work,749
+Female,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,750
+Female,4,1975,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,751
+Male,21,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,320.0,Health doesn't affect work,752
+Female,51,1929,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,17.0,25.0,College and above,Clerical and Administrative Support Occupations,10005.0,Health doesn't affect work,753
+Female,47,1932,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,30.0,High school,,0.0,Health doesn't affect work,754
+Female,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,755
+Male,30,1950,Black,Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,11140.0,Health doesn't affect work,756
+Female,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,17.0,18.0,High school,Clerical and Administrative Support Occupations,305.0,Health doesn't affect work,757
+Male,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,758
+Female,40,1939,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,25.0,31.0,College and above,Managerial Occupations,22865.0,Health doesn't affect work,759
+Male,5,1974,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,760
+Male,17,1962,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health doesn't affect work,761
+Male,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Sales Occupations,10015.0,Health doesn't affect work,762
+Female,16,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,Service Occupations,1005.0,Health doesn't affect work,763
+Male,60,1920,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,High school,Managerial Occupations,58010.0,Health doesn't affect work,764
+Male,65,1914,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,,High school,Sales Occupations,8965.0,Health doesn't affect work,765
+Female,6,1973,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,766
+Male,11,1968,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,767
+Female,42,1937,Black,Non-immigrant,Married,4.0,17.0,27.0,College and above,Professional Specialty Occupations,9205.0,Health doesn't affect work,768
+Male,5,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,769
+Female,75,1904,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,38.0,,High school,Service Occupations,4205.0,Health doesn't affect work,770
+Male,64,1915,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,35.0,,High school,"Operators, Fabricators, and Laborers",21110.0,Health doesn't affect work,771
+Female,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,25.0,College and above,Professional Specialty Occupations,2005.0,Health doesn't affect work,772
+Female,47,1932,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,16.0,,High school,Managerial Occupations,18165.0,Health doesn't affect work,773
+Female,18,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,1930.0,Health doesn't affect work,774
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,1220.0,Health doesn't affect work,775
+Female,50,1929,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,21.0,,High school,Service Occupations,7570.0,Health affects work,776
+Male,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,22.0,High school,Clerical and Administrative Support Occupations,21030.0,Health doesn't affect work,777
+Female,20,1959,Hispanic,Non-immigrant,Married,0.0,18.0,,College and above,Sales Occupations,2205.0,Health doesn't affect work,778
+Male,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Military Occupations,7010.0,Health doesn't affect work,779
+Male,8,1971,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,780
+Female,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Operators, Fabricators, and Laborers",3005.0,Health doesn't affect work,781
+Male,10,1969,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,782
+Female,1,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,783
+Female,31,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,23.0,High school,"Operators, Fabricators, and Laborers",5010.0,Health doesn't affect work,784
+Female,44,1935,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,21.0,26.0,College and above,Professional Specialty Occupations,11760.0,Health doesn't affect work,785
+Male,36,1944,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,21.0,High school,"Precision Production, Craft, and Repair Occupations",21005.0,Health doesn't affect work,786
+Female,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,787
+Male,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,High school,"Precision Production, Craft, and Repair Occupations",10905.0,Health doesn't affect work,788
+Female,14,1965,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,789
+Female,5,1974,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,790
+Female,10,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,791
+Female,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,792
+Female,20,1959,Black,Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,2910.0,Health doesn't affect work,793
+Male,31,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,17.0,High school,Managerial Occupations,25925.0,Health doesn't affect work,794
+Male,31,1948,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,26.0,College and above,Professional Specialty Occupations,9005.0,Health doesn't affect work,795
+Male,52,1927,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,38.0,College and above,Managerial Occupations,30005.0,Health doesn't affect work,796
+Male,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,797
+Female,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,798
+Female,47,1932,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Military Occupations,4255.0,Health doesn't affect work,799
+Male,0,1980,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,800
+Female,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,17.0,21.0,Less than high school,,0.0,Health doesn't affect work,801
+Female,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,802
+Male,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,19.0,High school,Sales Occupations,17165.0,Health doesn't affect work,803
+Male,60,1919,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,29.0,,Less than high school,,5510.0,Health doesn't affect work,804
+Male,21,1959,Black,Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,10210.0,Health doesn't affect work,805
+Male,80,1899,Black,Non-immigrant,Married,0.0,26.0,,Less than high school,"Farming, Forestry, and Fishing Occupations",4840.0,Health doesn't affect work,806
+Male,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Precision Production, Craft, and Repair Occupations",11180.0,Health doesn't affect work,807
+Male,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,808
+Female,17,1962,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,16.0,,High school,,0.0,Health doesn't affect work,809
+Male,27,1952,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,"Operators, Fabricators, and Laborers",11005.0,Health doesn't affect work,810
+Male,78,1901,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,62.0,,College and above,Professional Specialty Occupations,13015.0,Health doesn't affect work,811
+Female,79,1900,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,5.0,20.0,,Less than high school,,3670.0,Health affects work,812
+Male,50,1929,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,34.0,College and above,"Precision Production, Craft, and Repair Occupations",24005.0,Health doesn't affect work,813
+Male,21,1959,Hispanic,Non-immigrant,Single,0.0,,,College and above,Managerial Occupations,12005.0,Health doesn't affect work,814
+Male,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,18.0,High school,"Operators, Fabricators, and Laborers",16670.0,Health doesn't affect work,815
+Female,11,1968,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,816
+Female,1,1979,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,817
+Female,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,818
+Female,9,1970,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,819
+Male,20,1960,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,18.0,,High school,Service Occupations,3605.0,Health doesn't affect work,820
+Female,35,1944,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,24.0,32.0,College and above,Clerical and Administrative Support Occupations,10605.0,Health doesn't affect work,821
+Male,9,1971,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,822
+Male,43,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,26.0,High school,"Precision Production, Craft, and Repair Occupations",23005.0,Health doesn't affect work,823
+Female,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,21.0,23.0,College and above,,0.0,Health doesn't affect work,824
+Male,31,1949,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,24.0,20.0,College and above,Managerial Occupations,26660.0,Health doesn't affect work,825
+Female,10,1969,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,826
+Female,35,1944,Hispanic,Non-immigrant,Divorced/widowed,3.0,19.0,21.0,College and above,"Precision Production, Craft, and Repair Occupations",11670.0,Health doesn't affect work,827
+Male,23,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,High school,"Operators, Fabricators, and Laborers",20005.0,Health doesn't affect work,828
+Male,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",12005.0,Health doesn't affect work,829
+Male,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,,College and above,Professional Specialty Occupations,18605.0,Health doesn't affect work,830
+Male,35,1944,Black,Non-immigrant,Married,0.0,21.0,22.0,Less than high school,"Operators, Fabricators, and Laborers",6905.0,Health doesn't affect work,831
+Female,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,17.0,20.0,High school,,0.0,Health doesn't affect work,832
+Male,37,1943,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,36.0,,High school,Sales Occupations,30005.0,Health doesn't affect work,833
+Female,69,1911,Black,Non-immigrant,Married,1.0,18.0,,High school,,4205.0,Health doesn't affect work,834
+Male,59,1920,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,High school,"Precision Production, Craft, and Repair Occupations",16305.0,Health doesn't affect work,835
+Male,18,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,1325.0,Health doesn't affect work,836
+Male,30,1949,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,25.0,30.0,College and above,Professional Specialty Occupations,20050.0,Health doesn't affect work,837
+Male,63,1916,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,,High school,"Operators, Fabricators, and Laborers",18005.0,Health doesn't affect work,838
+Male,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,29.0,,High school,"Farming, Forestry, and Fishing Occupations",18210.0,Health doesn't affect work,839
+Female,56,1924,Black,Non-immigrant,Divorced/widowed,1.0,20.0,,High school,,4005.0,Health affects work,840
+Female,70,1909,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,21.0,,College and above,,8110.0,Health affects work,841
+Female,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,842
+Female,66,1914,"Non-Black, Non-Hispanic",Non-immigrant,Married,4.0,27.0,,College and above,Clerical and Administrative Support Occupations,11240.0,Health doesn't affect work,843
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,19510.0,Health doesn't affect work,844
+Female,60,1919,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,12005.0,Health affects work,845
+Female,21,1959,Black,Non-immigrant,Single,1.0,,,High school,Technicians and Related Support Occupations,5040.0,Health doesn't affect work,846
+Female,41,1938,Hispanic,Immigrant,Single,3.0,,22.0,Less than high school,,3985.0,Health affects work,847
+Female,68,1911,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,26.0,30.0,High school,,0.0,Health affects work,848
+Female,8,1971,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,849
+Male,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,15.0,,College and above,,5305.0,Health affects work,850
+Male,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",4005.0,Health doesn't affect work,851
+Male,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,852
+Female,12,1967,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,853
+Male,0,1979,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,854
+Male,34,1945,Black,Non-immigrant,Married,0.0,25.0,,Less than high school,"Operators, Fabricators, and Laborers",8165.0,Health doesn't affect work,855
+Female,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,24.0,27.0,College and above,Professional Specialty Occupations,1005.0,Health doesn't affect work,856
+Male,58,1921,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,29.0,,College and above,Professional Specialty Occupations,19105.0,Health doesn't affect work,857
+Male,31,1948,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,22355.0,Health doesn't affect work,858
+Female,9,1971,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,859
+Male,76,1903,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,69.0,,High school,,13210.0,Health doesn't affect work,860
+Male,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,23.0,High school,"Precision Production, Craft, and Repair Occupations",8785.0,Health doesn't affect work,861
+Female,46,1934,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,19.0,29.0,College and above,,0.0,Health doesn't affect work,862
+Male,11,1968,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,863
+Male,1,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,864
+Male,22,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,3005.0,Health doesn't affect work,865
+Female,39,1940,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,31.0,24.0,College and above,Professional Specialty Occupations,16850.0,Health doesn't affect work,866
+Male,24,1955,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,College and above,Technicians and Related Support Occupations,3005.0,Health doesn't affect work,867
+Female,19,1960,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,18.0,19.0,High school,"Operators, Fabricators, and Laborers",1765.0,Health doesn't affect work,868
+Female,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,205.0,Health doesn't affect work,869
+Male,29,1951,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Clerical and Administrative Support Occupations,3205.0,Health doesn't affect work,870
+Female,31,1949,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,21.0,25.0,High school,,15.0,Health doesn't affect work,871
+Female,60,1919,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,37.0,,College and above,Managerial Occupations,30005.0,Health doesn't affect work,872
+Female,54,1925,"Non-Black, Non-Hispanic",Non-immigrant,Married,6.0,20.0,,High school,Service Occupations,880.0,Health doesn't affect work,873
+Male,64,1915,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,,High school,"Precision Production, Craft, and Repair Occupations",7020.0,Health affects work,874
+Female,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,875
+Female,0,1979,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,876
+Male,54,1925,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,High school,"Farming, Forestry, and Fishing Occupations",15545.0,Health affects work,877
+Female,53,1926,Black,Non-immigrant,Divorced/widowed,0.0,32.0,,High school,Service Occupations,7005.0,Health affects work,878
+Female,83,1896,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,22.0,,College and above,,0.0,Health doesn't affect work,879
+Female,62,1917,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,8.0,20.0,,High school,Clerical and Administrative Support Occupations,7615.0,Health doesn't affect work,880
+Male,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,20.0,High school,"Operators, Fabricators, and Laborers",12005.0,Health doesn't affect work,881
+Female,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Professional Specialty Occupations,8005.0,Health doesn't affect work,882
+Female,77,1902,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,38.0,,College and above,,3645.0,Health doesn't affect work,883
+Female,18,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,13005.0,Health doesn't affect work,884
+Female,84,1895,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,17.0,,Less than high school,,1745.0,Health affects work,885
+Female,9,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,886
+Male,21,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",12005.0,Health doesn't affect work,887
+Female,28,1951,Black,Non-immigrant,Married,1.0,20.0,24.0,College and above,Clerical and Administrative Support Occupations,12425.0,Health doesn't affect work,888
+Female,68,1911,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,,High school,,2885.0,Health doesn't affect work,889
+Male,30,1949,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,27.0,High school,"Operators, Fabricators, and Laborers",20005.0,Health doesn't affect work,890
+Male,22,1958,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,"Precision Production, Craft, and Repair Occupations",4805.0,Health doesn't affect work,891
+Female,4,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,892
+Female,8,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,893
+Male,46,1933,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,32.0,College and above,"Operators, Fabricators, and Laborers",7005.0,Health affects work,894
+Female,16,1964,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,895
+Female,9,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,896
+Female,34,1945,Hispanic,Immigrant,Married,5.0,18.0,21.0,Less than high school,,0.0,Health doesn't affect work,897
+Female,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Managerial Occupations,6005.0,Health doesn't affect work,898
+Male,26,1953,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,19.0,20.0,High school,Sales Occupations,24115.0,Health doesn't affect work,899
+Male,76,1904,Black,Non-immigrant,Married,0.0,24.0,,Less than high school,,2410.0,Health affects work,900
+Male,19,1960,Hispanic,Non-immigrant,Single,0.0,,,College and above,"Precision Production, Craft, and Repair Occupations",4005.0,Health doesn't affect work,901
+Male,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,,College and above,Sales Occupations,10060.0,Health doesn't affect work,902
+Male,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,12965.0,Health doesn't affect work,903
+Female,39,1940,Black,Non-immigrant,Divorced/widowed,5.0,20.0,18.0,High school,Service Occupations,710.0,Health affects work,904
+Female,67,1913,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,25.0,,College and above,,13340.0,Health doesn't affect work,905
+Female,2,1977,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,906
+Male,2,1977,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,907
+Male,13,1966,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,908
+Female,7,1972,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,909
+Female,47,1932,Black,Non-immigrant,Divorced/widowed,0.0,17.0,,College and above,,0.0,Health doesn't affect work,910
+Female,29,1951,Black,Non-immigrant,Married,2.0,19.0,20.0,College and above,"Operators, Fabricators, and Laborers",16005.0,Health doesn't affect work,911
+Male,45,1935,Hispanic,Non-immigrant,Married,0.0,24.0,28.0,High school,Sales Occupations,22005.0,Health doesn't affect work,912
+Male,60,1919,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,50.0,College and above,"Precision Production, Craft, and Repair Occupations",14005.0,Health doesn't affect work,913
+Female,49,1930,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,29.0,37.0,High school,Clerical and Administrative Support Occupations,2235.0,Health doesn't affect work,914
+Male,74,1905,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,Less than high school,,525.0,Health affects work,915
+Male,8,1971,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,916
+Female,4,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,917
+Female,77,1902,Black,Non-immigrant,Married,0.0,40.0,,Less than high school,,2455.0,Health affects work,918
+Female,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,23.0,College and above,Clerical and Administrative Support Occupations,10925.0,Health doesn't affect work,919
+Female,75,1905,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,22.0,,Less than high school,,1505.0,Health affects work,920
+Male,66,1913,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,,High school,,8790.0,Health affects work,921
+Male,32,1947,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,23.0,24.0,College and above,Professional Specialty Occupations,21925.0,Health doesn't affect work,922
+Female,56,1923,Black,Non-immigrant,Divorced/widowed,0.0,17.0,,Less than high school,Service Occupations,5005.0,Health doesn't affect work,923
+Male,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,19.0,17.0,High school,"Precision Production, Craft, and Repair Occupations",11505.0,Health doesn't affect work,924
+Female,70,1910,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,27.0,,College and above,,13095.0,Health doesn't affect work,925
+Male,57,1922,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,25.0,42.0,College and above,Managerial Occupations,24005.0,Health doesn't affect work,926
+Female,30,1950,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Clerical and Administrative Support Occupations,9205.0,Health doesn't affect work,927
+Male,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,27.0,,College and above,Professional Specialty Occupations,27755.0,Health doesn't affect work,928
+Female,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,18.0,24.0,High school,,0.0,Health doesn't affect work,929
+Female,67,1913,Black,Non-immigrant,Divorced/widowed,1.0,17.0,,Less than high school,,2495.0,Health affects work,930
+Male,72,1907,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,41.0,,Less than high school,,6560.0,Health doesn't affect work,931
+Female,49,1931,"Non-Black, Non-Hispanic",Non-immigrant,Married,7.0,18.0,31.0,High school,Sales Occupations,10005.0,Health doesn't affect work,932
+Male,29,1950,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,22.0,,College and above,Managerial Occupations,29645.0,Health doesn't affect work,933
+Male,41,1938,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,25.0,High school,"Operators, Fabricators, and Laborers",17135.0,Health doesn't affect work,934
+Male,25,1954,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,12505.0,Health doesn't affect work,935
+Female,44,1935,"Non-Black, Non-Hispanic",Non-immigrant,Married,2.0,20.0,23.0,High school,,0.0,Health doesn't affect work,936
+Male,68,1911,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,39.0,,College and above,Managerial Occupations,75000.0,Health doesn't affect work,937
+Male,29,1950,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,0.0,18.0,,High school,"Precision Production, Craft, and Repair Occupations",12510.0,Health doesn't affect work,938
+Male,3,1976,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,939
+Male,26,1953,Black,Non-immigrant,Divorced/widowed,0.0,21.0,,Less than high school,,4555.0,Health doesn't affect work,940
+Female,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,Sales Occupations,0.0,Health doesn't affect work,941
+Female,18,1961,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Sales Occupations,2305.0,Health doesn't affect work,942
+Male,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,943
+Male,69,1910,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,40.0,,Less than high school,"Precision Production, Craft, and Repair Occupations",9450.0,Health doesn't affect work,944
+Male,34,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,19.0,High school,"Operators, Fabricators, and Laborers",24005.0,Health doesn't affect work,945
+Female,50,1929,Black,Non-immigrant,Married,3.0,18.0,23.0,College and above,,0.0,Health doesn't affect work,946
+Female,70,1909,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,21.0,,High school,Clerical and Administrative Support Occupations,6435.0,Health affects work,947
+Female,5,1975,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,948
+Male,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,27.0,High school,Managerial Occupations,7755.0,Health doesn't affect work,949
+Male,11,1968,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,950
+Female,70,1909,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,3.0,23.0,,College and above,,3805.0,Health affects work,951
+Male,64,1915,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,43.0,45.0,College and above,Managerial Occupations,37155.0,Health doesn't affect work,952
+Male,20,1959,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,4550.0,Health doesn't affect work,953
+Female,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Divorced/widowed,4.0,19.0,27.0,College and above,Sales Occupations,16685.0,Health doesn't affect work,954
+Female,23,1956,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,16.0,16.0,High school,,0.0,Health doesn't affect work,955
+Male,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,956
+Male,57,1922,Black,Non-immigrant,Divorced/widowed,0.0,23.0,,High school,,2455.0,Health doesn't affect work,957
+Female,70,1909,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,21.0,,High school,,2355.0,Health doesn't affect work,958
+Male,6,1973,Black,Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,959
+Female,2,1977,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,960
+Female,45,1934,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,25.0,30.0,High school,,0.0,Health doesn't affect work,961
+Male,18,1962,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,Service Occupations,2310.0,Health doesn't affect work,962
+Female,11,1968,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,963
+Female,43,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,23.0,28.0,High school,,0.0,Health doesn't affect work,964
+Male,49,1931,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,23.0,,College and above,Managerial Occupations,66010.0,Health doesn't affect work,965
+Female,57,1922,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,20.0,,Less than high school,Managerial Occupations,0.0,Health doesn't affect work,966
+Male,2,1978,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,967
+Male,1,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,968
+Male,17,1963,Hispanic,Non-immigrant,Single,0.0,,,Less than high school,,0.0,Health affects work,969
+Male,37,1943,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,26.0,27.0,High school,"Operators, Fabricators, and Laborers",10615.0,Health doesn't affect work,970
+Male,6,1973,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,971
+Male,13,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,972
+Male,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,,College and above,"Precision Production, Craft, and Repair Occupations",17575.0,Health doesn't affect work,973
+Male,0,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,974
+Female,69,1910,Hispanic,Immigrant,Divorced/widowed,2.0,54.0,19.0,High school,,3310.0,Health doesn't affect work,975
+Female,0,1980,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,976
+Male,75,1904,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,"Farming, Forestry, and Fishing Occupations",6820.0,Health doesn't affect work,977
+Male,51,1929,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,21.0,33.0,Less than high school,"Operators, Fabricators, and Laborers",6005.0,Health doesn't affect work,978
+Female,16,1963,Black,Non-immigrant,Single,0.0,,,High school,,0.0,Health doesn't affect work,979
+Male,35,1945,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,26.0,College and above,"Precision Production, Craft, and Repair Occupations",21035.0,Health doesn't affect work,980
+Male,1,1979,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,981
+Female,22,1957,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,Sales Occupations,0.0,Health affects work,982
+Female,14,1965,"Non-Black, Non-Hispanic",Immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,983
+Female,24,1955,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,20.0,,College and above,Professional Specialty Occupations,7410.0,Health doesn't affect work,984
+Female,35,1944,"Non-Black, Non-Hispanic",Immigrant,Married,3.0,27.0,29.0,College and above,Service Occupations,4815.0,Health doesn't affect work,985
+Female,14,1966,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,986
+Male,69,1910,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,18.0,,High school,,2005.0,Health affects work,987
+Male,9,1970,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,988
+Female,42,1937,"Non-Black, Non-Hispanic",Non-immigrant,Married,5.0,18.0,20.0,High school,Professional Specialty Occupations,4505.0,Health doesn't affect work,989
+Female,33,1946,"Non-Black, Non-Hispanic",Non-immigrant,Married,1.0,22.0,28.0,College and above,Managerial Occupations,22740.0,Health doesn't affect work,990
+Male,44,1936,"Non-Black, Non-Hispanic",Immigrant,Married,0.0,26.0,,High school,,75000.0,Health affects work,991
+Male,16,1963,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,High school,,2285.0,Health doesn't affect work,992
+Female,26,1953,"Non-Black, Non-Hispanic",Immigrant,Married,2.0,16.0,17.0,High school,"Operators, Fabricators, and Laborers",805.0,Health doesn't affect work,993
+Male,3,1977,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,994
+Female,54,1925,"Non-Black, Non-Hispanic",Non-immigrant,Married,7.0,21.0,30.0,High school,,7610.0,Health affects work,995
+Male,14,1965,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,Less than high school,,,Health doesn't affect work,996
+Male,62,1918,"Non-Black, Non-Hispanic",Non-immigrant,Married,0.0,22.0,,College and above,Professional Specialty Occupations,18025.0,Health doesn't affect work,997
+Female,28,1951,"Non-Black, Non-Hispanic",Non-immigrant,Married,3.0,20.0,22.0,College and above,Service Occupations,0.0,Health doesn't affect work,998
+Female,26,1953,"Non-Black, Non-Hispanic",Non-immigrant,Single,0.0,,,College and above,"Precision Production, Craft, and Repair Occupations",18760.0,Health doesn't affect work,999
