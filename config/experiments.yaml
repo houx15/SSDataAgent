@@ -81,3 +81,16 @@ experiments:
     sandbox_timeout: 60
     train_eval_split: 0.5
     n_rows: 1000
+
+  # A/B comparison vs pilot_paper_agents to measure the impact of the
+  # preserve-missingness instruction added to modeling_prompt on 2026-05-02.
+  # Hypothesis: ACS type-3 should jump from NaN to ~0.5+ for full_agent
+  # because the conditionally-missing predictors will retain their NaN
+  # rather than being imputed (which destroys the regression).
+  pilot_paper_agents_preserve:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent, agent_no_semantic, agent_no_data]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
