@@ -74,4 +74,5 @@ def load_schema(name: str) -> DatasetSchema:
         population_context=str(pop_ctx).strip(),
         ssdatabench_sim_subdir=entry["ssdatabench_sim_subdir"],
         evaluation_script=entry["evaluation_script"],
+        domains=domains,
     )

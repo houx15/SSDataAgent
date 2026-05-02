@@ -45,6 +45,18 @@ def test_schema_evaluation_script_path():
     assert s.evaluation_script.endswith("gss_2018.py")
 
 
+def test_schema_domains_populated_for_gss():
+    """GSS YAML tags every variable with a domain (Demography, SES, Health,
+    Marriage, Attitude, Ability) — used for per-domain reporting rollup."""
+    s = load_schema("gss")
+    assert s.domains.get("age") == "Demography"
+    assert s.domains.get("marital_status") == "Marriage"
+    assert s.domains.get("income") == "SES"
+    assert s.domains.get("health") == "Health"
+    assert s.domains.get("political_view") == "Attitude"
+    assert len(s.domains) >= 25  # all 30 GSS vars have a domain
+
+
 def test_unknown_dataset_raises():
     with pytest.raises(KeyError):
         load_schema("nope")
