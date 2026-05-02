@@ -30,10 +30,14 @@ def test_real_data_loadable():
         assert len(df) == entry["rows"], f"{csv.name} expected {entry['rows']} rows"
 
 
+# Use the legacy 11/12/13-var entries for the integration smoke since they
+# round-trip cleanly (real == sim). The new paper-faithful sampled CSVs work
+# too but exercise the full 30-var GSS schema, which is heavier than needed
+# for a plumbing check.
 _DATASET_PARAMS = [
-    ("gss", "gss_clean.csv", "gss_2018"),
-    ("cps", "cps_clean.csv", "cps_1980"),
-    ("acs", "acs_clean.csv", "acs_1980"),
+    ("gss_legacy", "gss_clean.csv", "gss_2018"),
+    ("cps_legacy", "cps_clean.csv", "cps_1980"),
+    ("acs_legacy", "acs_clean.csv", "acs_1980"),
 ]
 
 

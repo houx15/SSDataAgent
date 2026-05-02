@@ -61,3 +61,23 @@ experiments:
     n_rows: 1000
     unseen_variables:
       acs: [income]
+
+  # Paper-faithful replication: 3 agent conditions (skip direct_generation
+  # which is per-row and ~2h/dataset). Run after wiring real_data/used_dataset/
+  # sampled_*.csv on 2026-05-02. Direct_generation can run as a separate
+  # follow-up experiment.
+  pilot_paper_agents:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent, agent_no_semantic, agent_no_data]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  pilot_paper_direct:
+    datasets: [gss, cps, acs]
+    conditions: [direct_generation]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000

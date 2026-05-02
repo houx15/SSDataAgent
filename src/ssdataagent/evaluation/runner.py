@@ -16,25 +16,39 @@ class PassRates:
     by_type: dict[str, float] = field(default_factory=dict)
     by_variable: dict[str, dict[str, float]] = field(default_factory=dict)
     overall_average: float | None = None
+    # Type 2 is pairwise (var1, var2). Stored as nested dict so we don't lose the
+    # pair structure (rolling up to per-variable means via _per_variable_from_pairs).
+    by_pair: dict[str, list[dict]] = field(default_factory=dict)
+
+
+def _per_variable_from_pairs(pair_rows: list[dict]) -> dict[str, float]:
+    """Average pair rates per variable (each pair contributes to both vars)."""
+    sums: dict[str, list[float]] = {}
+    for row in pair_rows:
+        rate = row.get("insignificant_rate")
+        if rate is None:
+            continue
+        for k in ("var1", "var2"):
+            v = row.get(k)
+            if v:
+                sums.setdefault(str(v), []).append(float(rate))
+    return {v: sum(rs) / len(rs) for v, rs in sums.items() if rs}
 
 
 def parse_pass_rates(eval_dir: Path) -> PassRates:
-    """Read SSDataBench's evaluation outputs from *eval_dir* into PassRates.
+    """Parse SSDataBench evaluation outputs into a PassRates view.
 
-    Format reference (observed in smoke run):
-      - overall_insignificant_summary.csv:
-            type,avg_insignificant_rate,summary_path
-            type1,0.96,...
-            ...
-            Overall Average,0.95,
-      - summary_type<N>.csv:
-            variable,type,insignificant_rate,key
-            gender,categorical,0.93,
-            ...
-            ,,0.96,avg
+    Schemas across types:
+      - type1: ``variable, type, insignificant_rate, key`` — variable-level
+      - type2: ``var1, var2, type1, type2, mode, insignificant_rate, key`` — pair-level
+      - type3: ``response, model_type, mode, insignificant_rate, ..., key`` — response-level
+      - type4/5: assumed similar to type1/type3 (variable or response keyed); the
+        loop tries the known column names in order and skips rows missing them
+    The trailing ``avg``/``avg_strength``/``avg_all`` rows are dropped.
     """
     by_type: dict[str, float] = {}
     by_variable: dict[str, dict[str, float]] = {}
+    by_pair: dict[str, list[dict]] = {}
     overall_average: float | None = None
 
     overall = eval_dir / "overall_insignificant_summary.csv"
@@ -49,25 +63,73 @@ def parse_pass_rates(eval_dir: Path) -> PassRates:
                 by_type[name] = float(rate)
 
     for f in sorted(eval_dir.glob("summary_type*.csv")):
-        # Only single-type summaries; skip _strength variants for now (those have
-        # different schemas — pair-wise stats aren't tracked at variable level).
         if "strength" in f.stem:
             continue
         type_name = f.stem.replace("summary_", "")
         df = pd.read_csv(f)
+
+        cols = set(df.columns)
+        if {"var1", "var2"}.issubset(cols):
+            # Type 2 — pairwise. Keep the raw pair rows and roll up to per-variable.
+            pair_rows: list[dict] = []
+            for _, row in df.iterrows():
+                key = row.get("key", "")
+                if str(key).strip().startswith("avg"):
+                    continue
+                rate = row.get("insignificant_rate")
+                if pd.isna(rate) or pd.isna(row.get("var1")) or pd.isna(row.get("var2")):
+                    continue
+                pair_rows.append({
+                    "var1": str(row["var1"]), "var2": str(row["var2"]),
+                    "insignificant_rate": float(rate),
+                    "mode": str(row.get("mode", "")),
+                })
+            if pair_rows:
+                by_pair[type_name] = pair_rows
+                by_variable[type_name] = _per_variable_from_pairs(pair_rows)
+            continue
+
+        # Type 1 uses 'variable'; type 3+ use 'response' (the modeled outcome).
+        var_col = "variable" if "variable" in cols else ("response" if "response" in cols else None)
+        if var_col is None:
+            continue
         per: dict[str, float] = {}
         for _, row in df.iterrows():
-            var = row.get("variable")
             key = row.get("key", "")
-            if pd.isna(var) or str(key).strip() == "avg":
+            if str(key).strip().startswith("avg"):
+                continue
+            var = row.get(var_col)
+            if pd.isna(var):
                 continue
             rate = row.get("insignificant_rate")
             if pd.notna(rate):
+                # If the same response appears multiple times (e.g., overall + strength),
+                # keep the last one — type3 emits 'strength' and 'overall' rows per response.
                 per[str(var)] = float(rate)
         if per:
             by_variable[type_name] = per
 
-    return PassRates(by_type=by_type, by_variable=by_variable, overall_average=overall_average)
+    return PassRates(
+        by_type=by_type,
+        by_variable=by_variable,
+        overall_average=overall_average,
+        by_pair=by_pair,
+    )
+
+
+def by_domain(rates: PassRates, schema) -> dict[str, dict[str, float]]:
+    """Aggregate per-variable rates into per-domain rates using the schema's
+    ``domains`` map. Returns ``{type: {domain: mean_rate}}``. Variables without
+    a declared domain are bucketed under ``Other``.
+    """
+    out: dict[str, dict[str, float]] = {}
+    for type_name, vars_ in rates.by_variable.items():
+        bucket: dict[str, list[float]] = {}
+        for var, rate in vars_.items():
+            dom = schema.domains.get(var, "Other")
+            bucket.setdefault(dom, []).append(float(rate))
+        out[type_name] = {d: sum(rs) / len(rs) for d, rs in bucket.items() if rs}
+    return out
 
 
 def run_evaluation(

@@ -43,7 +43,11 @@ def test_openai_chat_returns_text():
         client = OpenAICompatibleClient(cfg)
         out = client.chat([{"role": "user", "content": "hello"}], system="be brief")
     assert out == "hi"
-    Sdk.assert_called_once_with(api_key="k", base_url="https://example.com")
+    Sdk.assert_called_once()
+    kwargs = Sdk.call_args.kwargs
+    assert kwargs["api_key"] == "k"
+    assert kwargs["base_url"] == "https://example.com"
+    assert kwargs["timeout"] > 0
 
 
 def test_openai_chat_falls_back_to_reasoning_content():

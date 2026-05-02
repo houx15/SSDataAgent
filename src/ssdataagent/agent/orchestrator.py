@@ -1,10 +1,17 @@
 from __future__ import annotations
 
+import sys
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import pandas as pd
+
+
+def _heartbeat(msg: str) -> None:
+    """Emit a timestamped progress line so background runs aren't opaque."""
+    print(f"[orch {time.strftime('%H:%M:%S')}] {msg}", file=sys.stderr, flush=True)
 
 from ssdataagent.agent.code_extraction import extract_python_block
 from ssdataagent.agent.context import Condition
@@ -79,29 +86,39 @@ class Orchestrator:
         history: list[dict[str, Any]] = []
 
         def step(stage: str, prompt: str) -> SandboxResult:
+            _heartbeat(f"{stage}: requesting LLM (history={len(history)} msgs)")
+            t0 = time.time()
             transcript.append(TranscriptEntry("user", prompt, stage))
             history.append({"role": "user", "content": prompt})
             response = self.client.chat(history, system=SYSTEM_PROMPT)
+            _heartbeat(f"{stage}: LLM responded in {time.time()-t0:.1f}s ({len(response)} chars)")
             transcript.append(TranscriptEntry("assistant", response, stage))
             history.append({"role": "assistant", "content": response})
             code = extract_python_block(response)
             if code is None:
-                # The reasoning model occasionally returns prose-only planning.
-                # Retry once with an explicit reminder before giving up.
+                _heartbeat(f"{stage}: no code block, retrying with nudge")
                 nudge = (
                     "Your previous response had no fenced Python code block. "
                     "Respond again with executable Python in a single ```python ... ``` block."
                 )
                 transcript.append(TranscriptEntry("user", nudge, stage))
                 history.append({"role": "user", "content": nudge})
+                t1 = time.time()
                 response = self.client.chat(history, system=SYSTEM_PROMPT)
+                _heartbeat(f"{stage}: nudge responded in {time.time()-t1:.1f}s")
                 transcript.append(TranscriptEntry("assistant", response, stage))
                 history.append({"role": "assistant", "content": response})
                 code = extract_python_block(response)
                 if code is None:
                     raise RuntimeError(f"no code block in {stage} response (after retry)")
             code_steps.append(code)
+            _heartbeat(f"{stage}: executing sandbox ({len(code)} chars of code)")
+            t2 = time.time()
             result = sandbox.run(code)
+            _heartbeat(
+                f"{stage}: sandbox exit={result.exit_code} timed_out={result.timed_out} "
+                f"in {time.time()-t2:.1f}s"
+            )
             sandbox_results.append(result)
             tool_msg = _format_sandbox_result(result)
             transcript.append(TranscriptEntry("tool", tool_msg, stage))

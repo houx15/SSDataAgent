@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
@@ -24,6 +24,7 @@ class DatasetSchema:
     population_context: str
     ssdatabench_sim_subdir: str
     evaluation_script: str
+    domains: dict[str, str] = field(default_factory=dict)
 
 
 def _registry() -> dict[str, dict]:
@@ -46,11 +47,14 @@ def load_schema(name: str) -> DatasetSchema:
     descriptions: dict[str, str] = {}
     allowed: dict[str, list[Any]] = {}
     numeric: dict[str, tuple[float, float]] = {}
+    domains: dict[str, str] = {}
 
     combined = {**(spec.get("input_variables") or {}), **(spec.get("output_variables") or {})}
     for var, meta in combined.items():
         meta = meta or {}
         descriptions[var] = meta.get("description", "")
+        if meta.get("domain"):
+            domains[var] = str(meta["domain"])
         a = meta.get("allowed")
         if isinstance(a, list):
             allowed[var] = a

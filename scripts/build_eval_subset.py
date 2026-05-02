@@ -1,33 +1,33 @@
 """Generate a pruned SSDataBench evaluation config for the columns we actually have.
 
-The shipped GSS-2018 evaluation expects ~28 variables, but our cleaned
-real_data/gss_clean.csv only contains 11. This script reads each type*.yaml
-under ssdatabench/evaluation/config/<dataset>/ and writes a pruned copy under
-<dataset>_subset/ that keeps only the variables present in our CSV.
+Reads each type*.yaml under ssdatabench/evaluation/config/<dataset>/ and
+writes a pruned copy under <dataset>_subset/ keeping only the variables
+present in the dataset CSV that the agent sees.
+
+The CSV path comes from config/datasets.yaml via the loader, so this stays
+in sync with whatever paper-faithful or legacy file is wired up.
 
 Usage:
-    python scripts/build_eval_subset.py gss      # GSS 2018
-    python scripts/build_eval_subset.py cps      # CPS 1980
-    python scripts/build_eval_subset.py acs      # ACS 1980
+    python scripts/build_eval_subset.py gss
+    python scripts/build_eval_subset.py cps
+    python scripts/build_eval_subset.py acs
+    python scripts/build_eval_subset.py gss_legacy
 """
 from __future__ import annotations
 
 import argparse
-import shutil
+import sys
 from pathlib import Path
 
-import pandas as pd
 import yaml
 
 
 REPO = Path(__file__).resolve().parents[1]
 SSDATABENCH = REPO / "ssdatabench"
 
-DATASET_TO_SUBDIR_AND_CSV = {
-    "gss": ("gss_2018", "gss_clean.csv"),
-    "cps": ("cps_1980", "cps_clean.csv"),
-    "acs": ("acs_1980", "acs_clean.csv"),
-}
+sys.path.insert(0, str(REPO / "src"))
+from ssdataagent.data.loader import load_real_data  # noqa: E402
+from ssdataagent.data.schema import load_schema  # noqa: E402
 
 
 def _prune_variables(spec: dict, available: set[str]) -> dict:
@@ -82,8 +82,9 @@ def _prune_pair_blocks(spec: dict, available: set[str]) -> dict:
 
 
 def build_subset(dataset: str) -> Path:
-    subdir, csv_name = DATASET_TO_SUBDIR_AND_CSV[dataset]
-    df = pd.read_csv(REPO / "real_data" / csv_name)
+    schema = load_schema(dataset)
+    subdir = schema.ssdatabench_sim_subdir
+    df = load_real_data(dataset)
     # Variables fully NaN can't be evaluated (bootstrap samples zero-length series).
     available = {c for c in df.columns if df[c].notna().any()}
     dropped_empty = sorted(set(df.columns) - available)
@@ -115,7 +116,7 @@ def build_subset(dataset: str) -> Path:
 
 def main():
     p = argparse.ArgumentParser()
-    p.add_argument("dataset", choices=list(DATASET_TO_SUBDIR_AND_CSV))
+    p.add_argument("dataset")
     args = p.parse_args()
     build_subset(args.dataset)
 

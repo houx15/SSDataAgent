@@ -4,14 +4,19 @@ import time
 from typing import Protocol
 
 from anthropic import Anthropic
-from openai import APIConnectionError, APIError, OpenAI, RateLimitError
+from openai import APIConnectionError, APIError, APITimeoutError, OpenAI, RateLimitError
 
 from ssdataagent.config import LLMConfig
 
 
-_TRANSIENT = (APIConnectionError, RateLimitError)
+_TRANSIENT = (APIConnectionError, RateLimitError, APITimeoutError)
 _DEFAULT_MAX_RETRIES = 4
 _BACKOFF_BASE_S = 2.0
+# Per-request hard timeout. The pilot once hung for 2+ hours on a stuck
+# proxy connection because the SDK's default 600s default was indistinguishable
+# from a long deepseek-v4-flash reasoning chain. 300s is generous for
+# reasoning calls but bounds the pathological case.
+_REQUEST_TIMEOUT_S = 300.0
 
 
 class LLMClient(Protocol):
@@ -22,7 +27,11 @@ class OpenAICompatibleClient:
     def __init__(self, cfg: LLMConfig, max_retries: int = _DEFAULT_MAX_RETRIES):
         self.cfg = cfg
         self.max_retries = max_retries
-        self._sdk = OpenAI(api_key=cfg.api_key, base_url=cfg.base_url)
+        self._sdk = OpenAI(
+            api_key=cfg.api_key,
+            base_url=cfg.base_url,
+            timeout=_REQUEST_TIMEOUT_S,
+        )
 
     def chat(self, messages: list[dict], system: str | None = None) -> str:
         msgs = list(messages)

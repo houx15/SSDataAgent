@@ -12,7 +12,8 @@ from ssdataagent.agent.orchestrator import Orchestrator
 from ssdataagent.config import REPO_ROOT, load_llm_config
 from ssdataagent.data.loader import load_real_data
 from ssdataagent.data.splitter import split_train_eval
-from ssdataagent.evaluation.runner import PassRates, run_evaluation
+from ssdataagent.data.schema import load_schema
+from ssdataagent.evaluation.runner import PassRates, by_domain, run_evaluation
 from ssdataagent.experiments.conditions import get_condition
 from ssdataagent.experiments.logger import log_run
 
@@ -43,15 +44,19 @@ def _git_sha() -> str:
         return "unknown"
 
 
-def _serialize_rates(r: PassRates) -> str:
-    return json.dumps(
-        {
-            "by_type": r.by_type,
-            "by_variable": r.by_variable,
-            "overall_average": r.overall_average,
-        },
-        indent=2,
-    )
+def _serialize_rates(r: PassRates, dataset_name: str | None = None) -> str:
+    payload: dict = {
+        "by_type": r.by_type,
+        "by_variable": r.by_variable,
+        "by_pair": r.by_pair,
+        "overall_average": r.overall_average,
+    }
+    if dataset_name is not None:
+        try:
+            payload["by_domain"] = by_domain(r, load_schema(dataset_name))
+        except Exception:
+            pass
+    return json.dumps(payload, indent=2)
 
 
 def _load_existing(run_dir: Path) -> PassRates | None:
@@ -64,6 +69,7 @@ def _load_existing(run_dir: Path) -> PassRates | None:
     return PassRates(
         by_type=blob.get("by_type", {}),
         by_variable=blob.get("by_variable", {}),
+        by_pair=blob.get("by_pair", {}),
         overall_average=blob.get("overall_average"),
     )
 
@@ -156,7 +162,7 @@ def _run_one_condition(
             generated=generated,
             sampled=eval_df,
         )
-        (run_dir / "eval.json").write_text(_serialize_rates(rates))
+        (run_dir / "eval.json").write_text(_serialize_rates(rates, dataset))
         return rates
 
     unseen = cfg.unseen_variables.get(dataset, [])

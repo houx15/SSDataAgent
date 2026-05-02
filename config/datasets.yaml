@@ -1,17 +1,37 @@
 datasets:
   gss:
-    real_data_path: real_data/gss_clean.csv
+    real_data_path: real_data/used_dataset/sampled_gss.csv
     ssdatabench_yaml: ssdatabench/real_data/data_configs/gss2018.yaml
     ssdatabench_sim_subdir: gss_2018
     evaluation_script: scripts/evaluation/gss_2018.py
     type: cross-sectional
   cps:
-    real_data_path: real_data/cps_clean.csv
+    real_data_path: real_data/used_dataset/samples_cps.csv
     ssdatabench_yaml: ssdatabench/real_data/data_configs/cps1980.yaml
     ssdatabench_sim_subdir: cps_1980
     evaluation_script: scripts/evaluation/cps_1980.py
     type: cross-sectional
   acs:
+    real_data_path: real_data/used_dataset/sampled_acs.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/acs1980.yaml
+    ssdatabench_sim_subdir: acs_1980
+    evaluation_script: scripts/evaluation/acs_1980.py
+    type: cross-sectional
+  # Legacy paths from the pre-2026-05-02 cross-dataset pilots (11/12/13 var subsets).
+  # Kept for reproducibility of the docs/report/2026-04-30-initial-findings.md numbers.
+  gss_legacy:
+    real_data_path: real_data/gss_clean.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/gss2018.yaml
+    ssdatabench_sim_subdir: gss_2018
+    evaluation_script: scripts/evaluation/gss_2018.py
+    type: cross-sectional
+  cps_legacy:
+    real_data_path: real_data/cps_clean.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/cps1980.yaml
+    ssdatabench_sim_subdir: cps_1980
+    evaluation_script: scripts/evaluation/cps_1980.py
+    type: cross-sectional
+  acs_legacy:
     real_data_path: real_data/acs_clean.csv
     ssdatabench_yaml: ssdatabench/real_data/data_configs/acs1980.yaml
     ssdatabench_sim_subdir: acs_1980
