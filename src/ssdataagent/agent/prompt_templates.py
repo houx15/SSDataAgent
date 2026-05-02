@@ -45,8 +45,8 @@ def exploration_prompt(*, has_data: bool, has_descriptions: bool) -> str:
     return "\n\n".join(bits)
 
 
-def modeling_prompt(*, findings_summary: str) -> str:
-    return (
+def modeling_prompt(*, findings_summary: str, preserve_missingness: bool = False) -> str:
+    base = (
         "STAGE: MODELING.\n\n"
         f"Your findings so far:\n{findings_summary}\n\n"
         "Write a single Python block that fits a generative model on `train.csv`"
@@ -56,15 +56,19 @@ def modeling_prompt(*, findings_summary: str) -> str:
         "    sample(n: int) -> pandas.DataFrame\n"
         "returning rows with the same columns as the *target* schema. Free choice"
         " of model family — JointDistribution, ConditionalChain, GaussianCopula,"
-        " statsmodels GLMs, etc. Keep it simple and fast.\n\n"
-        "IMPORTANT — preserve the missingness pattern. Many variables are"
-        " conditionally missing by survey design (e.g., 'age at first marriage'"
-        " is NaN for never-married respondents, 'spouse occupation' is NaN for"
-        " unmarried, 'income' is NaN for those out of the labor force). Do NOT"
-        " impute these to a value — the downstream regressions depend on the"
-        " missingness structure. Your sample(n) output must produce NaN in the"
-        " same conditional pattern as the training data."
+        " statsmodels GLMs, etc. Keep it simple and fast."
     )
+    if preserve_missingness:
+        base += (
+            "\n\nIMPORTANT — preserve the missingness pattern. Many variables are"
+            " conditionally missing by survey design (e.g., 'age at first marriage'"
+            " is NaN for never-married respondents, 'spouse occupation' is NaN for"
+            " unmarried, 'income' is NaN for those out of the labor force). Do NOT"
+            " impute these to a value — the downstream regressions depend on the"
+            " missingness structure. Your sample(n) output must produce NaN in the"
+            " same conditional pattern as the training data."
+        )
+    return base
 
 
 def validation_prompt() -> str:
