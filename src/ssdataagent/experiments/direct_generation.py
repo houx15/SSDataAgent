@@ -8,6 +8,8 @@ from __future__ import annotations
 
 import json
 import re
+import sys
+import time
 from typing import Any
 
 import pandas as pd
@@ -82,6 +84,8 @@ def generate_direct(
     targets = list(schema.target_variables)
 
     rows: list[dict] = []
+    n = len(sampled)
+    t_start = time.time()
     for i, (_, row) in enumerate(sampled.iterrows()):
         sampled_row = {c: row[c] for c in bg}
         prompt = _build_user_prompt(
@@ -100,4 +104,13 @@ def generate_direct(
             transcript_out.append({"row": i, "prompt": prompt, "response": raw})
         parsed = _parse_targets(raw, targets)
         rows.append({**sampled_row, **parsed})
+        if (i + 1) % 50 == 0 or (i + 1) == n:
+            elapsed = time.time() - t_start
+            rate = (i + 1) / max(elapsed, 0.001)
+            eta_s = (n - (i + 1)) / max(rate, 0.001)
+            print(
+                f"[direct {time.strftime('%H:%M:%S')}] {dataset_name}: "
+                f"{i + 1}/{n} rows ({rate:.2f}/s, eta {eta_s/60:.1f} min)",
+                file=sys.stderr, flush=True,
+            )
     return pd.DataFrame(rows)
