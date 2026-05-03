@@ -114,3 +114,11 @@ experiments:
     sandbox_timeout: 60
     train_eval_split: 0.5
     n_rows: 1000
+
+  pilot_paper_longitudinal_retry:
+    datasets: [cfps, us]
+    conditions: [full_agent]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
