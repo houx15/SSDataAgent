@@ -44,7 +44,15 @@ def build_context(
     has_descriptions = condition in (Condition.FULL, Condition.NO_DATA, Condition.UNSEEN)
 
     if has_data:
-        df = train_df.copy()
+        # Filter to schema-relevant columns only. Longitudinal datasets ship
+        # per-age sequential columns (income_14..65, education_14..65, etc.)
+        # that the schema's static-only loader excludes; copying them through
+        # to the agent makes the prompt unwieldy and tempts it to fit
+        # 500-column joint distributions that have nothing to do with eval.
+        keep = set(schema.background_variables) | set(schema.target_variables)
+        keep.add("profile_id")
+        cols = [c for c in train_df.columns if c in keep]
+        df = train_df[cols].copy()
         if condition is Condition.UNSEEN:
             df = df.drop(columns=[c for c in unseen if c in df.columns])
         df.to_csv(workspace / "train.csv", index=False)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import subprocess
+import sys
 from dataclasses import dataclass, field
 from pathlib import Path
 
@@ -223,14 +224,23 @@ def run_evaluation(
             # fall back to the upstream master config (full T1-T5 suite).
             config_path = f"evaluation/config/{subdir}/evaluation_master.yaml"
 
+    # Use the same interpreter as the parent so the eval picks up venv-only
+    # deps (autograd is needed for type2's Cramer's V; system python often
+    # doesn't have it). Also prepend the venv's bin to PATH so the eval's
+    # nested subprocess (`python evaluation/run_all_types.py` from
+    # batch_eval.py) picks up the same interpreter.
     cmd = [
-        "python", schema.evaluation_script,
+        sys.executable, schema.evaluation_script,
         "--single",
         "--sim-root", str(sim_root.relative_to(ssdatabench_root)),
         "--output-base", str(output_base.relative_to(ssdatabench_root)),
         "--config", config_path,
     ]
-    subprocess.run(cmd, cwd=ssdatabench_root, check=False)
+    import os
+    env = os.environ.copy()
+    venv_bin = str(Path(sys.executable).parent)
+    env["PATH"] = venv_bin + os.pathsep + env.get("PATH", "")
+    subprocess.run(cmd, cwd=ssdatabench_root, check=False, env=env)
     return parse_pass_rates(output_base)
 
 
