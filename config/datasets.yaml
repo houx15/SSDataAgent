@@ -17,6 +17,34 @@ datasets:
     ssdatabench_sim_subdir: acs_1980
     evaluation_script: scripts/evaluation/acs_1980.py
     type: cross-sectional
+  # Longitudinal panels (added 2026-05-03 to extend coverage to T4/T5).
+  # Sequential per-age columns (income_14..65 etc.) are filtered by the schema
+  # loader because SSDataBench's T1-T5 only references static aggregates.
+  nlsy:
+    real_data_path: real_data/used_dataset/sampled_nlsy.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/nlsy79.yaml
+    ssdatabench_sim_subdir: nlsy
+    evaluation_script: scripts/evaluation/nlsy.py
+    type: longitudinal
+  addhealth:
+    real_data_path: real_data/used_dataset/sampled_addhealth.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/AddHealth.yaml
+    ssdatabench_sim_subdir: addhealth
+    evaluation_script: scripts/evaluation/addhealth.py
+    type: longitudinal
+  cfps:
+    real_data_path: real_data/used_dataset/sampled_cfps.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/cfps.yaml
+    ssdatabench_sim_subdir: cfps
+    evaluation_script: scripts/evaluation/cfps.py
+    type: longitudinal
+  us:
+    real_data_path: real_data/used_dataset/sampled_US.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/UnderstandingSociety.yaml
+    ssdatabench_sim_subdir: US
+    evaluation_script: scripts/evaluation/us.py
+    type: longitudinal
+
   # Legacy paths from the pre-2026-05-02 cross-dataset pilots (11/12/13 var subsets).
   # Kept for reproducibility of the docs/report/2026-04-30-initial-findings.md numbers.
   gss_legacy:

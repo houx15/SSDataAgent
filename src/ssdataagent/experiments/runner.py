@@ -207,5 +207,5 @@ def _run_one_condition(
         generated=result.generated,
         sampled=eval_df,
     )
-    (run_dir / "eval.json").write_text(_serialize_rates(rates))
+    (run_dir / "eval.json").write_text(_serialize_rates(rates, dataset))
     return rates

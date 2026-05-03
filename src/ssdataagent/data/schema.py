@@ -41,17 +41,28 @@ def load_schema(name: str) -> DatasetSchema:
     with yaml_path.open() as f:
         spec = yaml.safe_load(f)
 
-    background = list((spec.get("input_variables") or {}).keys())
-    targets = list((spec.get("output_variables") or {}).keys())
+    # Longitudinal datasets list `type: sequential` variables (income_14..65,
+    # education_14..65, etc.) that expand to dozens of per-age columns. The
+    # SSDataBench T1-T5 evals only reference the *static* aggregates (e.g.,
+    # mean_income_30_40, age_finished_education) — generating sequential cols
+    # would balloon the agent's prompt without adding eval coverage.
+    def _is_static(meta: dict | None) -> bool:
+        return (meta or {}).get("type", "static") != "sequential"
+    inputs = spec.get("input_variables") or {}
+    outputs = spec.get("output_variables") or {}
+    background = [v for v, m in inputs.items() if _is_static(m)]
+    targets = [v for v, m in outputs.items() if _is_static(m)]
 
     descriptions: dict[str, str] = {}
     allowed: dict[str, list[Any]] = {}
     numeric: dict[str, tuple[float, float]] = {}
     domains: dict[str, str] = {}
 
-    combined = {**(spec.get("input_variables") or {}), **(spec.get("output_variables") or {})}
+    combined = {**inputs, **outputs}
     for var, meta in combined.items():
         meta = meta or {}
+        if not _is_static(meta):
+            continue
         descriptions[var] = meta.get("description", "")
         if meta.get("domain"):
             domains[var] = str(meta["domain"])

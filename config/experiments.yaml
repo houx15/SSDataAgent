@@ -94,3 +94,23 @@ experiments:
     sandbox_timeout: 60
     train_eval_split: 0.5
     n_rows: 1000
+
+  # Longitudinal panels: extends T4 (event-order chi-sq) and T5 (event-order ×
+  # covariate eta²/Cramér's V) coverage. Schema loader filters out per-age
+  # sequential cols (income_14..65 etc.) so the agent only models the
+  # static aggregates that T1-T5 actually evaluate.
+  smoke_nlsy:
+    datasets: [nlsy]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 200
+
+  pilot_paper_longitudinal:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [full_agent]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000

@@ -42,8 +42,10 @@ def parse_pass_rates(eval_dir: Path) -> PassRates:
       - type1: ``variable, type, insignificant_rate, key`` — variable-level
       - type2: ``var1, var2, type1, type2, mode, insignificant_rate, key`` — pair-level
       - type3: ``response, model_type, mode, insignificant_rate, ..., key`` — response-level
-      - type4/5: assumed similar to type1/type3 (variable or response keyed); the
-        loop tries the known column names in order and skips rows missing them
+      - type4: ``combo, insignificant_rate, ...`` — chronological-event-order
+        keyed by the ``combo`` string (e.g., "age_finished_education→age_at_first_marriage→age_at_first_child")
+      - type5: ``combo, predictor, type, insignificant_rate, mode, ...`` — event-order
+        × covariate; rolled up per-predictor (mean across combos)
     The trailing ``avg``/``avg_strength``/``avg_all`` rows are dropped.
     """
     by_type: dict[str, float] = {}
@@ -69,6 +71,50 @@ def parse_pass_rates(eval_dir: Path) -> PassRates:
         df = pd.read_csv(f)
 
         cols = set(df.columns)
+        if type_name == "type5" and {"combo", "predictor"}.issubset(cols):
+            # Type 5 — event_order × covariate. Each row is one combo×predictor
+            # pair; roll up to per-predictor means and keep the raw pairs.
+            pair_rows: list[dict] = []
+            for _, row in df.iterrows():
+                key = row.get("key", "")
+                if str(key).strip().startswith("avg"):
+                    continue
+                rate = row.get("insignificant_rate")
+                combo = row.get("combo")
+                pred = row.get("predictor")
+                if pd.isna(rate) or pd.isna(combo) or pd.isna(pred):
+                    continue
+                pair_rows.append({
+                    "combo": str(combo), "predictor": str(pred),
+                    "insignificant_rate": float(rate),
+                    "mode": str(row.get("mode", "")),
+                })
+            if pair_rows:
+                by_pair[type_name] = pair_rows
+                bucket: dict[str, list[float]] = {}
+                for r in pair_rows:
+                    bucket.setdefault(r["predictor"], []).append(r["insignificant_rate"])
+                by_variable[type_name] = {
+                    p: sum(rs) / len(rs) for p, rs in bucket.items()
+                }
+            continue
+
+        if type_name == "type4" and "combo" in cols and "var1" not in cols:
+            # Type 4 — combo-keyed (no var1/var2). Use combo as the variable.
+            per: dict[str, float] = {}
+            for _, row in df.iterrows():
+                key = row.get("key", row.get("combo", ""))
+                if str(row.get("combo", "")).strip() == "avg":
+                    continue
+                rate = row.get("insignificant_rate")
+                combo = row.get("combo")
+                if pd.isna(rate) or pd.isna(combo):
+                    continue
+                per[str(combo)] = float(rate)
+            if per:
+                by_variable[type_name] = per
+            continue
+
         if {"var1", "var2"}.issubset(cols):
             # Type 2 — pairwise. Keep the raw pair rows and roll up to per-variable.
             pair_rows: list[dict] = []
@@ -120,13 +166,18 @@ def parse_pass_rates(eval_dir: Path) -> PassRates:
 def by_domain(rates: PassRates, schema) -> dict[str, dict[str, float]]:
     """Aggregate per-variable rates into per-domain rates using the schema's
     ``domains`` map. Returns ``{type: {domain: mean_rate}}``. Variables without
-    a declared domain are bucketed under ``Other``.
+    a declared domain are bucketed under ``Other``. Type 4 keys are
+    ``combo`` strings (e.g., ``E→C→M``); domains aren't meaningful so they all
+    fall under ``Sequence``.
     """
     out: dict[str, dict[str, float]] = {}
     for type_name, vars_ in rates.by_variable.items():
         bucket: dict[str, list[float]] = {}
         for var, rate in vars_.items():
-            dom = schema.domains.get(var, "Other")
+            if type_name == "type4":
+                dom = "Sequence"
+            else:
+                dom = schema.domains.get(var, "Other")
             bucket.setdefault(dom, []).append(float(rate))
         out[type_name] = {d: sum(rs) / len(rs) for d, rs in bucket.items() if rs}
     return out
@@ -163,10 +214,14 @@ def run_evaluation(
     output_base.mkdir(parents=True, exist_ok=True)
 
     if config_path is None:
-        config_path = (
-            f"evaluation/config/{schema.ssdatabench_sim_subdir}_subset/"
-            "evaluation_master.yaml"
-        )
+        subdir = schema.ssdatabench_sim_subdir
+        subset_master = ssdatabench_root / "evaluation" / "config" / f"{subdir}_subset" / "evaluation_master.yaml"
+        if subset_master.exists():
+            config_path = f"evaluation/config/{subdir}_subset/evaluation_master.yaml"
+        else:
+            # Longitudinal datasets typically don't ship a `_subset` variant —
+            # fall back to the upstream master config (full T1-T5 suite).
+            config_path = f"evaluation/config/{subdir}/evaluation_master.yaml"
 
     cmd = [
         "python", schema.evaluation_script,
