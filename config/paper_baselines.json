@@ -1,0 +1,30 @@
+{
+  "_meta": {
+    "source": "SSDataBench paper, best of 15 LLMs per (dataset, T-type) cell.",
+    "extracted_from": [
+      "docs/report/2026-05-03-paper-comparison-full.md",
+      "docs/report/2026-05-05-three-way-model-comparison.md"
+    ],
+    "extracted_on": "2026-05-06",
+    "by_dataset_overall_means": "best-of-15 average across the T-types that apply to each dataset",
+    "by_type": "high end of the paper LLM range (i.e. paper's strongest LLM on that cell)"
+  },
+  "by_dataset_overall": {
+    "gss":       0.39,
+    "cps":       0.40,
+    "acs":       0.40,
+    "nlsy":      0.30,
+    "addhealth": 0.27,
+    "cfps":      0.30,
+    "us":        0.36
+  },
+  "by_dataset_by_type": {
+    "gss":       {"T1": 0.13, "T2": 0.71, "T3": 0.55},
+    "cps":       {"T1": 0.10, "T2": 0.71, "T3": 0.57},
+    "acs":       {"T1": 0.20, "T2": 0.50, "T3": 0.40},
+    "nlsy":      {"T1": 0.13, "T2": 0.71, "T3": 0.42, "T4": 0.05, "T5": 0.75},
+    "addhealth": {"T1": 0.12, "T2": 0.55, "T3": 0.39, "T4": 0.02, "T5": 0.46},
+    "cfps":      {"T1": 0.14, "T2": 0.62, "T3": 0.43, "T4": 0.05, "T5": 0.75},
+    "us":        {"T1": 0.20, "T2": 0.62, "T3": 0.54, "T4": 0.05, "T5": 0.75}
+  }
+}

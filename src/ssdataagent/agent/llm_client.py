@@ -37,6 +37,14 @@ class OpenAICompatibleClient:
         msgs = list(messages)
         if system:
             msgs = [{"role": "system", "content": system}, *msgs]
+        # OpenAI's GPT-5 / o-series chat-completions endpoint rejects the
+        # legacy `max_tokens` and requires `max_completion_tokens`. DeepSeek's
+        # OpenAI-compatible endpoint still wants `max_tokens`.
+        token_kwarg = (
+            "max_completion_tokens"
+            if "api.openai.com" in (self.cfg.base_url or "")
+            else "max_tokens"
+        )
         last_err: Exception | None = None
         for attempt in range(self.max_retries + 1):
             try:
@@ -44,7 +52,7 @@ class OpenAICompatibleClient:
                     model=self.cfg.model,
                     messages=msgs,
                     temperature=self.cfg.temperature,
-                    max_tokens=self.cfg.max_tokens,
+                    **{token_kwarg: self.cfg.max_tokens},
                 )
                 msg = resp.choices[0].message
                 content = msg.content or ""

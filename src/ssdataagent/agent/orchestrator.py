@@ -16,13 +16,7 @@ def _heartbeat(msg: str) -> None:
 from ssdataagent.agent.code_extraction import extract_python_block
 from ssdataagent.agent.context import Condition
 from ssdataagent.agent.llm_client import LLMClient
-from ssdataagent.agent.prompt_templates import (
-    SYSTEM_PROMPT,
-    exploration_prompt,
-    generation_prompt,
-    modeling_prompt,
-    validation_prompt,
-)
+from ssdataagent.agent.prompt_templates import PromptVariant, get_variant
 from ssdataagent.agent.sandbox import Sandbox, SandboxResult
 
 
@@ -59,11 +53,17 @@ class Orchestrator:
         n_rows: int,
         max_validation_iters: int = 3,
         sandbox_timeout: int = 60,
+        prompt_variant: str | PromptVariant = "baseline",
     ):
         self.client = client
         self.n_rows = n_rows
         self.max_validation_iters = max_validation_iters
         self.sandbox_timeout = sandbox_timeout
+        self.pv = (
+            prompt_variant
+            if isinstance(prompt_variant, PromptVariant)
+            else get_variant(prompt_variant)
+        )
 
     def run(
         self,
@@ -90,7 +90,7 @@ class Orchestrator:
             t0 = time.time()
             transcript.append(TranscriptEntry("user", prompt, stage))
             history.append({"role": "user", "content": prompt})
-            response = self.client.chat(history, system=SYSTEM_PROMPT)
+            response = self.client.chat(history, system=self.pv.system)
             _heartbeat(f"{stage}: LLM responded in {time.time()-t0:.1f}s ({len(response)} chars)")
             transcript.append(TranscriptEntry("assistant", response, stage))
             history.append({"role": "assistant", "content": response})
@@ -104,7 +104,7 @@ class Orchestrator:
                 transcript.append(TranscriptEntry("user", nudge, stage))
                 history.append({"role": "user", "content": nudge})
                 t1 = time.time()
-                response = self.client.chat(history, system=SYSTEM_PROMPT)
+                response = self.client.chat(history, system=self.pv.system)
                 _heartbeat(f"{stage}: nudge responded in {time.time()-t1:.1f}s")
                 transcript.append(TranscriptEntry("assistant", response, stage))
                 history.append({"role": "assistant", "content": response})
@@ -128,26 +128,26 @@ class Orchestrator:
         try:
             explore_result = step(
                 "EXPLORATION",
-                exploration_prompt(has_data=has_data, has_descriptions=has_descriptions),
+                self.pv.exploration(has_data=has_data, has_descriptions=has_descriptions),
             )
             findings = explore_result.stdout[-2000:] or "(no findings printed)"
-            step("MODELING", modeling_prompt(findings_summary=findings))
+            step("MODELING", self.pv.modeling(findings_summary=findings))
 
             for iteration in range(self.max_validation_iters):
-                v_result = step("VALIDATION", validation_prompt())
+                v_result = step("VALIDATION", self.pv.validation())
                 ok = "VALIDATION OK" in v_result.stdout.upper()
                 if ok or iteration == self.max_validation_iters - 1:
                     break
                 step(
                     "MODELING",
-                    modeling_prompt(
+                    self.pv.modeling(
                         findings_summary="Validation flagged issues. Revise the model."
                     ),
                 )
 
             step(
                 "GENERATION",
-                generation_prompt(n_rows=self.n_rows, target_path="generated.csv"),
+                self.pv.generation(n_rows=self.n_rows, target_path="generated.csv"),
             )
 
             generated_path = sandbox.workspace / "generated.csv"

@@ -29,6 +29,14 @@ class ExperimentConfig:
     n_rows: int
     results_root: Path = REPO_ROOT / "results"
     unseen_variables: dict[str, list[str]] = field(default_factory=dict)
+    # Per-experiment knobs (all optional). Defaults preserve historical
+    # behavior: prompt_variant=baseline + LLM picked from .env / llm.yaml.
+    # Setting llm_* here lets the batch runner cycle different models in one
+    # process without rewriting the env between experiments.
+    prompt_variant: str = "baseline"
+    llm_model: str | None = None
+    llm_provider: str | None = None
+    llm_base_url: str | None = None
 
 
 def _run_id() -> str:
@@ -79,7 +87,14 @@ def run_experiment(
     *,
     resume: bool = False,
 ) -> dict[tuple[str, str], PassRates]:
-    llm_cfg = load_llm_config()
+    overrides: dict[str, str] = {}
+    if cfg.llm_model:
+        overrides["model"] = cfg.llm_model
+    if cfg.llm_provider:
+        overrides["provider"] = cfg.llm_provider
+    if cfg.llm_base_url:
+        overrides["base_url"] = cfg.llm_base_url
+    llm_cfg = load_llm_config(overrides=overrides or None)
     client = build_client(llm_cfg)
     results: dict[tuple[str, str], PassRates] = {}
 
@@ -178,6 +193,7 @@ def _run_one_condition(
         n_rows=cfg.n_rows,
         max_validation_iters=cfg.max_iterations,
         sandbox_timeout=cfg.sandbox_timeout,
+        prompt_variant=cfg.prompt_variant,
     )
     result = orch.run(
         condition=spec.context_condition,

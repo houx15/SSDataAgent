@@ -123,3 +123,12 @@ results/
 ssdatabench/simulated_data/agent_*/
 ssdatabench/evaluation_results/agent_*/
 
+# Real survey data (GSS / CPS / ACS / NLSY / AddHealth / CFPS / US, etc).
+# Sourced separately, not redistributed via git. Upload to remote machines
+# manually (see docs/experiments/CLOUD_SETUP.md).
+real_data/
+
+# SSDataBench evaluation suite — third-party code + paper data, vendored
+# locally rather than committed. Upload to remote machines manually.
+ssdatabench/
+

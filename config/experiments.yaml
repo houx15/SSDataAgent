@@ -122,3 +122,99 @@ experiments:
     sandbox_timeout: 60
     train_eval_split: 0.5
     n_rows: 1000
+
+  # =========================================================================
+  # Model-labeled re-runs. Same datasets/conditions as the corresponding
+  # un-suffixed experiments above — only the LLM differs (set via .env /
+  # config/llm.yaml). Results land under results/<this name>/... so the
+  # baseline DeepSeek runs stay untouched and the model is visible in the
+  # path, not just buried in meta.json.
+  # =========================================================================
+  smoke_gpt54mini:
+    datasets: [gss]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+
+  pilot_paper_agents_gpt54mini:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent, agent_no_semantic, agent_no_data]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  pilot_paper_longitudinal_gpt54mini:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [full_agent]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  pilot_paper_longitudinal_gpt54mini_retry:
+    datasets: [us]
+    conditions: [full_agent]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  # gpt-5.4 (full, not -mini). Same datasets/conditions as the un-suffixed
+  # paper experiments; only the LLM differs. Active model is set in .env /
+  # config/llm.yaml — keep them in sync with the experiment name being run.
+  pilot_paper_agents_gpt54:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent, agent_no_semantic, agent_no_data]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  pilot_paper_longitudinal_gpt54:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [full_agent]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  pilot_paper_longitudinal_gpt54_retry:
+    datasets: [us]
+    conditions: [full_agent]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  # =========================================================================
+  # EXP-001 (matrix-of-variants framework). Each entry below differs only in
+  # `prompt_variant` from the corresponding gpt-5.4 baseline above. Run via
+  # `python scripts/run_batch.py exp001_rubric_cross exp001_rubric_long`.
+  # The agent's API key still comes from .env (never config).
+  # =========================================================================
+  exp001_rubric_cross:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent, agent_no_semantic, agent_no_data]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  exp001_rubric_long:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [full_agent]
+    max_iterations: 3
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
