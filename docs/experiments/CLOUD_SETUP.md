@@ -30,6 +30,26 @@ and `real_data/dataset_meta.json` are required. The other subdirectories
 (`real_data/addhealth/`, `real_data/cfps/`, etc.) are raw source data not
 read by any experiment.
 
+### Putting `real_data/` on a separate disk
+
+If the cloud box has a mounted persistent disk for survey data, you don't
+have to put it under the repo. Set `SSDA_DATA_ROOT` in `.env` to the
+absolute path of the data directory:
+
+```bash
+# in .env on the cloud box
+SSDA_DATA_ROOT=/mnt/disk2/survey_data
+```
+
+The directory at `$SSDA_DATA_ROOT` should then contain `used_dataset/`,
+`dataset_meta.json`, etc. — i.e. the same subtree you'd otherwise put
+under `real_data/`. The leading `real_data/` in `config/datasets.yaml` is
+stripped at lookup time when this var is set. Unset = the repo's
+`real_data/` (existing behavior).
+
+`ssdatabench/` is currently expected under the repo root only. Ping if you
+also want an env knob for that — same pattern.
+
 ## What to create on the box
 
 The API key is **never** in any config file. Create `.env` at the project root
