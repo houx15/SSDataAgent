@@ -15,7 +15,7 @@ from pathlib import Path
 
 import yaml
 
-from ssdataagent.config import REPO_ROOT
+from ssdataagent.config import REPO_ROOT, results_root
 from ssdataagent.evaluation.comparator import summary_pivot, to_long_table
 from ssdataagent.experiments.runner import ExperimentConfig, run_experiment
 
@@ -37,7 +37,7 @@ def main():
 
     spec = yaml.safe_load(Path(args.config).read_text())["experiments"][args.experiment]
     cfg = ExperimentConfig(name=args.experiment, **spec)
-    exp_root = REPO_ROOT / "results" / cfg.name
+    exp_root = results_root() / cfg.name
     exp_root.mkdir(parents=True, exist_ok=True)
     done_flag = exp_root / "done.flag"
     failed_flag = exp_root / "failed.flag"

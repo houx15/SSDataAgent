@@ -30,22 +30,28 @@ and `real_data/dataset_meta.json` are required. The other subdirectories
 (`real_data/addhealth/`, `real_data/cfps/`, etc.) are raw source data not
 read by any experiment.
 
-### Putting `real_data/` on a separate disk
+### Putting data + results on a mounted disk
 
-If the cloud box has a mounted persistent disk for survey data, you don't
-have to put it under the repo. Set `SSDA_DATA_ROOT` in `.env` to the
-absolute path of the data directory:
+If the cloud box has a persistent disk and you want both the uploaded
+survey CSVs *and* the per-experiment outputs on it (boot disk stays
+small), set `SSDA_ROOT` in `.env`:
 
 ```bash
 # in .env on the cloud box
-SSDA_DATA_ROOT=/mnt/disk2/survey_data
+SSDA_ROOT=/mnt/disk2/ssda
 ```
 
-The directory at `$SSDA_DATA_ROOT` should then contain `used_dataset/`,
-`dataset_meta.json`, etc. — i.e. the same subtree you'd otherwise put
-under `real_data/`. The leading `real_data/` in `config/datasets.yaml` is
-stripped at lookup time when this var is set. Unset = the repo's
-`real_data/` (existing behavior).
+That directory should mirror the repo layout — it should contain a
+`real_data/` subdir (you upload it) and a `results/` subdir (auto-created
+on first run). With `SSDA_ROOT` set, `python scripts/run_batch.py ...`
+reads data from `$SSDA_ROOT/real_data/` and writes outputs to
+`$SSDA_ROOT/results/`. `python scripts/status.py` reads from
+`$SSDA_ROOT/results/` automatically too. Unset = both stay under the repo
+(existing behavior).
+
+If you instead want the uploaded data under the repo and only outputs on
+the mount (or vice-versa), tell me — easy to add separate
+`SSDA_DATA_ROOT` / `SSDA_RESULTS_ROOT` overrides on top of `SSDA_ROOT`.
 
 `ssdatabench/` is currently expected under the repo root only. Ping if you
 also want an env knob for that — same pattern.

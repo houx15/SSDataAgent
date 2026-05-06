@@ -33,7 +33,10 @@ from pathlib import Path
 import yaml
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
-RESULTS_ROOT = REPO_ROOT / "results"
+sys.path.insert(0, str(REPO_ROOT / "src"))
+from ssdataagent.config import results_root  # noqa: E402
+
+RESULTS_ROOT = results_root()
 EXPERIMENTS_YAML = REPO_ROOT / "config" / "experiments.yaml"
 PAPER_BASELINES = REPO_ROOT / "config" / "paper_baselines.json"
 STRATEGY_MD = REPO_ROOT / "docs" / "experiments" / "STRATEGY.md"

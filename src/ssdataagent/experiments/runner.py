@@ -9,7 +9,7 @@ from pathlib import Path
 from ssdataagent.agent.context import Condition, build_context
 from ssdataagent.agent.llm_client import build_client
 from ssdataagent.agent.orchestrator import Orchestrator
-from ssdataagent.config import REPO_ROOT, load_llm_config
+from ssdataagent.config import REPO_ROOT, load_llm_config, results_root
 from ssdataagent.data.loader import load_real_data
 from ssdataagent.data.splitter import split_train_eval
 from ssdataagent.data.schema import load_schema
@@ -27,7 +27,7 @@ class ExperimentConfig:
     sandbox_timeout: int
     train_eval_split: float
     n_rows: int
-    results_root: Path = REPO_ROOT / "results"
+    results_root: Path = field(default_factory=results_root)
     unseen_variables: dict[str, list[str]] = field(default_factory=dict)
     # Per-experiment knobs (all optional). Defaults preserve historical
     # behavior: prompt_variant=baseline + LLM picked from .env / llm.yaml.

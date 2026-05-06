@@ -1,32 +1,22 @@
 from __future__ import annotations
 
-import os
 from dataclasses import dataclass, field
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-from ssdataagent.config import REPO_ROOT
+from ssdataagent.config import REPO_ROOT, project_root
 
 
 DATASETS_YAML = REPO_ROOT / "config" / "datasets.yaml"
 
 
 def _resolve_data_path(rel: str) -> Path:
-    """Resolve a `real_data_path` entry from datasets.yaml.
-
-    Without env override, resolves under the repo (existing behavior).
-    With `SSDA_DATA_ROOT=/mnt/disk2/data` set, the leading `real_data/`
-    is stripped and the rest is resolved under that root — useful when
-    the cleaned survey CSVs live on a separate disk on a cloud box.
-    """
-    root = os.environ.get("SSDA_DATA_ROOT")
-    if not root:
-        return REPO_ROOT / rel
-    if rel.startswith("real_data/"):
-        rel = rel[len("real_data/"):]
-    return Path(root) / rel
+    """Resolve a `real_data_path` entry from datasets.yaml against `SSDA_ROOT`
+    if set, otherwise under the repo. The yaml entries (`real_data/...`) are
+    treated as paths under `project_root()`, mirroring the repo layout."""
+    return project_root() / rel
 
 
 @dataclass(frozen=True)

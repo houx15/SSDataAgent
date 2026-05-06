@@ -13,6 +13,27 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_YAML = REPO_ROOT / "config" / "llm.yaml"
 
 
+def project_root() -> Path:
+    """Where `real_data/` and `results/` live.
+
+    Defaults to the repo root, so a fresh checkout works with no extra config.
+    Set `SSDA_ROOT=/mnt/disk2/ssda` in the env to relocate both onto a
+    mounted disk on a cloud box; that directory should then contain
+    `real_data/` (you upload it) and `results/` (auto-created on first run),
+    same layout as the repo. Read at call time so tests can monkey-patch.
+    """
+    root = os.environ.get("SSDA_ROOT")
+    return Path(root) if root else REPO_ROOT
+
+
+def data_root() -> Path:
+    return project_root() / "real_data"
+
+
+def results_root() -> Path:
+    return project_root() / "results"
+
+
 @dataclass(frozen=True)
 class LLMConfig:
     provider: Literal["openai", "anthropic"]
