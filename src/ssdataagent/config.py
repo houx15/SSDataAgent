@@ -12,6 +12,15 @@ from dotenv import load_dotenv
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DEFAULT_YAML = REPO_ROOT / "config" / "llm.yaml"
 
+# Load .env once at import so that any code path reading env vars
+# (project_root, data_root, results_root, llm config, ...) sees the values.
+# `override=False` means real shell env wins over .env, matching dotenv's
+# usual semantics. Only loads if .env exists; tests that don't want this
+# can monkey-patch os.environ after import.
+_ENV_PATH = REPO_ROOT / ".env"
+if _ENV_PATH.exists():
+    load_dotenv(_ENV_PATH, override=False)
+
 
 def project_root() -> Path:
     """Where `real_data/` and `results/` live.
