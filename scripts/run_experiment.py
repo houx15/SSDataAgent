@@ -15,9 +15,14 @@ from pathlib import Path
 
 import yaml
 
-from ssdataagent.config import REPO_ROOT, results_root
-from ssdataagent.evaluation.comparator import summary_pivot, to_long_table
-from ssdataagent.experiments.runner import ExperimentConfig, run_experiment
+# Bootstrap so this script runs without `pip install -e .` (matches the
+# pattern in run_batch.py / status.py / generate_exp_report.py).
+_REPO_ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(_REPO_ROOT / "src"))
+
+from ssdataagent.config import REPO_ROOT, results_root  # noqa: E402
+from ssdataagent.evaluation.comparator import summary_pivot, to_long_table  # noqa: E402
+from ssdataagent.experiments.runner import ExperimentConfig, run_experiment  # noqa: E402
 
 # Ensure the build_eval_subset helper runs before the experiment.
 sys.path.insert(0, str(REPO_ROOT / "scripts"))
