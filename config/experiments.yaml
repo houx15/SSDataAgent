@@ -8,6 +8,21 @@ experiments:
     train_eval_split: 0.5
     n_rows: 100
 
+  # Tiny end-to-end check that the rubric variant + done.flag wiring works
+  # end-to-end through a real LLM call. ~1-2 min. Should be run before any
+  # full EXP-001 batch on a cloud box.
+  smoke_gss_rubric:
+    datasets: [gss]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+    prompt_variant: rubric
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
   pilot_gss:
     datasets: [gss]
     conditions: [full_agent, agent_no_semantic, agent_no_data, direct_generation]

@@ -4,27 +4,22 @@ An LLM **data-analyst agent** for population-level social-survey simulation, eva
 
 Instead of prompting an LLM to generate one synthetic respondent at a time (the SSDataBench paradigm), this project gives the LLM access to real survey data and lets it explore, model, and generate via Python code execution. The agent functions as a data scientist, not a survey respondent.
 
-## TL;DR — cross-dataset findings (n=1000 each)
+## TL;DR — current state
 
-Mean pass rate (overall, types 1–3) by condition × dataset:
+The agent paradigm is now run on **7 datasets × 5 metric types (T1–T5)**, including longitudinal panels (NLSY, AddHealth, CFPS, Understanding Society) that exercise event-time chronology. The three LLMs we've benchmarked end-to-end:
 
-| Condition | GSS-2018 | CPS-1980 | ACS-1980 |
+| Model | Cross-sectional mean | Longitudinal mean | vs SSDataBench paper-best (Δ over 7 datasets) |
 |---|---:|---:|---:|
-| `full_agent` | **0.631** | **0.622** | 0.443 |
-| `agent_no_semantic` | 0.506 | 0.544 | **0.655** |
-| `agent_no_data` | 0.181 | 0.175 | 0.179 |
-| `direct_generation` | 0.273 | 0.200 | 0.189 |
+| DeepSeek v4 flash    | 0.563 | 0.345 | +0.10 |
+| gpt-5.4-mini         | 0.375 | 0.367 | +0.02 |
+| **gpt-5.4** (current default) | 0.507 | **0.453** | **+0.13** (5/7 dataset wins) |
 
-Two robust cross-dataset findings:
+Two structural results worth highlighting:
 
-- **`full_agent` matches GSS-quality on CPS** (~0.63 on both); on ACS it underperforms its own data-only ablation. The agent paradigm wins on 2 of 3 datasets.
-- **`agent_no_semantic` beats `direct_generation` on every dataset**, with the margin growing from +0.23 (GSS) → +0.34 (CPS) → +0.47 (ACS). Data-driven empirical sampling is uniformly stronger than per-individual LLM elicitation, regardless of variable semantics.
+- **The agent paradigm beats SSDataBench's per-individual paradigm on every dataset.** Best-of-15 paper LLMs averaged ~0.34; our agent on gpt-5.4 averages 0.476.
+- **gpt-5.4 on Understanding Society is the first ever non-trivial T4 score** (0.270, vs paper-best ceiling of 0.05) — first evidence that the agent paradigm + a strong LLM can begin to capture life-course chronology, which the paper called the LLMs' hardest failure mode.
 
-The `agent_no_data` baseline is a near-identical floor (~0.18) on every dataset, confirming that prior knowledge alone is calibration-free.
-
-A held-out-variable test on GSS shows the agent does **not** attempt zero-shot prediction of variables absent from training — it just omits them from output.
-
-See [`docs/report/2026-04-30-initial-findings.md`](docs/report/2026-04-30-initial-findings.md) for the full write-up.
+Full write-ups live in [`docs/report/`](docs/report/); the experiment ledger and current backlog are in [`docs/experiments/LEDGER.md`](docs/experiments/LEDGER.md) and [`docs/experiments/STRATEGY.md`](docs/experiments/STRATEGY.md).
 
 ## How it works
 
@@ -91,48 +86,109 @@ SSDataAgent/
     experiments/          # conditions, logger, runner, direct_generation
   config/
     datasets.yaml         # dataset registry
-    experiments.yaml      # experiment matrix
-    llm.yaml              # provider/model (no secrets)
+    experiments.yaml      # experiment matrix (20+ entries, including EXP-001)
+    llm.yaml              # provider/model defaults (no secrets)
+    paper_baselines.json  # SSDataBench paper-best per (dataset, T-type)
   scripts/
-    run_experiment.py     # CLI entry point
+    run_experiment.py     # run one experiment (writes done.flag on success)
+    run_batch.py          # run a list of experiments back-to-back, resumable
+    status.py             # at-a-glance progress for all experiments
+    new_experiment.py     # scaffold a docs/experiments/ entry
+    generate_exp_report.py# build the per-exp markdown report (vs paper-best)
     smoke_eval.py         # ssdatabench smoke test
     build_eval_subset.py  # auto-prune ssdatabench eval config to our columns
   tests/                  # 90 pytest tests, mirrors src/
-  real_data/              # cleaned GSS / CPS / ACS CSVs
-  ssdatabench/            # vendored submodule
+  real_data/              # cleaned survey CSVs (gitignored — see Setup)
+  ssdatabench/            # vendored eval suite (gitignored — see Setup)
   docs/
     SPEC.md               # engineering specification
     SSDataBench.pdf       # source benchmark paper
     LLM_Survey_Prediction_Agent.pdf
-    report/               # paper-style writeups
+    report/               # paper-style writeups (one per pilot wave)
+    experiments/          # ledger, strategy, per-exp retros, CLOUD_SETUP.md
     superpowers/          # design spec & implementation plan
-  results/                # per-experiment per-condition logs and pass rates
+  results/                # per-experiment artifacts; done.flag = experiment finished
 ```
 
 ## Setup
 
 ```bash
-git clone --recurse-submodules git@github.com:houx15/SSDataAgent.git
+git clone git@github.com:houx15/SSDataAgent.git
 cd SSDataAgent
-python3 -m venv .venv && source .venv/bin/activate
+python3.11 -m venv .venv && source .venv/bin/activate
 pip install -e ".[dev]"
-pip install -r ssdatabench/requirements.txt
 
+# Two paths are gitignored — copy/download separately:
+#   real_data/     — cleaned survey CSVs (~6 MB)
+#   ssdatabench/   — third-party eval suite (~35 MB)
+# See docs/experiments/CLOUD_SETUP.md for the full upload + .env recipe.
+
+pip install -r ssdatabench/requirements.txt
 cp .env.example .env
-# Edit .env: set LLM_API_KEY and adjust LLM_MODEL / LLM_BASE_URL if needed
+# Edit .env: at minimum set LLM_API_KEY. LLM_MODEL/PROVIDER/BASE_URL
+# are now usually set per-experiment in config/experiments.yaml — the
+# .env entries are only the fallback when an experiment doesn't specify.
 ```
 
-The default `.env` is configured for DeepSeek (`deepseek-v4-flash`, OpenAI-compatible). Any OpenAI-compatible endpoint works (`anthropic` is also supported via the same `LLMClient` interface).
+The default `llm.yaml` is configured for OpenAI (`gpt-5.4-2026-03-05`). DeepSeek and Anthropic are supported through the same `LLMClient` interface — see `src/ssdataagent/agent/llm_client.py`.
 
-## Usage
+## Running experiments
 
-Run the full pilot matrix on GSS:
+The framework is built around three commands. Pick by what you want to do.
+
+### 1. Smoke test (~1–2 min) — sanity-check after a code change
 
 ```bash
-python scripts/run_experiment.py --experiment pilot_gss
+python scripts/run_experiment.py --experiment smoke_gss
+# Or for the rubric variant added in EXP-001:
+python scripts/run_experiment.py --experiment smoke_gss_rubric
 ```
 
-Per-run artifacts land in `results/<experiment>/<condition>/<dataset>/<run_id>/`:
+One dataset, `n_rows=100`, `max_iterations=1`. Use this any time you change prompts, the orchestrator, the runner, or the LLM client.
+
+### 2. Single experiment — focused investigation
+
+```bash
+python scripts/run_experiment.py --experiment pilot_paper_agents_gpt54
+python scripts/run_experiment.py --experiment pilot_paper_agents_gpt54 --resume
+```
+
+`--resume` skips per-(condition × dataset) cells whose `eval.json` exists, and skips the experiment entirely if `results/<exp>/done.flag` exists.
+
+### 3. Batch — many experiments in one shot, resumable
+
+```bash
+# in tmux on a cloud box, see CLOUD_SETUP.md for the full setup
+nohup python scripts/run_batch.py \
+    exp001_rubric_cross exp001_rubric_long \
+    > batch.log 2>&1 &
+```
+
+Sequential by design (resume logic is trivial that way). One failure doesn't block the rest. Per-experiment log lands at `results/<exp>/run.log` and `results/_batch_status.json` is rewritten after each step for SSH-friendly status checks.
+
+### Status, from anywhere over SSH
+
+```bash
+python scripts/status.py                              # all experiments
+python scripts/status.py exp001_rubric_cross          # filter
+python scripts/status.py --watch                      # refresh every 5s
+tail -f results/exp001_rubric_cross/run.log           # live output
+```
+
+Source of truth is `results/<exp>/done.flag` (success) and `failed.flag` (failure with traceback). If `done.flag` exists, the experiment finished and `summary.csv` is on disk.
+
+### Per-experiment report (results vs the paper)
+
+```bash
+python scripts/generate_exp_report.py exp001_rubric_cross \
+    --baseline pilot_paper_agents_gpt54
+```
+
+Writes `docs/experiments/<date>-<exp>-report.md` with three sections: **Strategy** (hypothesis + variant deltas), **Results** (T1–T5 per dataset), **vs Paper-best** (Δ against the strongest of SSDataBench's 15 LLMs per cell, sourced from `config/paper_baselines.json`). The optional `--baseline` adds a fourth A/B section.
+
+### Per-run artifacts
+
+Every per-(condition × dataset) cell writes to `results/<experiment>/<condition>/<dataset>/<run_id>/`:
 
 ```
 meta.json            run config + git SHA + model
@@ -141,21 +197,27 @@ responses.jsonl      every response received
 code/step_NN.py      every code block the agent executed
 code/step_NN.{stdout,stderr,exit}
 workspace/           snapshot of the sandbox workspace at end of run
-generated.csv        the synthetic dataset handed to evaluation
-eval.json            SSDataBench pass rates
+generated.csv        the synthetic dataset handed to scoring
+eval.json            SSDataBench T1–T5 pass rates
 ```
 
-Resume a partially-completed experiment (skips conditions whose `eval.json` already exists):
+The full set of experiments is in [`config/experiments.yaml`](config/experiments.yaml) — 20+ entries covering smoke runs, the cross-sectional 4-condition matrix, longitudinal pilots, and the in-flight `exp001_rubric_*` variants.
 
-```bash
-python scripts/run_experiment.py --experiment pilot_gss --resume
-```
+## Deploying to a cloud box
 
-Available experiments (in `config/experiments.yaml`):
+Designed for **Ubuntu GCP server, run inside `tmux`, walk away**. The full recipe is in [`docs/experiments/CLOUD_SETUP.md`](docs/experiments/CLOUD_SETUP.md). Two-minute version:
 
-- `smoke_gss` — single `full_agent` run, n=100, ~3 minutes
-- `pilot_gss` — full 4-condition matrix, n=1000, ~30 minutes
-- `pilot_gss_unseen` — held-out variable experiment
+1. **`rsync` two paths from your laptop** (both gitignored):
+   - `real_data/` (~6 MB; `real_data/used_dataset/*.csv` + `dataset_meta.json` is the minimum)
+   - `ssdatabench/` (~35 MB)
+2. **Create `.env` on the box** with at least `LLM_API_KEY=sk-...`. Never put the key in any committed config.
+3. **Inside `tmux`**, kick off a batch:
+   ```bash
+   nohup python scripts/run_batch.py exp001_rubric_cross exp001_rubric_long \
+       > batch.log 2>&1 &
+   ```
+4. **Detach** (`Ctrl-b d`), **disconnect SSH freely**, **come back** to a finished batch. Reconnect via `ssh + tmux a -t ssda` and run `python scripts/status.py` to see what's done. Network drops do not affect the batch.
+5. **Re-running the same `run_batch.py` command resumes** — anything with `done.flag` is silently skipped, anything with `failed.flag` is retried.
 
 ## Tests
 
@@ -177,20 +239,25 @@ RUN_LIVE_LLM_TESTS=1 pytest  # +1 test that hits the real LLM API
 
 ## Status
 
-| Phase | Description | Status |
-|---|---|:---:|
-| 0 | Project setup, SSDataBench integration, LLM connectivity | ✓ |
-| 1 | Data layer (schema, loader, splitter) | ✓ |
-| 2 | Sandbox + context builder | ✓ |
-| 3 | Agent orchestrator (explore/model/validate/generate) | ✓ |
-| 4 | Output formatting + evaluation bridge | ✓ |
-| 5 | Experiment runner + CLI | ✓ |
-| 6 | Unseen-variable experiment | wired, not yet run |
-| 7 | Direct LLM generation baseline | ✓ |
+| Area | Status |
+|---|:---:|
+| Core agent + sandbox + 4-stage orchestrator | ✓ |
+| Cross-sectional pilots (GSS/CPS/ACS) | ✓ |
+| Longitudinal pilots (NLSY/AddHealth/CFPS/US) — adds T4/T5 | ✓ |
+| Direct-generation baseline (paper paradigm) | ✓ |
+| Three-model comparison (DeepSeek / gpt-5.4-mini / gpt-5.4) | ✓ |
+| Paper-comparison reporting (vs SSDataBench's 15 LLMs) | ✓ |
+| Matrix-of-variants framework (prompt registry + per-exp LLM overrides) | ✓ (this PR) |
+| Batch runner + status + per-exp report (cloud-deploy ready) | ✓ (this PR) |
+| EXP-001 rubric variant — `exp001_rubric_*` | wired, smoke tested, full run pending |
 
-90/90 unit tests passing. One full pilot run completed (above).
+Backlog (full list in [`docs/experiments/STRATEGY.md`](docs/experiments/STRATEGY.md)):
 
-Next steps: run `pilot_gss_unseen`; expand to CPS and ACS; add longitudinal datasets per SPEC Phase 3.
+- **EXP-001** rubric block in SYSTEM_PROMPT (in flight)
+- **EXP-002** quantitative VALIDATION thresholds (replace "if anything is clearly off")
+- **EXP-003** wire `preserve_missingness=True` (currently dead code)
+- **EXP-004** MODELING decision rule branching cross-sectional vs longitudinal
+- **EXP-005** cross-run lessons memory injected into SYSTEM_PROMPT
 
 ## License
 
