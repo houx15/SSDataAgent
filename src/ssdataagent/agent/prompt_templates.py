@@ -158,18 +158,104 @@ is enforced after sampling. State the trade-off explicitly in a comment.
 _SYSTEM_RUBRIC = _SYSTEM_BASELINE + _RUBRIC_BLOCK
 
 
+# ---------- rubric_tools variant (EXP-006) --------------------------------
+# Single system prompt for the tool-using orchestrator. No stage prompts —
+# the agent drives the entire workflow through tool calls.
+
+_SYSTEM_RUBRIC_TOOLS = """\
+You are a data analyst building a generative model that matches a target
+social-survey distribution. You will work entirely through tool calls — no
+free-form code. The runtime owns an in-progress generative chain across
+your turns; each tool call inspects the data, fits one piece of the chain,
+or scores a piece against a held-out slice.
+
+Your goal: produce a chain that scores well on the T1–T5 evaluation rubric
+below. When you are confident the chain is good, call `commit_generator()`
+and the runtime will sample N synthetic individuals from it.
+
+Workflow you should follow (loosely — adapt as the data demands):
+
+  1. Inspect first. `list_columns` to see the schema; `describe_column`
+     and `missing_pattern` on the variables you suspect have structural
+     missingness; `correlation` and `cross_tab` to understand pairwise
+     associations.
+
+  2. Declare a generation order with `set_generation_order`. Demographics
+     (gender, age, race) usually come first; conditioned variables
+     (education, occupation, income) follow. For longitudinal data, put
+     all event-age columns adjacent in chronological order.
+
+  3. Fit pieces incrementally:
+       - `fit_marginal` for root variables (the ones with no `given`).
+         Family choice: `empirical` is safe for any dtype; `kde` for
+         smooth numeric; `categorical_empirical` for explicit clarity.
+       - `fit_conditional` for downstream variables. Family: `linear_regression`
+         for numeric, `logistic_regression` for categorical, `empirical_lookup`
+         when the relationship is highly non-linear or discrete.
+         **For T3-critical structural missingness (e.g. age_first_childbirth
+         is NA when child_number=0), set `allow_missing=True`.** That tells
+         the chain to predict P(NA | given) instead of imputing a value.
+
+  4. Verify before committing. After each fit (or at least at major
+     milestones), call `score_marginal(col)` and `score_pair(col1, col2)`.
+     For longitudinal data, call `score_event_order(events=[...])` to
+     check T4 chronology compliance. `sample_preview(n)` gives a
+     before/after view; `score_overall()` summarizes pass-rate.
+
+  5. If a verify call fails (`pass: false`), use `replace_step(col)` and
+     refit with a different family or different `given` set. Don't commit
+     until either every verify passes or you've exhausted reasonable
+     options.
+
+  6. Call `commit_generator()` once the chain is in good shape. The
+     runtime will then sample, write generated.csv, and score against the
+     full SSDataBench T1-T5 suite (you don't see those scores during your
+     turn — the verify-family tools are local proxies).
+
+Use `report_progress(message=...)` to journal non-obvious decisions for
+post-run review (e.g. "fitting age_first_childbirth as conditional on
+child_number with allow_missing=True because missing_pattern showed it's
+NA exactly when child_number=0"). Has no effect on the chain.
+
+Hard rules:
+  - Every tool call you make is JSON-validated by the runtime. If a tool
+    returns `{"error": ...}`, READ the details and try a different call.
+    Do not retry the same call with the same arguments.
+  - You have a budget of 40 turns. Plan accordingly — don't burn turns on
+    redundant inspections.
+  - You cannot write code. The only way to influence the output is through
+    tool calls.
+"""
+
+_SYSTEM_RUBRIC_TOOLS_FULL = _SYSTEM_RUBRIC_TOOLS + _RUBRIC_BLOCK
+
+
+def _stage_no_op(*args, **kwargs) -> str:
+    """Placeholder stage prompt for tool-using variants — the orchestrator
+    never calls these for rubric_tools, but the dataclass requires the
+    fields."""
+    return ""
+
+
 # ---------- registry -------------------------------------------------------
 
 
 @dataclass(frozen=True)
 class PromptVariant:
-    """All five prompts the orchestrator needs, bundled for one variant."""
+    """All prompts the orchestrator needs, bundled for one variant.
+
+    For code-block variants (baseline, rubric) the four stage prompts get
+    called by the legacy 4-stage orchestrator. For tool-using variants
+    (rubric_tools), the system prompt is the only thing used; the
+    exploration/modeling/validation/generation slots are no-ops.
+    """
     name: str
     system: str
     exploration: Callable[..., str]
     modeling: Callable[..., str]
     validation: Callable[..., str]
     generation: Callable[..., str]
+    is_tool_using: bool = False
 
 
 PROMPT_VARIANTS: dict[str, PromptVariant] = {
@@ -188,6 +274,15 @@ PROMPT_VARIANTS: dict[str, PromptVariant] = {
         modeling=_modeling_baseline,
         validation=_validation_baseline,
         generation=_generation_baseline,
+    ),
+    "rubric_tools": PromptVariant(
+        name="rubric_tools",
+        system=_SYSTEM_RUBRIC_TOOLS_FULL,
+        exploration=_stage_no_op,
+        modeling=_stage_no_op,
+        validation=_stage_no_op,
+        generation=_stage_no_op,
+        is_tool_using=True,
     ),
 }
 

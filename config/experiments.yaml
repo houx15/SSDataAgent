@@ -233,3 +233,33 @@ experiments:
     llm_model: gpt-5.4-2026-03-05
     llm_provider: openai
     llm_base_url: https://api.openai.com/v1
+
+  # =========================================================================
+  # EXP-006 spike — tool-using agent, ACS only, single condition.
+  # Smoke and full variants. Compares to pilot_paper_agents_gpt54[acs] (0.505)
+  # and exp001_rubric_cross[acs] (full_agent: 0.369).
+  # =========================================================================
+  smoke_acs_tools:
+    datasets: [acs]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+    prompt_variant: rubric_tools
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  exp006a_tools_acs:
+    datasets: [acs]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
