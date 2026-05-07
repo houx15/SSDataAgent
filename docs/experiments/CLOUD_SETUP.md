@@ -4,34 +4,22 @@ The framework is designed for the workflow: **launch a batch of experiments
 in tmux, walk away, come back to a finished comparison report.** Local
 network drops don't matter; the box keeps running.
 
-## What to upload (not in git)
+## What to fetch and what to upload
 
-Two paths must be `rsync`'d from your laptop to the cloud box. Both are in
-`.gitignore` precisely so they're never accidentally committed.
+`ssdatabench/` is a **git submodule** (third-party scoring suite,
+~35 MB). Don't rsync it — `git submodule update` populates it from the
+upstream repo, and that's the source of truth for which files are pinned.
 
-| Path                  | Size  | Why                                                     |
-|-----------------------|-------|---------------------------------------------------------|
-| `real_data/`          | ~6 MB | Cleaned SSDataBench survey CSVs the agent and metrics consume. |
-| `ssdatabench/`        | ~35 MB | Third-party eval suite (referenced by `config/datasets.yaml`). |
-
-```bash
-# from your laptop, inside the project dir
-# Default (repo-rooted) layout:
-rsync -av --progress \
-    real_data/ \
-    user@cloud-box:~/SSDataAgent/real_data/
-
-rsync -av --progress \
-    ssdatabench/ \
-    user@cloud-box:~/SSDataAgent/ssdatabench/
-```
-
-If you set `SSDA_ROOT=/mnt/disk2/ssda` (next section), upload to the
-mount instead:
+`real_data/` is the only thing that has to be **rsync'd** from your
+laptop because the survey CSVs aren't redistributed via git.
 
 ```bash
-rsync -av --progress real_data/   user@cloud-box:/mnt/disk2/ssda/real_data/
-rsync -av --progress ssdatabench/ user@cloud-box:/mnt/disk2/ssda/ssdatabench/
+# on the cloud box, after `git clone`:
+cd ~/SSDataAgent
+git submodule update --init --recursive
+
+# from your laptop, inside the project dir:
+rsync -av --progress real_data/ user@cloud-box:~/SSDataAgent/real_data/
 ```
 
 You can prune `real_data/` further if you want — only `real_data/used_dataset/`
@@ -39,43 +27,37 @@ and `real_data/dataset_meta.json` are required. The other subdirectories
 (`real_data/addhealth/`, `real_data/cfps/`, etc.) are raw source data not
 read by any experiment.
 
-### Putting data + ssdatabench + results on a mounted disk
+### Putting data + results on a mounted disk
 
 If the cloud box has a persistent disk and you want the uploaded survey
-CSVs, the third-party scoring suite, *and* the per-experiment outputs on
-it (boot disk stays small), set `SSDA_ROOT` in `.env`:
+CSVs *and* the per-experiment outputs on it (boot disk stays small), set
+`SSDA_ROOT` in `.env`:
 
 ```bash
 # in .env on the cloud box
 SSDA_ROOT=/mnt/disk2/ssda
 ```
 
-That directory should mirror the repo layout — it should contain
-`real_data/` (you upload it), `ssdatabench/` (you upload it), and
-`results/` (auto-created on first run). So your rsync targets become:
+That directory should contain `real_data/` (you upload it) and
+`results/` (auto-created on first run). The rsync target becomes:
 
 ```bash
-rsync -av --progress real_data/    user@cloud-box:/mnt/disk2/ssda/real_data/
-rsync -av --progress ssdatabench/  user@cloud-box:/mnt/disk2/ssda/ssdatabench/
+rsync -av --progress real_data/ user@cloud-box:/mnt/disk2/ssda/real_data/
 ```
 
-With `SSDA_ROOT` set, every data-loading code path reads from the mount:
-`scripts/run_batch.py` reads CSVs from `$SSDA_ROOT/real_data/`, the
-schema loader reads dataset configs from `$SSDA_ROOT/ssdatabench/...`,
-and the runner writes outputs to `$SSDA_ROOT/results/`.
-`scripts/status.py` reads from `$SSDA_ROOT/results/` automatically.
-Unset = all three stay under the repo (existing behavior).
+With `SSDA_ROOT` set, `scripts/run_batch.py` reads CSVs from
+`$SSDA_ROOT/real_data/` and writes outputs to `$SSDA_ROOT/results/`;
+`scripts/status.py` reads `$SSDA_ROOT/results/` automatically. Unset =
+both stay under the repo. `ssdatabench/` is not affected by `SSDA_ROOT`
+— as a submodule it always lives under the repo.
 
-#### Splitting trees across disks (optional)
+#### Splitting data and results across disks (optional)
 
-If you want a tree on a different disk than `SSDA_ROOT` (e.g. data on a
-fast SSD, results on a large slow disk), each tree has an independent
-override:
+Each tree has an independent override:
 
 ```bash
 SSDA_DATA_ROOT=/mnt/fast/real_data
 SSDA_RESULTS_ROOT=/mnt/large/results
-SSDA_SSDATABENCH_ROOT=/opt/ssdatabench
 ```
 
 Any unset override falls back to `$SSDA_ROOT/<tree>/`, then to the repo.
@@ -111,10 +93,12 @@ LLM_API_KEY=sk-...
 ## Setup on a fresh box
 
 ```bash
+git clone <repo-url> ~/SSDataAgent
 cd ~/SSDataAgent
+git submodule update --init --recursive   # populates ssdatabench/
 python3.11 -m venv .venv
 .venv/bin/pip install -r requirements.txt
-# upload data + ssdatabench (see above)
+# rsync real_data/ from your laptop (see above)
 # create .env (see above)
 ```
 

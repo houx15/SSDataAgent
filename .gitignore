@@ -128,7 +128,3 @@ ssdatabench/evaluation_results/agent_*/
 # manually (see docs/experiments/CLOUD_SETUP.md).
 real_data/
 
-# SSDataBench evaluation suite — third-party code + paper data, vendored
-# locally rather than committed. Upload to remote machines manually.
-ssdatabench/
-

@@ -23,14 +23,13 @@ if _ENV_PATH.exists():
 
 
 def project_root() -> Path:
-    """Where `real_data/`, `results/`, and `ssdatabench/` live.
+    """Where `real_data/` and `results/` live.
 
-    Defaults to the repo root, so a fresh checkout works with no extra config.
-    Set `SSDA_ROOT=/mnt/disk2/ssda` in the env to relocate all three onto a
-    mounted disk on a cloud box; that directory should then contain
-    `real_data/` (you upload it), `ssdatabench/` (you upload it), and
-    `results/` (auto-created on first run), same layout as the repo. Read at
-    call time so tests can monkey-patch.
+    Defaults to the repo root. Set `SSDA_ROOT=/mnt/disk2/ssda` to relocate
+    user-managed data + outputs onto a mounted disk on a cloud box; that
+    directory should contain `real_data/` (you upload it) and `results/`
+    (auto-created on first run). The `ssdatabench/` submodule always lives
+    under the repo, so it isn't affected by SSDA_ROOT.
     """
     root = os.environ.get("SSDA_ROOT")
     return Path(root) if root else REPO_ROOT
@@ -38,24 +37,24 @@ def project_root() -> Path:
 
 def data_root() -> Path:
     """Where the cleaned survey CSVs live. Override with `SSDA_DATA_ROOT`
-    if you want data on a different disk than results/ssdatabench."""
+    if you want data on a different disk than results."""
     override = os.environ.get("SSDA_DATA_ROOT")
     return Path(override) if override else project_root() / "real_data"
 
 
 def results_root() -> Path:
     """Where per-experiment outputs go. Override with `SSDA_RESULTS_ROOT`
-    if you want results on a different disk than data/ssdatabench."""
+    if you want results on a different disk than data."""
     override = os.environ.get("SSDA_RESULTS_ROOT")
     return Path(override) if override else project_root() / "results"
 
 
 def ssdatabench_root() -> Path:
-    """Where the third-party SSDataBench scoring suite lives. Override with
-    `SSDA_SSDATABENCH_ROOT` if you want ssdatabench on a different disk
-    than data/results."""
-    override = os.environ.get("SSDA_SSDATABENCH_ROOT")
-    return Path(override) if override else project_root() / "ssdatabench"
+    """The third-party SSDataBench scoring suite, vendored as a git
+    submodule at `<repo>/ssdatabench`. Always under the repo — it's code,
+    not data — so `git submodule update --init --recursive` is the way to
+    get it on a cloud box, not rsync."""
+    return REPO_ROOT / "ssdatabench"
 
 
 @dataclass(frozen=True)
