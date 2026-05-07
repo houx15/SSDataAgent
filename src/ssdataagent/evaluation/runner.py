@@ -7,7 +7,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from ssdataagent.config import REPO_ROOT
+from ssdataagent.config import ssdatabench_root as _default_ssdatabench_root
 from ssdataagent.data.schema import load_schema
 from ssdataagent.generation.formatter import format_generated, write_simulated
 
@@ -197,7 +197,8 @@ def run_evaluation(
     invoke the dataset's evaluation script in --single mode, and parse the
     resulting pass rates.
     """
-    ssdatabench_root = ssdatabench_root or (REPO_ROOT / "ssdatabench")
+    if ssdatabench_root is None:
+        ssdatabench_root = _default_ssdatabench_root()
     schema = load_schema(dataset_name)
     formatted = format_generated(generated, dataset_name)
     sim_csv = write_simulated(

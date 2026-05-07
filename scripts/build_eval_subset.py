@@ -23,9 +23,8 @@ import yaml
 
 
 REPO = Path(__file__).resolve().parents[1]
-SSDATABENCH = REPO / "ssdatabench"
-
 sys.path.insert(0, str(REPO / "src"))
+from ssdataagent.config import ssdatabench_root  # noqa: E402
 from ssdataagent.data.loader import load_real_data  # noqa: E402
 from ssdataagent.data.schema import load_schema  # noqa: E402
 
@@ -90,8 +89,9 @@ def build_subset(dataset: str) -> Path:
     dropped_empty = sorted(set(df.columns) - available)
     if dropped_empty:
         print(f"[build_eval_subset] dropping all-NaN columns: {dropped_empty}")
-    src = SSDATABENCH / "evaluation" / "config" / subdir
-    dst = SSDATABENCH / "evaluation" / "config" / f"{subdir}_subset"
+    bench = ssdatabench_root()
+    src = bench / "evaluation" / "config" / subdir
+    dst = bench / "evaluation" / "config" / f"{subdir}_subset"
     dst.mkdir(parents=True, exist_ok=True)
 
     for src_file in sorted(src.glob("type*.yaml")):

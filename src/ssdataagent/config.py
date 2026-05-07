@@ -23,24 +23,39 @@ if _ENV_PATH.exists():
 
 
 def project_root() -> Path:
-    """Where `real_data/` and `results/` live.
+    """Where `real_data/`, `results/`, and `ssdatabench/` live.
 
     Defaults to the repo root, so a fresh checkout works with no extra config.
-    Set `SSDA_ROOT=/mnt/disk2/ssda` in the env to relocate both onto a
+    Set `SSDA_ROOT=/mnt/disk2/ssda` in the env to relocate all three onto a
     mounted disk on a cloud box; that directory should then contain
-    `real_data/` (you upload it) and `results/` (auto-created on first run),
-    same layout as the repo. Read at call time so tests can monkey-patch.
+    `real_data/` (you upload it), `ssdatabench/` (you upload it), and
+    `results/` (auto-created on first run), same layout as the repo. Read at
+    call time so tests can monkey-patch.
     """
     root = os.environ.get("SSDA_ROOT")
     return Path(root) if root else REPO_ROOT
 
 
 def data_root() -> Path:
-    return project_root() / "real_data"
+    """Where the cleaned survey CSVs live. Override with `SSDA_DATA_ROOT`
+    if you want data on a different disk than results/ssdatabench."""
+    override = os.environ.get("SSDA_DATA_ROOT")
+    return Path(override) if override else project_root() / "real_data"
 
 
 def results_root() -> Path:
-    return project_root() / "results"
+    """Where per-experiment outputs go. Override with `SSDA_RESULTS_ROOT`
+    if you want results on a different disk than data/ssdatabench."""
+    override = os.environ.get("SSDA_RESULTS_ROOT")
+    return Path(override) if override else project_root() / "results"
+
+
+def ssdatabench_root() -> Path:
+    """Where the third-party SSDataBench scoring suite lives. Override with
+    `SSDA_SSDATABENCH_ROOT` if you want ssdatabench on a different disk
+    than data/results."""
+    override = os.environ.get("SSDA_SSDATABENCH_ROOT")
+    return Path(override) if override else project_root() / "ssdatabench"
 
 
 @dataclass(frozen=True)

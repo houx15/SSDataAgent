@@ -20,13 +20,14 @@ import pandas as pd
 
 REPO = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO / "src"))
+from ssdataagent.config import results_root  # noqa: E402
 from ssdataagent.data.schema import load_schema  # noqa: E402
 from ssdataagent.evaluation.runner import PassRates, by_domain  # noqa: E402
 
 
-def _load_eval(p: Path) -> dict:
+def _load_eval(p: Path, results_dir: Path) -> dict:
     blob = json.loads(p.read_text())
-    parts = p.relative_to(REPO / "results").parts
+    parts = p.relative_to(results_dir).parts
     # parts = (experiment, condition, dataset, run_id, "eval.json")
     return {
         "experiment": parts[0],
@@ -51,14 +52,15 @@ def _domain_view(blob: dict, dataset: str) -> dict[str, dict[str, float]]:
 def main():
     p = argparse.ArgumentParser()
     p.add_argument("experiment")
-    p.add_argument("--results-root", default=str(REPO / "results"))
+    p.add_argument("--results-root", default=str(results_root()))
     args = p.parse_args()
 
     root = Path(args.results_root) / args.experiment
     if not root.exists():
         sys.exit(f"no such experiment dir: {root}")
 
-    rows = [_load_eval(p) for p in sorted(root.rglob("eval.json"))]
+    results_dir = Path(args.results_root)
+    rows = [_load_eval(p, results_dir) for p in sorted(root.rglob("eval.json"))]
     if not rows:
         sys.exit(f"no eval.json files under {root}")
 

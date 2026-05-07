@@ -6,17 +6,32 @@ from typing import Any
 
 import yaml
 
-from ssdataagent.config import REPO_ROOT, project_root
+from ssdataagent.config import REPO_ROOT, data_root, ssdatabench_root
 
 
 DATASETS_YAML = REPO_ROOT / "config" / "datasets.yaml"
 
 
 def _resolve_data_path(rel: str) -> Path:
-    """Resolve a `real_data_path` entry from datasets.yaml against `SSDA_ROOT`
-    if set, otherwise under the repo. The yaml entries (`real_data/...`) are
-    treated as paths under `project_root()`, mirroring the repo layout."""
-    return project_root() / rel
+    """Resolve a `real_data_path` entry from datasets.yaml. Entries are written
+    as `real_data/...` (mirroring the repo layout); we strip the leading
+    `real_data/` and rejoin against `data_root()` so `SSDA_DATA_ROOT` /
+    `SSDA_ROOT` overrides take effect."""
+    p = Path(rel)
+    if p.parts and p.parts[0] == "real_data":
+        return data_root().joinpath(*p.parts[1:])
+    return data_root() / p
+
+
+def _resolve_ssdatabench_path(rel: str) -> Path:
+    """Resolve a `ssdatabench_yaml` entry from datasets.yaml. Entries are
+    written as `ssdatabench/...`; we strip the leading `ssdatabench/` and
+    rejoin against `ssdatabench_root()` so `SSDA_SSDATABENCH_ROOT` /
+    `SSDA_ROOT` overrides take effect."""
+    p = Path(rel)
+    if p.parts and p.parts[0] == "ssdatabench":
+        return ssdatabench_root().joinpath(*p.parts[1:])
+    return ssdatabench_root() / p
 
 
 @dataclass(frozen=True)
@@ -44,7 +59,7 @@ def load_schema(name: str) -> DatasetSchema:
     if name not in reg:
         raise KeyError(f"unknown dataset {name!r}; known: {list(reg)}")
     entry = reg[name]
-    yaml_path = REPO_ROOT / entry["ssdatabench_yaml"]
+    yaml_path = _resolve_ssdatabench_path(entry["ssdatabench_yaml"])
     with yaml_path.open() as f:
         spec = yaml.safe_load(f)
 

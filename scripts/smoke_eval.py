@@ -11,16 +11,18 @@ from pathlib import Path
 
 
 REPO = Path(__file__).resolve().parents[1]
-SSDATABENCH = REPO / "ssdatabench"
 
 import sys
+sys.path.insert(0, str(REPO / "src"))
 sys.path.insert(0, str(REPO / "scripts"))
+from ssdataagent.config import data_root, ssdatabench_root  # noqa: E402
 from build_eval_subset import build_subset  # noqa: E402
 
 
 def main() -> None:
     build_subset("gss")
-    real_csv = REPO / "real_data" / "gss_clean.csv"
+    SSDATABENCH = ssdatabench_root()
+    real_csv = data_root() / "gss_clean.csv"
     sim_root = SSDATABENCH / "simulated_data" / "gss_2018" / "agent_smoke"
     sim_root.mkdir(parents=True, exist_ok=True)
     shutil.copy(real_csv, sim_root / "sampled_smoke.csv")
