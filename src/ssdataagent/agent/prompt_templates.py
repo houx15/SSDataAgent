@@ -230,6 +230,89 @@ Hard rules:
 _SYSTEM_RUBRIC_TOOLS_FULL = _SYSTEM_RUBRIC_TOOLS + _RUBRIC_BLOCK
 
 
+# ---------- rubric_tools_v2 variant (EXP-006c) ----------------------------
+# Tightens family selection and adds an explicit longitudinal chronology
+# recipe. Built from the EXP-006b retro: agent overused empirical_lookup
+# for numeric targets (collapsed T3) and never composed event-age
+# conditionals in chronology order (kept T4 ≈ 0).
+
+_FAMILY_RECIPE = """\
+
+FAMILY-SELECTION RECIPE (READ THIS BEFORE EVERY fit_conditional CALL).
+
+EXP-006b showed that picking `empirical_lookup` for numeric targets
+collapses T3 (regression preservation). Apply these rules:
+
+  - Target is NUMERIC (income, age_*, child_number, education-as-years etc.):
+      • If you have ≥3 informative `given` columns AND the relationship is
+        roughly monotonic → use `linear_regression`.
+      • If the target is bounded/integer-valued and the relationship is
+        non-monotonic → still use `linear_regression` first; only fall back
+        to `empirical_lookup` if `score_pair` against `given[0]` shows
+        |Δr| > 0.15 after fitting.
+      • Use `empirical_lookup` for numeric targets ONLY when the column has
+        ≤8 distinct values and is essentially categorical-encoded.
+
+  - Target is CATEGORICAL with ≤8 distinct labels (gender, marital_status,
+    education-as-bracket, education-as-level, race, etc.):
+      • Use `logistic_regression` whenever you have ≥3 informative `given`
+        columns. It handles small label sets well and preserves
+        conditional probability structure that T2 / T3 measure.
+      • Use `empirical_lookup` only when the label set is >8 OR every label
+        appears <5 times in train.
+
+  - Always set `allow_missing=True` when `missing_pattern` showed structural
+    missingness (e.g. age_first_childbirth NA when child_number=0,
+    spouse_occupation NA when never-married, income NA when out-of-labor-force).
+    This is T3-critical: imputing those values destroys the regression.
+"""
+
+_CHRONOLOGY_RECIPE = """\
+
+LONGITUDINAL CHRONOLOGY RECIPE (read before set_generation_order on
+longitudinal datasets — those with multiple age_* event columns).
+
+T4 (event-time chronology) and T5 (event-order × covariate) score the
+joint distribution of dated life events. EXP-006b kept T4 ≈ 0 on every
+longitudinal cell. Recipe to fix:
+
+  1. Enumerate the event-age columns in chronological order, e.g.
+     [age_started_work, age_at_first_marriage, age_at_first_child].
+     Place them ADJACENT in generation_order, AFTER demographics but
+     BEFORE outcomes (income, occupation, etc.).
+
+  2. Fit each event-age as `fit_conditional` with `given` = the previous
+     events in chronology + at least one demographic (typically gender).
+     For example:
+       fit_conditional(col="age_at_first_marriage",
+                       given=["gender", "birth_year"],
+                       family="linear_regression",
+                       allow_missing=True)
+       fit_conditional(col="age_at_first_child",
+                       given=["age_at_first_marriage", "gender"],
+                       family="linear_regression",
+                       allow_missing=True)
+
+     The chained conditional automatically respects the ordering on
+     average — the predicted age_at_first_child = β·age_at_first_marriage
+     + … is shifted up.
+
+  3. After fitting all event-ages, call score_event_order(events=[...])
+     on the full chronological tuple. If `pass: false`, the most likely
+     causes are:
+       (a) you picked empirical_lookup somewhere — refit as
+           linear_regression.
+       (b) you didn't include the previous event in `given` — replace_step
+           and refit with the previous event added.
+       (c) noise from linear_regression's residual std — usually
+           accept it; the score is the trade-off, not a hard fail.
+"""
+
+_SYSTEM_RUBRIC_TOOLS_V2 = (
+    _SYSTEM_RUBRIC_TOOLS + _FAMILY_RECIPE + _CHRONOLOGY_RECIPE + _RUBRIC_BLOCK
+)
+
+
 def _stage_no_op(*args, **kwargs) -> str:
     """Placeholder stage prompt for tool-using variants — the orchestrator
     never calls these for rubric_tools, but the dataclass requires the
@@ -278,6 +361,15 @@ PROMPT_VARIANTS: dict[str, PromptVariant] = {
     "rubric_tools": PromptVariant(
         name="rubric_tools",
         system=_SYSTEM_RUBRIC_TOOLS_FULL,
+        exploration=_stage_no_op,
+        modeling=_stage_no_op,
+        validation=_stage_no_op,
+        generation=_stage_no_op,
+        is_tool_using=True,
+    ),
+    "rubric_tools_v2": PromptVariant(
+        name="rubric_tools_v2",
+        system=_SYSTEM_RUBRIC_TOOLS_V2,
         exploration=_stage_no_op,
         modeling=_stage_no_op,
         validation=_stage_no_op,

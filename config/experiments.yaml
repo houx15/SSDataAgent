@@ -288,3 +288,63 @@ experiments:
     llm_provider: openai
     llm_base_url: https://api.openai.com/v1
 
+
+  # =========================================================================
+  # EXP-006c — same datasets/conditions as exp006b but with rubric_tools_v2
+  # (family-selection recipe + longitudinal chronology recipe). Goal:
+  # close the T3 gap on cross-sectional and lift T4 on longitudinal.
+  # =========================================================================
+  smoke_acs_tools_v2:
+    datasets: [acs]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+    prompt_variant: rubric_tools_v2
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  exp006c_tools_cross:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools_v2
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  exp006c_tools_long:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools_v2
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  # =========================================================================
+  # EXP-006d — ablation on tools path. Tests whether the no_semantic
+  # advantage seen in EXP-001 (agent_no_semantic outscored full_agent on
+  # ACS by +0.27) persists on the tool-using path. Cross only — longitudinal
+  # ablations would 2x the cost without changing the question.
+  # =========================================================================
+  exp006d_tools_ablation_cross:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent, agent_no_semantic, agent_no_data]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools_v2
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
