@@ -92,15 +92,22 @@ LLM_API_KEY=sk-...
 
 ## Setup on a fresh box
 
+This project's cloud env is a conda env named `ssda` (Python 3.11). If
+you don't have it yet:
+
 ```bash
 git clone <repo-url> ~/SSDataAgent
 cd ~/SSDataAgent
 git submodule update --init --recursive   # populates ssdatabench/
-python3.11 -m venv .venv
-.venv/bin/pip install -r requirements.txt
+conda create -n ssda python=3.11 -y
+conda activate ssda
+pip install -r requirements.txt
 # rsync real_data/ from your laptop (see above)
 # create .env (see above)
 ```
+
+If `ssda` already exists, activate it and `pip install -r requirements.txt`
+to pick up any new deps.
 
 ## Running a batch
 
@@ -108,15 +115,17 @@ python3.11 -m venv .venv
 # in tmux on the cloud box
 tmux new -s ssda
 cd ~/SSDataAgent
-source .venv/bin/activate
+conda activate ssda
 
-# kick off the batch — sequential, resumable, one log per experiment
-nohup python scripts/run_batch.py \
-    exp001_rubric_cross exp001_rubric_long \
-    > batch.log 2>&1 &
+# kick off the batch — sequential, resumable, one log per experiment.
+# `tee` so the tmux scrollback shows live progress AND the file persists
+# after detach.
+python scripts/run_batch.py exp001_rubric_cross exp001_rubric_long \
+    | tee batch.log
 
 # detach: Ctrl-b d
 # disconnect SSH freely; the box keeps running.
+# re-attach: tmux attach -t ssda
 ```
 
 ## Checking on it from anywhere

@@ -158,10 +158,10 @@ python scripts/run_experiment.py --experiment pilot_paper_agents_gpt54 --resume
 ### 3. Batch — many experiments in one shot, resumable
 
 ```bash
-# in tmux on a cloud box, see CLOUD_SETUP.md for the full setup
-nohup python scripts/run_batch.py \
-    exp001_rubric_cross exp001_rubric_long \
-    > batch.log 2>&1 &
+# in tmux on the cloud box (conda env `ssda` active), see CLOUD_SETUP.md
+python scripts/run_batch.py exp001_rubric_cross exp001_rubric_long \
+    | tee batch.log
+# Ctrl-b d to detach; tmux attach -t ssda to come back later.
 ```
 
 Sequential by design (resume logic is trivial that way). One failure doesn't block the rest. Per-experiment log lands at `results/<exp>/run.log` and `results/_batch_status.json` is rewritten after each step for SSH-friendly status checks.
@@ -211,10 +211,12 @@ Designed for **Ubuntu GCP server, run inside `tmux`, walk away**. The full recip
    - `real_data/` (~6 MB; `real_data/used_dataset/*.csv` + `dataset_meta.json` is the minimum)
    - `ssdatabench/` (~35 MB)
 2. **Create `.env` on the box** with at least `LLM_API_KEY=sk-...`. Never put the key in any committed config.
-3. **Inside `tmux`**, kick off a batch:
+3. **Inside `tmux`**, with the `ssda` conda env active, kick off a batch:
    ```bash
-   nohup python scripts/run_batch.py exp001_rubric_cross exp001_rubric_long \
-       > batch.log 2>&1 &
+   tmux new -s ssda
+   conda activate ssda
+   python scripts/run_batch.py exp001_rubric_cross exp001_rubric_long \
+       | tee batch.log
    ```
 4. **Detach** (`Ctrl-b d`), **disconnect SSH freely**, **come back** to a finished batch. Reconnect via `ssh + tmux a -t ssda` and run `python scripts/status.py` to see what's done. Network drops do not affect the batch.
 5. **Re-running the same `run_batch.py` command resumes** — anything with `done.flag` is silently skipped, anything with `failed.flag` is retried.
