@@ -235,6 +235,32 @@ def test_replace_step_idempotent(state):
 # ---------- end-to-end Chain.sample ----------
 
 
+def test_chain_sample_handles_missing_categories_at_sample_time(state):
+    """Regression: a categorical `given` column may be drawn with fewer
+    unique values at sample time than at fit time (or vice versa). The
+    encoder must reindex to the fit-time dummy columns so X_sample has
+    the same width as X_fit, otherwise sklearn raises 'X has K features,
+    but expecting N features as input'."""
+    set_generation_order(state, ["gender", "age_first_childbirth"])
+    fit_marginal(state, "gender", family="empirical")
+    out = fit_conditional(
+        state, "age_first_childbirth", given=["gender"],
+        family="linear_regression", allow_missing=True,
+    )
+    assert out["registered"] is True
+    # Sample with a partial that contains both categories.
+    rng = np.random.default_rng(0)
+    partial_both = pd.DataFrame({"gender": ["F"] * 50 + ["M"] * 50})
+    step = state.chain.steps["age_first_childbirth"]
+    out_both = step.sample(rng, 100, partial_both)
+    assert len(out_both) == 100
+    # Sample with a partial that contains only ONE category — would have
+    # crashed before the dummy_columns reindex fix.
+    partial_one = pd.DataFrame({"gender": ["F"] * 50})
+    out_one = step.sample(rng, 50, partial_one)
+    assert len(out_one) == 50
+
+
 def test_chain_sample_full_pipeline(state):
     """Build a complete chain and draw N rows that look like the real data."""
     set_generation_order(state, ["gender", "age", "child_number", "age_first_childbirth"])

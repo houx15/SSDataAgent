@@ -349,31 +349,36 @@ class Orchestrator:
                     f"max_turns reached and forced commit failed: {forced!r}"
                 )
 
-        # Sample N rows from the now-committed chain.
-        _heartbeat(f"sampling {self.n_rows} rows from committed chain")
-        generated = state.chain.sample(state.rng, self.n_rows)
-
-        # Persist artefacts to workspace alongside generated.csv.
-        chain_meta = state.chain.to_meta()
-        (workspace / "chain.json").write_text(json.dumps(chain_meta, indent=2, default=str))
-        (workspace / "transcript.json").write_text(json.dumps(
-            [{"role": e.role, "content": e.content, "stage": e.stage,
-              "duration_s": e.duration_s} for e in transcript],
-            indent=2, default=str,
-        ))
-        (workspace / "tool_calls.json").write_text(json.dumps(tool_call_log, indent=2, default=str))
-        if state.progress_log:
-            (workspace / "progress.log").write_text("\n".join(state.progress_log) + "\n")
-        generated.to_csv(workspace / "generated.csv", index=False)
-
-        return RunResult(
-            generated=generated,
-            transcript=transcript,
-            code_steps=[],
-            sandbox_results=[],
-            tool_call_log=tool_call_log,
-            chain_meta=chain_meta,
-        )
+        try:
+            # Sample N rows from the now-committed chain.
+            _heartbeat(f"sampling {self.n_rows} rows from committed chain")
+            generated = state.chain.sample(state.rng, self.n_rows)
+            chain_meta = state.chain.to_meta()
+            generated.to_csv(workspace / "generated.csv", index=False)
+            return RunResult(
+                generated=generated,
+                transcript=transcript,
+                code_steps=[],
+                sandbox_results=[],
+                tool_call_log=tool_call_log,
+                chain_meta=chain_meta,
+            )
+        finally:
+            # Persist artefacts even if sampling crashed — they're how we
+            # debug the run after the fact.
+            try:
+                chain_meta = state.chain.to_meta()
+                (workspace / "chain.json").write_text(json.dumps(chain_meta, indent=2, default=str))
+            except Exception as e:
+                (workspace / "chain.json.error").write_text(f"{type(e).__name__}: {e}")
+            (workspace / "transcript.json").write_text(json.dumps(
+                [{"role": e.role, "content": e.content, "stage": e.stage,
+                  "duration_s": e.duration_s} for e in transcript],
+                indent=2, default=str,
+            ))
+            (workspace / "tool_calls.json").write_text(json.dumps(tool_call_log, indent=2, default=str))
+            if state.progress_log:
+                (workspace / "progress.log").write_text("\n".join(state.progress_log) + "\n")
 
 
 # ===================== helpers =====================

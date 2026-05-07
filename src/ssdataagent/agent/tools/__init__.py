@@ -46,8 +46,10 @@ TOOL_REGISTRY: dict[str, Callable[..., dict]] = {
 
 def dispatch(state: RuntimeState, name: str, arguments: dict) -> dict:
     """Look up `name` in the registry and call it with `arguments`. Catches
-    the agent's typical mistakes (unknown tool, bad kwargs) and returns
-    them as tool-result dicts so the LLM can self-correct."""
+    every exception type and returns it as a tool-result dict so the LLM
+    can self-correct without crashing the orchestrator loop. The contract
+    is: tools never propagate exceptions to the caller — bad input or
+    internal errors all become {"error": ..., "details": ...} dicts."""
     fn = TOOL_REGISTRY.get(name)
     if fn is None:
         return {
@@ -57,8 +59,15 @@ def dispatch(state: RuntimeState, name: str, arguments: dict) -> dict:
     try:
         return fn(state, **arguments)
     except TypeError as e:
-        # Wrong kwargs — tool got unexpected args or missing required ones.
         return {"error": "bad_arguments", "details": f"{e}"}
+    except Exception as e:
+        # Genuine internal error inside a tool — usually a sklearn / pandas
+        # surprise from an upstream fit. Surface it as a tool result so the
+        # agent can call replace_step / use a different family.
+        return {
+            "error": "tool_internal_error",
+            "details": f"{type(e).__name__}: {e}",
+        }
 
 
 __all__ = [

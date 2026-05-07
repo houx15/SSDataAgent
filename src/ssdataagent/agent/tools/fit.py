@@ -87,6 +87,11 @@ class ConditionalStep(Step):
     sklearn_feature_cols: list[str] | None = None
     sklearn_categorical_features: list[str] | None = None  # subset of feature_cols that need encoding
     sklearn_target_classes: np.ndarray | None = None       # for logistic_regression
+    # Per-categorical dummy column names captured at fit time. At sample
+    # time we reindex to exactly these columns so the encoded feature
+    # matrix has the same shape regardless of which categories the partial
+    # sim has drawn so far.
+    sklearn_dummy_columns: dict | None = None
 
     # NA model — present only when allow_missing=True
     na_model: Any = None                     # sklearn classifier predicting P(NA | given)
@@ -95,7 +100,10 @@ class ConditionalStep(Step):
         # Step 1: maybe sample NA mask first.
         na_mask = np.zeros(n_rows, dtype=bool)
         if self.allow_missing and self.na_model is not None:
-            X = _encode_features(partial[self.given], self.sklearn_feature_cols, self.sklearn_categorical_features)
+            X = _encode_features(
+                partial[self.given], self.sklearn_feature_cols,
+                self.sklearn_categorical_features, self.sklearn_dummy_columns,
+            )
             p_na = self.na_model.predict_proba(X)[:, 1]
             na_mask = rng.random(n_rows) < p_na
 
@@ -131,7 +139,10 @@ class ConditionalStep(Step):
     def _sample_linear_regression(
         self, rng: np.random.Generator, n_rows: int, partial: pd.DataFrame
     ) -> np.ndarray:
-        X = _encode_features(partial[self.given], self.sklearn_feature_cols, self.sklearn_categorical_features)
+        X = _encode_features(
+            partial[self.given], self.sklearn_feature_cols,
+            self.sklearn_categorical_features, self.sklearn_dummy_columns,
+        )
         mu = self.sklearn_model.predict(X)
         # Add Gaussian noise sized by the residual std observed at fit time.
         sigma = getattr(self.sklearn_model, "_residual_std_", 0.0)
@@ -140,7 +151,10 @@ class ConditionalStep(Step):
     def _sample_logistic_regression(
         self, rng: np.random.Generator, n_rows: int, partial: pd.DataFrame
     ) -> np.ndarray:
-        X = _encode_features(partial[self.given], self.sklearn_feature_cols, self.sklearn_categorical_features)
+        X = _encode_features(
+            partial[self.given], self.sklearn_feature_cols,
+            self.sklearn_categorical_features, self.sklearn_dummy_columns,
+        )
         probs = self.sklearn_model.predict_proba(X)
         out = np.empty(n_rows, dtype=object)
         for i in range(n_rows):
@@ -167,28 +181,47 @@ def _encode_features(
     df_in: pd.DataFrame,
     feature_cols: list[str] | None,
     categorical_features: list[str] | None,
+    dummy_columns: dict | None = None,
 ) -> np.ndarray:
     """One-hot encode any categorical features; pass numerics through as float.
-    Same treatment as fit time, controlled by the column lists captured then."""
+
+    For categorical features, reindex to the exact dummy columns captured
+    at fit time (`dummy_columns[col]`) so the output has the same shape
+    regardless of which categories are present at sample time. Unseen
+    categories at sample time get encoded as all-zero one-hots; missing
+    fit-time categories at sample time get filled with zero columns.
+    """
     if feature_cols is None:
         return df_in.to_numpy(dtype=float)
     parts = []
     cats = set(categorical_features or [])
+    dcols = dummy_columns or {}
     for c in feature_cols:
         if c in cats:
-            parts.append(pd.get_dummies(df_in[c], prefix=c, dummy_na=True).to_numpy(dtype=float))
+            dummies = pd.get_dummies(df_in[c], prefix=c, dummy_na=True)
+            target_cols = dcols.get(c)
+            if target_cols is not None:
+                # Reindex to the exact fit-time columns; unseen → 0 column.
+                dummies = dummies.reindex(columns=target_cols, fill_value=0)
+            parts.append(dummies.to_numpy(dtype=float))
         else:
             v = pd.to_numeric(df_in[c], errors="coerce").fillna(0.0).to_numpy(dtype=float).reshape(-1, 1)
             parts.append(v)
     return np.hstack(parts) if parts else np.zeros((len(df_in), 0))
 
 
-def _build_feature_matrix(df_fit: pd.DataFrame, given: list[str]) -> tuple[np.ndarray, list[str], list[str]]:
-    """Return (X, feature_cols, categorical_feature_names). The dummy
-    columns generated here are remembered so sample-time encoding produces
-    the same columns even if some categories are unseen at sample time."""
+def _build_feature_matrix(
+    df_fit: pd.DataFrame, given: list[str],
+) -> tuple[np.ndarray, list[str], list[str], dict[str, list[str]]]:
+    """Return (X, feature_cols, categorical_feature_names, dummy_columns).
+
+    `dummy_columns[col]` is the exact list of dummy column names produced
+    for `col` at fit time. Stored on the Step so sample-time encoding can
+    reindex and produce a matrix of the same width.
+    """
     feature_cols: list[str] = []
     cat_features: list[str] = []
+    dummy_columns: dict[str, list[str]] = {}
     parts = []
     for c in given:
         s = df_fit[c]
@@ -200,8 +233,9 @@ def _build_feature_matrix(df_fit: pd.DataFrame, given: list[str]) -> tuple[np.nd
             parts.append(dummies.to_numpy(dtype=float))
             feature_cols.append(c)
             cat_features.append(c)
+            dummy_columns[c] = list(dummies.columns)
     X = np.hstack(parts) if parts else np.zeros((len(df_fit), 0))
-    return X, feature_cols, cat_features
+    return X, feature_cols, cat_features, dummy_columns
 
 
 # ===================== Chain =====================
@@ -388,27 +422,33 @@ def fit_conditional(
         step.fallback_values = values
         score = None  # no in-sample R²/accuracy for lookups; the agent verifies via score_*
     else:
-        X_fit, feature_cols, cat_features = _build_feature_matrix(df_fit.loc[obs_mask], given)
-        y_fit = s_col[obs_mask].to_numpy()
+        # Build encoding on the full df_fit (not just obs_mask rows) so the
+        # value model and NA model share the same dummy schema. Then slice
+        # X_full for the value-model fit.
+        X_full, feature_cols, cat_features, dummy_cols = _build_feature_matrix(df_fit, given)
         step.sklearn_feature_cols = feature_cols
         step.sklearn_categorical_features = cat_features
+        step.sklearn_dummy_columns = dummy_cols
+        obs_idx = obs_mask.to_numpy()
+        X_obs = X_full[obs_idx]
+        y_obs = s_col[obs_mask].to_numpy()
 
         if family == "linear_regression":
             model = LinearRegression()
-            model.fit(X_fit, y_fit)
-            preds = model.predict(X_fit)
-            residuals = y_fit - preds
+            model.fit(X_obs, y_obs)
+            preds = model.predict(X_obs)
+            residuals = y_obs - preds
             model._residual_std_ = float(np.std(residuals)) if len(residuals) > 1 else 0.0
-            ss_tot = float(np.var(y_fit) * len(y_fit)) or 1e-12
+            ss_tot = float(np.var(y_obs) * len(y_obs)) or 1e-12
             score = 1.0 - float(np.sum(residuals ** 2)) / ss_tot
             step.sklearn_model = model
         elif family == "logistic_regression":
-            classes = np.unique(y_fit.astype(object))
+            classes = np.unique(y_obs.astype(object))
             if len(classes) < 2:
                 return {"error": "logistic_needs_2_classes", "details": f"col {col!r} has only one class in train"}
             model = LogisticRegression(max_iter=1000)
-            model.fit(X_fit, y_fit)
-            score = float(model.score(X_fit, y_fit))
+            model.fit(X_obs, y_obs)
+            score = float(model.score(X_obs, y_obs))
             step.sklearn_model = model
             step.sklearn_target_classes = classes
         else:
@@ -416,25 +456,23 @@ def fit_conditional(
 
     # NA model — only when allow_missing.
     if allow_missing:
-        # Predict P(col is NA | given). Only useful when there's any NA at all.
         n_na = int((~obs_mask).sum())
         if n_na == 0:
             step.na_model = None  # nothing to predict
         else:
-            X_na, feat_na, cat_na = _build_feature_matrix(df_fit, given)
+            # Reuse the full encoding built above for sklearn families;
+            # for empirical_lookup we don't have one yet, so build now.
+            if step.sklearn_feature_cols is None:
+                X_full, feat_na, cat_na, dummy_na = _build_feature_matrix(df_fit, given)
+                step.sklearn_feature_cols = feat_na
+                step.sklearn_categorical_features = cat_na
+                step.sklearn_dummy_columns = dummy_na
             y_na = (~obs_mask).astype(int).to_numpy()
             try:
                 na_clf = LogisticRegression(max_iter=1000)
-                na_clf.fit(X_na, y_na)
+                na_clf.fit(X_full, y_na)
                 step.na_model = na_clf
-                # When the NA-model is trained, sample-time encoding for it
-                # uses the same feature_cols/categoricals as the value model.
-                # (Rare: na features differ from value features; we keep them
-                # identical for simplicity.)
-                step.sklearn_feature_cols = feat_na
-                step.sklearn_categorical_features = cat_na
             except ValueError:
-                # Edge case: only one class of NA observed. Skip NA modeling.
                 step.na_model = None
 
     state.chain.add(step)
