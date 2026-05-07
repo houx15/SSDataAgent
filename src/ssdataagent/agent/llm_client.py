@@ -1,7 +1,9 @@
 from __future__ import annotations
 
+import json
 import time
-from typing import Protocol
+from dataclasses import dataclass, field
+from typing import Any, Protocol
 
 from anthropic import Anthropic
 from openai import APIConnectionError, APIError, APITimeoutError, OpenAI, RateLimitError
@@ -19,8 +21,35 @@ _BACKOFF_BASE_S = 2.0
 _REQUEST_TIMEOUT_S = 300.0
 
 
+@dataclass
+class ToolCallRequest:
+    """One function call the assistant emitted in a tool-using turn."""
+    id: str
+    name: str
+    arguments: dict[str, Any]
+
+
+@dataclass
+class ToolUsingResponse:
+    """A single tool-using LLM turn. Either content (final answer when no
+    tools were called) or tool_calls (still iterating). Both can be present.
+    `assistant_message` is the OpenAI-shaped dict the caller should append
+    verbatim to the next request's `messages` list."""
+    content: str
+    tool_calls: list[ToolCallRequest] = field(default_factory=list)
+    assistant_message: dict[str, Any] = field(default_factory=dict)
+
+
 class LLMClient(Protocol):
     def chat(self, messages: list[dict], system: str | None = None) -> str: ...
+
+    def chat_with_tools(
+        self,
+        messages: list[dict],
+        tools: list[dict],
+        system: str | None = None,
+        tool_choice: str = "auto",
+    ) -> ToolUsingResponse: ...
 
 
 class OpenAICompatibleClient:
@@ -33,39 +62,27 @@ class OpenAICompatibleClient:
             timeout=_REQUEST_TIMEOUT_S,
         )
 
-    def chat(self, messages: list[dict], system: str | None = None) -> str:
-        msgs = list(messages)
-        if system:
-            msgs = [{"role": "system", "content": system}, *msgs]
+    def _token_kwarg(self) -> str:
         # OpenAI's GPT-5 / o-series chat-completions endpoint rejects the
         # legacy `max_tokens` and requires `max_completion_tokens`. DeepSeek's
         # OpenAI-compatible endpoint still wants `max_tokens`.
-        token_kwarg = (
+        return (
             "max_completion_tokens"
             if "api.openai.com" in (self.cfg.base_url or "")
             else "max_tokens"
         )
+
+    def _retry_loop(self, do_call):
         last_err: Exception | None = None
         for attempt in range(self.max_retries + 1):
             try:
-                resp = self._sdk.chat.completions.create(
-                    model=self.cfg.model,
-                    messages=msgs,
-                    temperature=self.cfg.temperature,
-                    **{token_kwarg: self.cfg.max_tokens},
-                )
-                msg = resp.choices[0].message
-                content = msg.content or ""
-                if not content:
-                    content = getattr(msg, "reasoning_content", "") or ""
-                return content
+                return do_call()
             except _TRANSIENT as e:
                 last_err = e
                 if attempt == self.max_retries:
                     break
                 time.sleep(_BACKOFF_BASE_S * (2 ** attempt))
             except APIError as e:
-                # Treat 5xx as transient; 4xx as fatal.
                 status = getattr(e, "status_code", None)
                 if status and 500 <= status < 600 and attempt < self.max_retries:
                     last_err = e
@@ -74,6 +91,51 @@ class OpenAICompatibleClient:
                 raise
         assert last_err is not None
         raise last_err
+
+    def chat(self, messages: list[dict], system: str | None = None) -> str:
+        msgs = list(messages)
+        if system:
+            msgs = [{"role": "system", "content": system}, *msgs]
+
+        def call():
+            resp = self._sdk.chat.completions.create(
+                model=self.cfg.model,
+                messages=msgs,
+                temperature=self.cfg.temperature,
+                **{self._token_kwarg(): self.cfg.max_tokens},
+            )
+            msg = resp.choices[0].message
+            content = msg.content or ""
+            if not content:
+                content = getattr(msg, "reasoning_content", "") or ""
+            return content
+
+        return self._retry_loop(call)
+
+    def chat_with_tools(
+        self,
+        messages: list[dict],
+        tools: list[dict],
+        system: str | None = None,
+        tool_choice: str = "auto",
+    ) -> ToolUsingResponse:
+        msgs = list(messages)
+        if system:
+            msgs = [{"role": "system", "content": system}, *msgs]
+
+        def call():
+            resp = self._sdk.chat.completions.create(
+                model=self.cfg.model,
+                messages=msgs,
+                tools=tools,
+                tool_choice=tool_choice,
+                temperature=self.cfg.temperature,
+                **{self._token_kwarg(): self.cfg.max_tokens},
+            )
+            return resp.choices[0].message
+
+        msg = self._retry_loop(call)
+        return _parse_openai_tool_message(msg)
 
 
 class AnthropicCompatibleClient:
@@ -97,6 +159,65 @@ class AnthropicCompatibleClient:
             if t:
                 parts.append(t)
         return "".join(parts)
+
+    def chat_with_tools(
+        self,
+        messages: list[dict],
+        tools: list[dict],
+        system: str | None = None,
+        tool_choice: str = "auto",
+    ) -> ToolUsingResponse:
+        # Anthropic uses a different tool-use envelope than OpenAI. EXP-006
+        # spike targets gpt-5.4 only; add this when the project needs to run
+        # the tool-using path on Claude.
+        raise NotImplementedError(
+            "chat_with_tools is not implemented for the Anthropic provider yet. "
+            "EXP-006 spike runs on gpt-5.4 (OpenAI-shaped). Wire this if/when "
+            "we move the tool path to Claude."
+        )
+
+
+def _parse_openai_tool_message(msg) -> ToolUsingResponse:
+    """Turn an OpenAI ChatCompletionMessage into our internal shape.
+    `msg` may be either an SDK object or, in tests, a plain dict."""
+    if isinstance(msg, dict):
+        content = msg.get("content") or ""
+        tool_calls_raw = msg.get("tool_calls") or []
+    else:
+        content = getattr(msg, "content", None) or ""
+        tool_calls_raw = getattr(msg, "tool_calls", None) or []
+
+    tool_calls: list[ToolCallRequest] = []
+    serialized_tool_calls: list[dict] = []
+    for tc in tool_calls_raw:
+        if isinstance(tc, dict):
+            tc_id = tc["id"]
+            fn = tc.get("function", {})
+            name = fn.get("name", "")
+            args_json = fn.get("arguments", "{}") or "{}"
+        else:
+            tc_id = tc.id
+            name = tc.function.name
+            args_json = tc.function.arguments or "{}"
+        try:
+            args = json.loads(args_json) if isinstance(args_json, str) else dict(args_json)
+        except json.JSONDecodeError:
+            args = {"_raw_arguments": args_json, "_parse_error": "JSONDecodeError"}
+        tool_calls.append(ToolCallRequest(id=tc_id, name=name, arguments=args))
+        serialized_tool_calls.append({
+            "id": tc_id,
+            "type": "function",
+            "function": {"name": name, "arguments": args_json if isinstance(args_json, str) else json.dumps(args_json)},
+        })
+
+    assistant_message: dict[str, Any] = {"role": "assistant", "content": content}
+    if serialized_tool_calls:
+        assistant_message["tool_calls"] = serialized_tool_calls
+    return ToolUsingResponse(
+        content=content,
+        tool_calls=tool_calls,
+        assistant_message=assistant_message,
+    )
 
 
 def build_client(cfg: LLMConfig) -> LLMClient:
