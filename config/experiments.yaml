@@ -263,3 +263,28 @@ experiments:
     llm_provider: openai
     llm_base_url: https://api.openai.com/v1
 
+
+  exp006b_tools_cross:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  exp006b_tools_long:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
