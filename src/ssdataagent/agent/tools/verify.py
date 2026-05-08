@@ -258,6 +258,10 @@ def score_event_order(state: RuntimeState, events: list[str]) -> dict:
     arr = sub.to_numpy(dtype=float)
     compliant = np.all(np.diff(arr, axis=1) >= 0, axis=1)
     rate = float(compliant.mean())
+    # Audit: a successful event-order check is what unblocks commit_generator
+    # for longitudinal chains. Errors above (bad_arguments / unknown_column /
+    # no_complete_rows) returned early and do not reach this point.
+    state.event_order_calls.append(tuple(events))
     return {
         "events": list(events),
         "metric": "compliance_rate",
@@ -273,7 +277,13 @@ def score_event_order(state: RuntimeState, events: list[str]) -> dict:
 
 def score_overall(state: RuntimeState) -> dict:
     """Run score_marginal on every column in the chain. Returns a summary
-    table. Cheap proxy for "how good is the in-progress chain right now"."""
+    table. Cheap proxy for "how good is the in-progress chain right now".
+
+    Note: this only covers per-column marginals (T1). When the chain has
+    multiple event-age columns, we surface a `chronology_hint` so the agent
+    doesn't treat this score as the final criterion — T4 (event ordering)
+    requires `score_event_order`.
+    """
     if (refusal := _refusal(state)) is not None:
         return refusal
     if not state.chain.generation_order:
@@ -285,9 +295,21 @@ def score_overall(state: RuntimeState) -> dict:
         rows.append({"col": col, **{k: v for k, v in out.items() if k != "col"}})
         if out.get("pass"):
             n_pass += 1
-    return {
+    result: dict[str, Any] = {
         "n_columns": len(rows),
         "n_pass": n_pass,
         "pass_rate": _to_jsonable(n_pass / len(rows)) if rows else None,
         "rows": rows,
     }
+    # Hint for longitudinal chains — only when there's actually chronology to check.
+    from ssdataagent.agent.tools.commit import _event_age_columns
+    event_cols = _event_age_columns(state.chain.generation_order)
+    if len(event_cols) >= 2:
+        result["event_age_columns"] = sorted(event_cols)
+        result["chronology_hint"] = (
+            "score_overall covers per-column marginals only (T1). This chain has "
+            f"{len(event_cols)} event-age columns ({sorted(event_cols)}); call "
+            "score_event_order with them in chronological order to check T4 "
+            "(event ordering) before commit_generator."
+        )
+    return result

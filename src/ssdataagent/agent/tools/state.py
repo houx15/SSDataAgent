@@ -33,6 +33,9 @@ class RuntimeState:
     progress_log: list[str] = field(default_factory=list)
     rng: np.random.Generator = field(default_factory=lambda: np.random.default_rng(0))
     committed: bool = False              # set by commit_generator; orchestrator reads it to exit the loop
+    # Audit trail of every successful score_event_order call (events tuple).
+    # commit_generator reads this to gate longitudinal commits — see EXP-006e.
+    event_order_calls: list[tuple[str, ...]] = field(default_factory=list)
 
 
 def split_train_heldout(

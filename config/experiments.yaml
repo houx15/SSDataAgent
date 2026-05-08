@@ -331,6 +331,57 @@ experiments:
     llm_base_url: https://api.openai.com/v1
 
   # =========================================================================
+  # EXP-006e (rubric_tools_v3) — fixes the longitudinal regression seen in
+  # EXP-006c. Two changes vs v2:
+  #   • Hard gate: commit_generator now refuses chains with ≥2 event-age
+  #     columns until score_event_order has been called. Recipe surfaces
+  #     this gate explicitly so the agent doesn't loop.
+  #   • Family recipe corrected: many-valued event-age targets use
+  #     empirical_lookup conditioned on prior events — NOT linear_regression
+  #     (which collapsed nlsy T3 from 0.494 to 0.298 in EXP-006c).
+  # Smoke first locally on nlsy to confirm score_event_order fires before
+  # spending cloud time on the full long batch.
+  # =========================================================================
+  smoke_nlsy_tools_v3:
+    datasets: [nlsy]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+    prompt_variant: rubric_tools_v3
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  exp006e_tools_long:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools_v3
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  # Cross-sectional retest with v3 — should preserve the gss/cps T3 lift v2
+  # produced (0.207→0.485 / 0.197→0.537) while v3's family-recipe correction
+  # leaves cross-sectional rules unchanged. Light insurance run.
+  exp006e_tools_cross:
+    datasets: [gss, cps, acs]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools_v3
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  # =========================================================================
   # EXP-006d — ablation on tools path. Tests whether the no_semantic
   # advantage seen in EXP-001 (agent_no_semantic outscored full_agent on
   # ACS by +0.27) persists on the tool-using path. Cross only — longitudinal

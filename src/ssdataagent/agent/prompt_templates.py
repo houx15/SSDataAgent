@@ -313,6 +313,101 @@ _SYSTEM_RUBRIC_TOOLS_V2 = (
 )
 
 
+# ---------- rubric_tools_v3 variant (EXP-006e) ----------------------------
+# Two corrections to v2:
+#   (1) Family recipe was wrong for many-valued event-age targets. v2 told
+#       the agent to use linear_regression on age_at_first_marriage; on
+#       NLSY this caused T3 to regress -0.196 because the joint
+#       distribution of integer event ages doesn't behave like a linear
+#       function of priors + Gaussian noise.
+#   (2) v2's chronology recipe was advisory. The orchestrator now
+#       hard-gates commit_generator on score_event_order (commit.py); the
+#       prompt must surface that gate so the agent doesn't loop trying to
+#       commit and getting refused.
+
+_FAMILY_RECIPE_V3 = """\
+
+FAMILY-SELECTION RECIPE (READ THIS BEFORE EVERY fit_conditional CALL).
+
+EXP-006c showed that picking `empirical_lookup` for numeric targets
+collapses T3 (regression preservation) on cross-sectional data, but that
+picking `linear_regression` for many-valued event-age targets ALSO
+collapses T3 on longitudinal data (NLSY). Apply these rules:
+
+  - Target is a CONTINUOUS NUMERIC variable (income, current age,
+    child_number-as-count, education-as-years, vocabulary score, etc.):
+      • If you have ≥3 informative `given` columns AND the relationship is
+        roughly monotonic → use `linear_regression`.
+      • Otherwise still use `linear_regression` first; only fall back to
+        `empirical_lookup` if `score_pair` against `given[0]` shows
+        |Δr| > 0.15 after fitting.
+
+  - Target is a LIFE-EVENT AGE column (age_at_first_*, age_finished_*,
+    age_started_*) — integer-valued, many distinct values, noisy chronology:
+      • Use `empirical_lookup` conditioned on the previous life-event age
+        plus 1-2 demographics (birth_year, gender). NOT linear_regression
+        — the joint distribution doesn't behave linearly and the residual
+        spread destroys event ordering.
+      • Example:
+          fit_conditional(col="age_at_first_child",
+                          given=["age_at_first_marriage", "gender"],
+                          family="empirical_lookup",
+                          allow_missing=True)
+
+  - Target is CATEGORICAL with ≤8 distinct labels (gender, marital_status,
+    education-bracket, race, etc.):
+      • Use `logistic_regression` whenever you have ≥3 informative `given`
+        columns.
+      • Use `empirical_lookup` only when the label set is >8 OR every label
+        appears <5 times in train.
+
+  - Always set `allow_missing=True` when `missing_pattern` showed structural
+    missingness (age_first_childbirth NA when child_number=0,
+    spouse_occupation NA when never-married, income NA when out-of-labor).
+    Imputing those destroys the regression — T3-critical.
+"""
+
+_CHRONOLOGY_RECIPE_V3 = """\
+
+LONGITUDINAL CHRONOLOGY RECIPE (read before set_generation_order on
+longitudinal datasets — those with multiple age_* event columns).
+
+T4 (event-time chronology) scores whether life events arrive in the right
+order. The orchestrator HARD-GATES `commit_generator` on this: if your
+chain has ≥2 event-age columns, commit will be refused with
+`error: missing_event_order_check` until you call `score_event_order`.
+This is not optional.
+
+  1. Enumerate the event-age columns in chronological order, e.g.
+     [age_started_work, age_at_first_marriage, age_at_first_child].
+     Place them ADJACENT in generation_order, AFTER demographics but
+     BEFORE outcomes (income, occupation, etc.).
+
+  2. Fit each event-age as `fit_conditional(family="empirical_lookup",
+     allow_missing=True)`, with `given` = the IMMEDIATELY PRIOR event
+     in chronology + 1-2 demographics. The chronology hint in
+     `score_overall` will tell you which columns it detected.
+
+  3. Before calling `commit_generator`, you MUST call:
+       score_event_order(events=[<the event-age cols in chronological order>])
+     A `compliance_rate` ≥ 0.80 means T4 will pass. Below 0.80 the most
+     likely causes are:
+       (a) you used a parametric family for the event-age — switch to
+           empirical_lookup.
+       (b) you didn't include the previous event in `given` — replace_step
+           and refit with it added.
+
+  4. `score_overall` covers per-column marginals (T1) only. When the chain
+     has event-age columns, score_overall will surface a `chronology_hint`
+     reminding you to call score_event_order. Don't treat score_overall's
+     pass_rate as the final criterion on longitudinal datasets.
+"""
+
+_SYSTEM_RUBRIC_TOOLS_V3 = (
+    _SYSTEM_RUBRIC_TOOLS + _FAMILY_RECIPE_V3 + _CHRONOLOGY_RECIPE_V3 + _RUBRIC_BLOCK
+)
+
+
 def _stage_no_op(*args, **kwargs) -> str:
     """Placeholder stage prompt for tool-using variants — the orchestrator
     never calls these for rubric_tools, but the dataclass requires the
@@ -370,6 +465,15 @@ PROMPT_VARIANTS: dict[str, PromptVariant] = {
     "rubric_tools_v2": PromptVariant(
         name="rubric_tools_v2",
         system=_SYSTEM_RUBRIC_TOOLS_V2,
+        exploration=_stage_no_op,
+        modeling=_stage_no_op,
+        validation=_stage_no_op,
+        generation=_stage_no_op,
+        is_tool_using=True,
+    ),
+    "rubric_tools_v3": PromptVariant(
+        name="rubric_tools_v3",
+        system=_SYSTEM_RUBRIC_TOOLS_V3,
         exploration=_stage_no_op,
         modeling=_stage_no_op,
         validation=_stage_no_op,
