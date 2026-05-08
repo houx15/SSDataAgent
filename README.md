@@ -23,41 +23,59 @@ Full write-ups live in [`docs/report/`](docs/report/); the experiment ledger and
 
 ## How it works
 
+The current default agent (`rubric_tools_v3`, EXP-006e onward) is a **tool-using loop** in the same shape Claude Code and Codex use: one persistent LLM conversation, OpenAI function-calling protocol, fixed tool registry. The legacy 4-stage code-block path (`baseline`, `rubric` variants) is still wired and used for ablations — `PromptVariant.is_tool_using` routes the orchestrator.
+
 ```
-                ┌─────────────────────────────────────────────┐
-                │  Orchestrator: explore → model → validate   │
-                │                              → generate     │
-                └─────────┬───────────────────────────────────┘
-                          │ writes code
-                ┌─────────▼─────────┐
-                │  Sandbox          │   fresh subprocess per code block
-                │  (cwd = workspace)│   shared workspace dir for files
-                └─────────┬─────────┘
-                          │ runs code, returns stdout/stderr
-                          ▼
-              ┌────────────────────────────┐
-              │  Agent's generative model  │   pandas / sklearn /
-              │  saved to model.pkl        │   statsmodels — agent's choice
-              └────────────────────────────┘
-                          │ generates synthetic individuals
-                          ▼
-                ┌──────────────────────┐
-                │  Formatter           │   coerce to schema, write to
-                │                      │   sim_profiles_*.csv
-                └─────────┬────────────┘
-                          ▼
-              ┌────────────────────────────┐
-              │  SSDataBench evaluation    │   bootstrap statistical tests
-              │  (subprocess wrapper)      │   over 5 pattern types
-              └────────────────────────────┘
+   ┌──────────────────────────────────────────────────────────────┐
+   │ Orchestrator                                                 │
+   │   loop: ask LLM → dispatch tool_calls → return results       │
+   │   exits when commit_generator succeeds or MAX_TURNS=40       │
+   └────────┬─────────────────────────────────────┬───────────────┘
+            │ chat_with_tools                     │ tool results
+            ▼                                     │
+   ┌──────────────────┐                           │
+   │ LLM (gpt-5.4)    │   one persistent context,─┘
+   │ function-calling │   not stage-by-stage subprocesses
+   └────────┬─────────┘
+            │ tool_calls
+            ▼
+   ┌────────────────────────────────────────────────────────────┐
+   │ Tool registry — 16 tools across 4 families                 │
+   │  inspect : list_columns, describe_column, cross_tab,       │
+   │            missing_pattern, correlation, groupby_stat, …   │
+   │  fit     : set_generation_order, fit_marginal,             │
+   │            fit_conditional, fit_copy_real, replace_step    │
+   │  verify  : sample_preview, score_marginal, score_pair,     │
+   │            score_event_order, score_overall                │
+   │  commit  : commit_generator (hard-gated on chronology),    │
+   │            report_progress                                 │
+   └────────┬───────────────────────────────────────────────────┘
+            │ reads / mutates
+            ▼
+   ┌────────────────────────────────────────────────────────────┐
+   │ RuntimeState — owned by the orchestrator across one run    │
+   │  train_fit / held_out (deterministic 80/20 split)          │
+   │  descriptions  (None when condition strips semantic info)  │
+   │  Chain         — ordered list of fit Steps, built          │
+   │                  incrementally; replaces model.pkl         │
+   │  event_order_calls — audit trail read by commit gate       │
+   └────────┬───────────────────────────────────────────────────┘
+            │ chain.sample(n_rows) on commit
+            ▼
+   ┌──────────────────────┐    ┌────────────────────────────────┐
+   │ generated.csv        │───►│ SSDataBench eval (subprocess)  │
+   └──────────────────────┘    └────────────────────────────────┘
 ```
 
-The agent runs four stages in a loop:
+The loop:
 
-1. **EXPLORATION** — agent writes EDA code, sees output.
-2. **MODELING** — agent fits a generative model (e.g. conditional probability tables, GLMs, copulas) and saves it to `model.pkl`.
-3. **VALIDATION** — agent samples from its model and compares to a holdout slice of the training data; up to N retries (default 3) if it self-diagnoses problems.
-4. **GENERATION** — agent samples N synthetic individuals and writes `generated.csv`.
+1. **Inspect.** The agent reads `train_fit` (80% slice) through inspect-family tools. Tools return JSON-serializable summaries — never raw rows beyond a small `head_rows` peek. Under the `agent_no_data` condition the inspect family refuses, so the agent must rely on `descriptions.json` only.
+2. **Fit incrementally.** The agent declares a `generation_order`, then fits each column with `fit_marginal` or `fit_conditional`. Each call adds one Step to the in-progress Chain. Supported families: empirical / categorical_empirical / kde / normal (marginal); empirical_lookup / linear_regression / logistic_regression (conditional, with optional `allow_missing=True` for structural NaN preservation).
+3. **Verify against the held-out slice.** Verify-family tools sample the chain and score it against the 20% held-out: KS or TV distance per column, |Δ correlation| or |Δ Cramér's V| per pair, event-order compliance for life-event tuples. Each score returns `pass: true/false` against thresholds matching SSDataBench (T1 ≤ 0.10, T2 ≤ 0.15, T4 ≥ 0.80).
+4. **Commit.** When the agent calls `commit_generator`, the orchestrator validates the chain and exits the loop. Two hard gates: an empty chain refuses, and a chain with ≥2 event-age columns (`age_at_first_*`, `age_finished_*`, etc.) refuses unless `score_event_order` has covered ≥2 of those columns — added in EXP-006e because the agent could otherwise optimize a marginal-only `score_overall` and ship a chain with destroyed chronology.
+5. **Sample.** The orchestrator calls `chain.sample(n_rows)` to produce `generated.csv`, then hands off to SSDataBench scoring.
+
+Every tool returns a dict; tools never raise. Bad input becomes `{"error": "...", "details": "..."}` so the LLM can self-correct — `dispatch` in `tools/__init__.py` catches every exception type. The whole tool-call transcript persists to `workspace/tool_calls.json` for offline analysis even if sampling crashes.
 
 ## Experimental conditions
 
@@ -191,14 +209,20 @@ Writes `docs/experiments/<date>-<exp>-report.md` with three sections: **Strategy
 Every per-(condition × dataset) cell writes to `results/<experiment>/<condition>/<dataset>/<run_id>/`:
 
 ```
-meta.json            run config + git SHA + model
-prompts.jsonl        every message sent to the LLM
-responses.jsonl      every response received
-code/step_NN.py      every code block the agent executed
+meta.json                  run config + git SHA + model
+prompts.jsonl              every message sent to the LLM
+responses.jsonl            every response received
+code/step_NN.py            every code block (legacy code-block path only)
 code/step_NN.{stdout,stderr,exit}
-workspace/           snapshot of the sandbox workspace at end of run
-generated.csv        the synthetic dataset handed to scoring
-eval.json            SSDataBench T1–T5 pass rates
+workspace/
+  train.csv                the 80% slice the agent saw
+  descriptions.json        semantic context (omitted in no_semantic / no_data)
+  chain.json               serialized Chain (tool-using path)
+  tool_calls.json          full tool-call transcript with arguments + results
+  transcript.json          LLM messages + tool_results in order
+  progress.log             agent's free-form journal via report_progress
+generated.csv              the synthetic dataset handed to scoring
+eval.json                  SSDataBench T1–T5 pass rates
 ```
 
 The full set of experiments is in [`config/experiments.yaml`](config/experiments.yaml) — 20+ entries covering smoke runs, the cross-sectional 4-condition matrix, longitudinal pilots, and the in-flight `exp001_rubric_*` variants.
@@ -231,19 +255,21 @@ RUN_LIVE_LLM_TESTS=1 pytest  # +1 test that hits the real LLM API
 
 ## Key design decisions
 
-1. **The agent generates a model, not individual cases.** Final agent output is executable Python that produces a pandas DataFrame.
-2. **Stateless sandbox + shared workspace.** Each code block runs in a fresh `python` subprocess in a shared `cwd`. State persists via files (CSV / cloudpickle / JSON), never via interpreter state. The system prompt warns the agent about the pickle-by-reference trap.
-3. **The agent sees a train split; SSDataBench evaluates on the eval split.** Default 50/50, fixed seed.
+1. **The agent generates a model, not individual cases.** On the tool-using path the model is a `Chain` of fit Steps, built incrementally via tool calls and serialized to `chain.json` + sampled at commit. On the legacy code-block path the model is executable Python the agent writes to `model.pkl`. In both cases the orchestrator — not the LLM — runs the final `sample(n)`.
+2. **Two execution paths share one orchestrator.** `PromptVariant.is_tool_using` decides at run start. The legacy path runs the agent's code in fresh `python` subprocesses with a shared workspace `cwd`; the tool-using path runs every tool in-process against a `RuntimeState` and never spawns subprocesses. A failure in either is caught and persisted to `tool_calls.json` / `step_NN.{stdout,stderr}` so the agent can self-correct.
+3. **Two splits, two purposes.** SSDataBench's eval split (default 50/50, fixed seed) is the *external* boundary the agent never sees. Inside the tool-using loop the orchestrator further splits `train` 80/20: `train_fit` for fit-family tools and `held_out` for verify-family tools. Verify scores are local proxies for SSDataBench T1/T2/T4 — same metrics, different sample.
 4. **SSDataBench is called as a subprocess.** We don't import its code; we shell out to its evaluation scripts. Survives any internal refactor of theirs.
 5. **Schema drift is auto-handled.** SSDataBench's GSS-2018 evaluation expects ~28 variables; our cleaned `gss_clean.csv` has only 11. `scripts/build_eval_subset.py` regenerates a pruned config at runtime.
-6. **Everything is logged.** Every prompt, response, code execution, and output is saved per-run for reproducibility and qualitative analysis.
-7. **Resilient to transient errors.** OpenAI client retries `APIConnectionError`, rate limits, and 5xx with exponential backoff. The runner isolates per-condition failures so one bad run doesn't kill the matrix.
+6. **Everything is logged.** Every prompt, response, tool call, tool result, code execution, and output is saved per-run for reproducibility and qualitative analysis.
+7. **Verify-tool design is destiny.** A summary verify (e.g. `score_overall`) that omits a metric the rubric measures will train the agent to ship chains that score high on the visible part and low on the hidden one. Whenever a new structural rubric type lands, the corresponding verify tool plus a `commit_generator` gate goes in alongside it. EXP-006e's chronology gate is the canonical example.
+8. **Resilient to transient errors.** OpenAI client retries `APIConnectionError`, rate limits, and 5xx with exponential backoff. The runner isolates per-condition failures so one bad run doesn't kill the matrix.
 
 ## Status
 
 | Area | Status |
 |---|:---:|
-| Core agent + sandbox + 4-stage orchestrator | ✓ |
+| Tool-using agent loop (`rubric_tools_v3`, current default) — 16 tools across inspect/fit/verify/commit; commit_generator hard-gated on chronology | ✓ |
+| Legacy 4-stage code-block orchestrator (`baseline`, `rubric` variants) | ✓ |
 | Cross-sectional pilots (GSS/CPS/ACS) | ✓ |
 | Longitudinal pilots (NLSY/AddHealth/CFPS/US) — adds T4/T5 | ✓ |
 | Direct-generation baseline (paper paradigm) | ✓ |
