@@ -253,3 +253,53 @@ def test_score_overall_no_hint_when_no_event_age_cols(cross_state):
     _fit_cross_chain(cross_state)
     out = dispatch(cross_state, "score_overall", {})
     assert "chronology_hint" not in out
+
+
+# ---------- EXP-006f: forced-commit bypass for max_turns escape hatch ----------
+
+
+def test_commit_bypasses_gate_when_t4_unverified_flag_set(long_state):
+    """When the orchestrator hits max_turns with the chronology gate as the
+    only blocker, it sets `state.t4_unverified = True` and retries commit.
+    The retry must succeed and surface the flag so downstream reporting
+    can mark this run as having an unverified T4."""
+    _fit_long_chain(long_state)
+
+    # First commit blocked by gate (control).
+    blocked = dispatch(long_state, "commit_generator", {})
+    assert blocked.get("error") == "missing_event_order_check"
+
+    # Orchestrator escape hatch: force-commit by flagging the state.
+    long_state.t4_unverified = True
+    out = dispatch(long_state, "commit_generator", {})
+    assert out.get("committed") is True, f"expected committed, got {out}"
+    assert out.get("t4_unverified") is True, (
+        "result must surface t4_unverified so reporting can flag the run"
+    )
+    # The warning string must mention score_event_order so a human reader
+    # of tool_calls.json can see what was skipped.
+    assert "score_event_order" in (out.get("warning", "") or "")
+    assert long_state.committed is True
+
+
+def test_commit_with_t4_unverified_flag_does_not_warn_on_cross_sectional(cross_state):
+    """The flag is harmless on chains that wouldn't have hit the gate anyway —
+    no warning should be added, since chronology was never relevant."""
+    _fit_cross_chain(cross_state)
+    cross_state.t4_unverified = True  # simulate orchestrator setting it
+    out = dispatch(cross_state, "commit_generator", {})
+    assert out.get("committed") is True
+    # Cross-sectional chain: no chronology to skip, no warning to surface.
+    assert out.get("t4_unverified") is not True
+    assert "warning" not in out
+
+
+def test_commit_t4_unverified_does_not_bypass_other_errors(long_state):
+    """The flag must ONLY bypass the chronology gate. An empty chain or
+    unknown column should still error — those represent genuinely broken
+    chains, not 'we ran out of time'."""
+    long_state.t4_unverified = True
+    # Empty chain: still an error, flag or not.
+    out = dispatch(long_state, "commit_generator", {})
+    assert out.get("error") == "empty_chain"
+    assert long_state.committed is False

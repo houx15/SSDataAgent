@@ -54,8 +54,12 @@ def commit_generator(state: RuntimeState) -> dict:
 
     # Chronology gate (EXP-006e). Skip on chains with <2 event-age cols —
     # nothing to check for ordering.
+    # The orchestrator may set state.t4_unverified=True at max_turns to bypass
+    # this gate (EXP-006f) — that path keeps the run alive at the cost of a
+    # T4 penalty, instead of crashing with the gate as the only blocker.
     event_cols = _event_age_columns(chain.generation_order)
-    if len(event_cols) >= 2:
+    gate_bypassed = False
+    if len(event_cols) >= 2 and not state.t4_unverified:
         event_set = set(event_cols)
         scored_pair = any(
             len(event_set & set(call)) >= 2
@@ -73,6 +77,16 @@ def commit_generator(state: RuntimeState) -> dict:
                     "Call score_event_order(events=[...]) and then retry commit_generator."
                 ),
             }
+    elif len(event_cols) >= 2 and state.t4_unverified:
+        # Gate bypassed by the orchestrator. Verify the bypass was needed
+        # (the gate would have blocked otherwise) so the warning we surface
+        # accurately describes what happened.
+        event_set = set(event_cols)
+        scored_pair = any(
+            len(event_set & set(call)) >= 2
+            for call in state.event_order_calls
+        )
+        gate_bypassed = not scored_pair
 
     # Auto-fill any unfit cols with empirical so sample() doesn't raise.
     from ssdataagent.agent.tools.fit import MarginalStep
@@ -96,12 +110,22 @@ def commit_generator(state: RuntimeState) -> dict:
             auto_filled.append(col)
 
     state.committed = True
-    return {
+    result = {
         "committed": True,
         "n_steps": len(chain.steps),
         "generation_order": list(chain.generation_order),
         "auto_filled_with_empirical": auto_filled,
     }
+    if gate_bypassed:
+        # Surface the bypass loudly so reporting code + a human reading
+        # tool_calls.json can see this chain shipped without chronology
+        # verification — T4 will be penalized accordingly.
+        result["t4_unverified"] = True
+        result["warning"] = (
+            "committed without score_event_order coverage of event-age columns; "
+            "T4 (event ordering) will be penalized in evaluation"
+        )
+    return result
 
 
 def report_progress(state: RuntimeState, message: str) -> dict:

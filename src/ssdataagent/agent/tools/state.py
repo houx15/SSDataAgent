@@ -36,6 +36,13 @@ class RuntimeState:
     # Audit trail of every successful score_event_order call (events tuple).
     # commit_generator reads this to gate longitudinal commits — see EXP-006e.
     event_order_calls: list[tuple[str, ...]] = field(default_factory=list)
+    # Orchestrator escape hatch (EXP-006f): when max_turns is reached with the
+    # chronology gate as the only blocker, the orchestrator sets this and
+    # retries commit_generator. The flag bypasses the gate but is surfaced in
+    # the commit result + chain_meta so downstream reporting can flag the run
+    # as T4-unverified rather than silently shipping a chain that skipped the
+    # check. NEVER set by the agent — only by the orchestrator.
+    t4_unverified: bool = False
 
 
 def split_train_heldout(

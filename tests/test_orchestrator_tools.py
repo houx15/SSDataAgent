@@ -193,5 +193,98 @@ def test_tool_using_loop_respects_no_data_condition(workspace: Path):
             condition=Condition.NO_DATA, dataset_name="test_ds",
             workspace=workspace, has_data=False, has_descriptions=True,
         )
-    # All three tool results should be data_withheld or empty_chain errors.
-    # (we can't access result here; instead look at the workspace files.)
+    # EXP-006f: even on raise, the persistence block runs and writes
+    # the forensic artefacts. Before the fix, these never landed.
+    assert (workspace / "tool_calls.json").exists(), (
+        "tool_calls.json must persist even when force-commit raises — "
+        "this is the bug EXP-006f fixed"
+    )
+    assert (workspace / "transcript.json").exists()
+    tool_log = json.loads((workspace / "tool_calls.json").read_text())
+    # All three agent calls + the forced-commit attempt are logged.
+    assert any(e["tool"] == "commit_generator (forced)" for e in tool_log)
+
+
+# ============== EXP-006f: chronology gate at max_turns ==============
+
+
+@pytest.fixture
+def longitudinal_workspace(tmp_path: Path) -> Path:
+    """Workspace with two event-age columns so the chronology gate fires."""
+    rng = np.random.default_rng(0)
+    n = 200
+    age_marriage = rng.integers(20, 35, size=n).astype(float)
+    age_first_child = age_marriage + rng.integers(1, 8, size=n).astype(float)
+    df = pd.DataFrame({
+        "gender": rng.choice(["F", "M"], size=n),
+        "age_at_first_marriage": age_marriage,
+        "age_at_first_child": age_first_child,
+    })
+    ws = tmp_path / "workspace"
+    ws.mkdir()
+    df.to_csv(ws / "train.csv", index=False)
+    (ws / "descriptions.json").write_text(json.dumps({
+        "context": "Synthetic longitudinal fixture",
+        "background_variables": ["gender"],
+        "target_variables": ["age_at_first_marriage", "age_at_first_child"],
+        "descriptions": {},
+    }))
+    return ws
+
+
+def test_max_turns_chronology_gate_retries_with_t4_unverified(longitudinal_workspace: Path):
+    """The EXP-006e cfps failure mode: agent fits a longitudinal chain but
+    never calls score_event_order. At max_turns the orchestrator force-commits;
+    the gate refuses; the orchestrator sets t4_unverified and retries.
+
+    The run must complete (not raise) and the artefacts must mark the chain
+    as T4-unverified so reporting can flag the run."""
+    ws = longitudinal_workspace
+    responses = [
+        _make_response(calls=[("set_generation_order", {
+            "cols": ["gender", "age_at_first_marriage", "age_at_first_child"],
+        })]),
+        _make_response(calls=[("fit_marginal", {"col": "gender"})]),
+        _make_response(calls=[("fit_marginal", {"col": "age_at_first_marriage"})]),
+        _make_response(calls=[("fit_marginal", {"col": "age_at_first_child"})]),
+        # Agent tries to commit but never called score_event_order — gate refuses.
+        _make_response(calls=[("commit_generator", {})]),
+        # ...then keeps spinning without engaging the gate. max_turns=6 stops it.
+        _make_response(calls=[("list_columns", {})]),
+    ]
+    client = _stub_client(responses)
+    orch = Orchestrator(
+        client=client, n_rows=10,
+        prompt_variant="rubric_tools", max_turns=6,
+    )
+    # Crucially: this MUST NOT raise. Before EXP-006f it did.
+    result = orch.run(
+        condition=Condition.FULL, dataset_name="long_test",
+        workspace=ws, has_data=True, has_descriptions=True,
+    )
+    assert len(result.generated) == 10
+    # tool_calls.json must show both forced attempts: the gate-blocked one,
+    # then the t4_unverified retry that succeeded.
+    assert (ws / "tool_calls.json").exists()
+    tool_log = json.loads((ws / "tool_calls.json").read_text())
+    forced_blocked = [
+        e for e in tool_log
+        if e["tool"] == "commit_generator (forced)"
+        and e["result"].get("error") == "missing_event_order_check"
+    ]
+    forced_unverified = [
+        e for e in tool_log
+        if e["tool"] == "commit_generator (forced, t4_unverified)"
+        and e["result"].get("committed") is True
+    ]
+    assert len(forced_blocked) == 1, (
+        f"expected one gate-blocked force-commit; got {[e['tool'] for e in tool_log]}"
+    )
+    assert len(forced_unverified) == 1, (
+        "expected the t4_unverified retry to succeed and be logged"
+    )
+    assert forced_unverified[0]["result"].get("t4_unverified") is True
+    # chain.json + run result must surface the unverified flag for reporting.
+    chain_meta = json.loads((ws / "chain.json").read_text())
+    assert chain_meta.get("t4_unverified") is True
+    assert result.chain_meta.get("t4_unverified") is True

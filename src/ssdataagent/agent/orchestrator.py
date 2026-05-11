@@ -332,28 +332,60 @@ class Orchestrator:
                     f"{_brief_result(result)} in {tool_dt:.2f}s"
                 )
 
-        # Force-commit if we ran out of turns without an explicit commit.
-        if not state.committed:
-            _heartbeat(f"max_turns ({self.max_turns}) reached without commit; auto-committing")
-            from ssdataagent.agent.tools.commit import commit_generator
-            forced = commit_generator(state)
-            tool_call_log.append({
-                "turn": turn + 1, "tool": "commit_generator (forced)",
-                "arguments": {}, "result": forced, "duration_s": 0.0,
-            })
-            transcript.append(TranscriptEntry(
-                "tool", f"[forced commit_generator] -> {forced!r}", "auto_commit",
-            ))
-            if forced.get("error"):
-                raise RuntimeError(
-                    f"max_turns reached and forced commit failed: {forced!r}"
-                )
-
+        # Force-commit + sampling are wrapped in one try/finally (EXP-006f):
+        # before the fix, a max_turns failure that hit the chronology gate
+        # raised RuntimeError before reaching the persistence block, so
+        # tool_calls.json / transcript.json never landed and we lost the
+        # forensic data we needed to diagnose the failure.
         try:
+            # Force-commit if we ran out of turns without an explicit commit.
+            if not state.committed:
+                _heartbeat(
+                    f"max_turns ({self.max_turns}) reached without commit; auto-committing"
+                )
+                from ssdataagent.agent.tools.commit import commit_generator
+                forced = commit_generator(state)
+                tool_call_log.append({
+                    "turn": turn + 1, "tool": "commit_generator (forced)",
+                    "arguments": {}, "result": forced, "duration_s": 0.0,
+                })
+                transcript.append(TranscriptEntry(
+                    "tool", f"[forced commit_generator] -> {forced!r}", "auto_commit",
+                ))
+                # EXP-006f: when the chronology gate is the *only* blocker,
+                # set state.t4_unverified and retry. The chain ships penalized
+                # on T4 instead of the run crashing — and we still get the
+                # tool_calls.json / transcript.json forensic data.
+                if forced.get("error") == "missing_event_order_check":
+                    _heartbeat(
+                        "chronology gate blocked forced commit; retrying with "
+                        "t4_unverified=True (run will be penalized on T4)"
+                    )
+                    state.t4_unverified = True
+                    forced = commit_generator(state)
+                    tool_call_log.append({
+                        "turn": turn + 2,
+                        "tool": "commit_generator (forced, t4_unverified)",
+                        "arguments": {}, "result": forced, "duration_s": 0.0,
+                    })
+                    transcript.append(TranscriptEntry(
+                        "tool",
+                        f"[forced commit_generator t4_unverified=True] -> {forced!r}",
+                        "auto_commit",
+                    ))
+                if forced.get("error"):
+                    # Genuinely broken chain (empty, unknown column, etc.) —
+                    # no escape hatch for these. Raise *inside* the try so the
+                    # finally still persists what we have.
+                    raise RuntimeError(
+                        f"max_turns reached and forced commit failed: {forced!r}"
+                    )
+
             # Sample N rows from the now-committed chain.
             _heartbeat(f"sampling {self.n_rows} rows from committed chain")
             generated = state.chain.sample(state.rng, self.n_rows)
             chain_meta = state.chain.to_meta()
+            chain_meta["t4_unverified"] = state.t4_unverified
             generated.to_csv(workspace / "generated.csv", index=False)
             return RunResult(
                 generated=generated,
@@ -364,10 +396,11 @@ class Orchestrator:
                 chain_meta=chain_meta,
             )
         finally:
-            # Persist artefacts even if sampling crashed — they're how we
-            # debug the run after the fact.
+            # Persist artefacts even if force-commit raised or sampling
+            # crashed — they're how we debug the run after the fact.
             try:
                 chain_meta = state.chain.to_meta()
+                chain_meta["t4_unverified"] = state.t4_unverified
                 (workspace / "chain.json").write_text(json.dumps(chain_meta, indent=2, default=str))
             except Exception as e:
                 (workspace / "chain.json.error").write_text(f"{type(e).__name__}: {e}")
