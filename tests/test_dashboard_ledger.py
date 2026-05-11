@@ -48,3 +48,18 @@ def test_parse_ledger_strips_backticks_from_exp_names():
 def test_parse_ledger_missing_file_raises():
     with pytest.raises(FileNotFoundError):
         parse_ledger(FIXTURES / "DOES_NOT_EXIST.md")
+
+
+def test_parse_ledger_splits_slash_separated_exp_names(tmp_path):
+    p = tmp_path / "LEDGER.md"
+    p.write_text(
+        "| date | exp_name | model | git_sha | hypothesis | headline | retro |\n"
+        "|------|----------|-------|---------|------------|----------|-------|\n"
+        "| 2026-04-30 | `pilot_a` / `pilot_b` / `pilot_c` | m | sha | h | hl | [r](x.md) |\n",
+        encoding="utf-8",
+    )
+    entries = parse_ledger(p)
+    assert len(entries) == 1
+    assert entries[0].exp_names == ["pilot_a", "pilot_b", "pilot_c"]
+    for name in entries[0].exp_names:
+        assert "`" not in name

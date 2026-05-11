@@ -67,7 +67,7 @@ def _row_to_entry(cells: list[str]) -> LedgerEntry:
 
 
 def _split_exp_names(field: str) -> list[str]:
-    parts = re.split(r"\s*[+,]\s*", field)
+    parts = re.split(r"\s*[+,/]\s*", field)
     return [p.strip().strip("`").strip() for p in parts if p.strip()]
 
 
