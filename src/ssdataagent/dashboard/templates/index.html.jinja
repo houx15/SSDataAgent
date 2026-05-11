@@ -84,7 +84,7 @@
     {% for b in champion.workflow_bullets %}<li>{{ b }}</li>{% endfor %}
   </ul>
   {% if champion.retro_link %}
-    <a href="../experiments/{{ champion.retro_link|replace('retros/','') }}">Read full retro →</a>
+    <a href="../experiments/{{ champion.retro_link }}">Read full retro →</a>
   {% endif %}
 </div>
 {% endif %}

@@ -57,3 +57,25 @@ def test_parse_retro_handles_pilot_with_no_h2():
 
 def test_parse_retro_missing_file_returns_none():
     assert parse_retro(FIXTURES / "retros" / "no-such-file.md") is None
+
+
+def test_parse_retro_multiline_bullets_captured(tmp_path):
+    """Bullet values that span multiple lines are joined; next bullet's
+    marker does NOT leak into the previous bullet's value."""
+    p = tmp_path / "retro.md"
+    p.write_text(
+        "## Retro\n\n"
+        "- **What worked:** First line of value.\n"
+        "  Second line continues the same bullet.\n"
+        "- **What didn't:** Different bullet's value.\n"
+        "- **Surprises:**\n"
+        "  Value on the next line.\n",
+        encoding="utf-8",
+    )
+    r = parse_retro(p)
+    kv = dict(r.bullets["Retro"])
+    assert kv["What worked"] == "First line of value. Second line continues the same bullet."
+    assert kv["What didn't"] == "Different bullet's value."
+    assert "**" not in kv["What worked"]
+    assert "**" not in kv["What didn't"]
+    assert kv["Surprises"] == "Value on the next line."

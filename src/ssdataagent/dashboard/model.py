@@ -159,9 +159,14 @@ def _resolve_hypothesis(entry: LedgerEntry, retro: RetroSections | None) -> str:
     if retro and "Strategy" in retro.sections:
         for chunk in retro.sections["Strategy"].split("\n\n"):
             stripped = chunk.strip()
-            if stripped and not stripped.startswith(">"):
-                return stripped.splitlines()[0] if stripped else ""
-        return retro.sections["Strategy"].strip().splitlines()[0]
+            if not stripped or stripped.startswith(">"):
+                continue
+            first_line = stripped.splitlines()[0].strip()
+            # Skip stub lines that look like headers (too short or
+            # colon-terminated, e.g. "From STRATEGY.md backlog:").
+            if len(first_line) < 25 or first_line.endswith(":"):
+                continue
+            return first_line
     if entry.hypothesis:
         return entry.hypothesis
     return "—"

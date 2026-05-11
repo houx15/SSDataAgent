@@ -20,9 +20,8 @@ class RetroSections:
 
 _FRONTMATTER_RE = re.compile(r"\A---\s*\n(.*?)\n---\s*\n", re.DOTALL)
 _H2_RE = re.compile(r"^##\s+(.+?)\s*$", re.MULTILINE)
-_BULLET_KV_RE = re.compile(
-    r"^\s*-\s+\*\*(?P<label>[^*]+?):\*\*\s*(?P<value>.*?)\s*$",
-    re.MULTILINE,
+_BULLET_START_RE = re.compile(
+    r"^\s*-\s+\*\*(?P<label>[^*]+?):\*\*\s*(?P<rest>.*?)\s*$"
 )
 
 
@@ -76,7 +75,25 @@ def _normalize_heading(text: str) -> str:
 
 
 def _extract_bullet_kv(section_body: str) -> list[tuple[str, str]]:
-    return [
-        (m.group("label").strip(), m.group("value").strip())
-        for m in _BULLET_KV_RE.finditer(section_body)
-    ]
+    pairs: list[tuple[str, str]] = []
+    lines = section_body.splitlines()
+    i = 0
+    while i < len(lines):
+        m = _BULLET_START_RE.match(lines[i])
+        if not m:
+            i += 1
+            continue
+        label = m.group("label").strip()
+        parts = [m.group("rest").strip()]
+        i += 1
+        while i < len(lines):
+            nxt = lines[i]
+            if _BULLET_START_RE.match(nxt) or nxt.lstrip().startswith("#"):
+                break
+            stripped = nxt.strip()
+            if stripped:
+                parts.append(stripped)
+            i += 1
+        value = " ".join(p for p in parts if p).strip()
+        pairs.append((label, value))
+    return pairs

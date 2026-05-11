@@ -109,6 +109,45 @@ def test_assemble_partial_data_when_one_exp_in_group_missing():
     assert b.overall_mean_full_agent is not None  # still computable from cross half
 
 
+def test_assemble_hypothesis_falls_back_to_ledger_when_strategy_stub(tmp_path):
+    """If a retro's Strategy section starts with a one-liner stub ending in
+    ':' (e.g. 'From STRATEGY.md backlog:'), use the LEDGER's hypothesis
+    field instead."""
+    # Build a tiny in-memory LEDGER + retro pair.
+    fixtures = tmp_path / "fix"
+    (fixtures / "retros").mkdir(parents=True)
+    (fixtures / "LEDGER.md").write_text(
+        "| date | exp_name | model | git_sha | hypothesis | headline | retro |\n"
+        "|------|----------|-------|---------|------------|----------|-------|\n"
+        "| 2026-05-08 | `exp_x` | m | sha | meaningful hypothesis from the ledger | hl | [r](retros/r.md) |\n",
+        encoding="utf-8",
+    )
+    (fixtures / "retros" / "r.md").write_text(
+        "# exp_x\n\n## Strategy\n\nFrom STRATEGY.md backlog:\n\n"
+        "> - [ ] **EXP-X** — described in the strategy doc.\n",
+        encoding="utf-8",
+    )
+
+    from ssdataagent.dashboard.ledger import parse_ledger
+    from ssdataagent.dashboard.config import load_configs
+    from ssdataagent.dashboard.model import assemble
+    from ssdataagent.dashboard.results import load_results
+    from ssdataagent.dashboard.retros import parse_retro
+
+    ledger = parse_ledger(fixtures / "LEDGER.md")
+    # Empty config and results — we only care about hypothesis resolution.
+    (fixtures / "experiments.yaml").write_text("experiments: {}\n", encoding="utf-8")
+    configs = load_configs(fixtures / "experiments.yaml")
+    dash = assemble(
+        ledger, configs,
+        lambda name: None,
+        lambda link: parse_retro(fixtures / link) if link else None,
+    )
+    e = dash.experiments[0]
+    assert "meaningful hypothesis from the ledger" in e.hypothesis_text
+    assert "From STRATEGY.md backlog" not in e.hypothesis_text
+
+
 def test_assemble_entry_with_no_results_renders_without_champion_flag():
     """Drop all results; entries render with overall_mean_full_agent=None, no champion."""
     ledger = parse_ledger(FIXTURES / "LEDGER.md")
