@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SSDataAgent — Experiment Dashboard</title>
+<style>
+  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+         max-width: 1200px; margin: 24px auto; padding: 0 16px; color: #222; }
+  h1 { margin: 0 0 4px; font-size: 22px; }
+  .subtitle { color: #666; font-size: 13px; margin-bottom: 24px; }
+  .champion { border: 2px solid #2d7a2d; border-radius: 6px;
+              padding: 16px; margin-bottom: 32px; background: #f6fbf6; }
+  .champion h2 { margin: 0 0 8px; font-size: 13px; letter-spacing: 1px;
+                 color: #2d7a2d; text-transform: uppercase; }
+  .champion-title { font-size: 18px; font-weight: 600; margin-bottom: 4px; }
+  .champion-meta { color: #555; font-size: 13px; margin-bottom: 12px; }
+  .bars { display: flex; gap: 4px; margin: 12px 0; }
+  .bar { flex: 1; background: #eaeaea; height: 24px; position: relative;
+         border-radius: 2px; overflow: hidden; }
+  .bar-fill { background: #4a90e2; height: 100%; }
+  .bar-label { position: absolute; top: 50%; left: 8px; transform: translateY(-50%);
+               font-size: 11px; color: #222; }
+  .workflow-bullets { margin: 8px 0; padding-left: 20px; font-size: 13px; }
+  .workflow-bullets li { margin: 2px 0; }
+  .filters { display: flex; gap: 12px; margin-bottom: 12px; align-items: center;
+             font-size: 13px; }
+  .filters input[type="text"], .filters select {
+    padding: 4px 8px; border: 1px solid #ccc; border-radius: 4px; font-size: 13px;
+  }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid #eee; }
+  th { background: #f6f6f6; cursor: pointer; user-select: none; }
+  th.sorted-asc::after  { content: " ▲"; color: #999; }
+  th.sorted-desc::after { content: " ▼"; color: #999; }
+  tr.pilot td { color: #888; font-style: italic; }
+  tr.experiment-row { cursor: pointer; }
+  tr.experiment-row:hover { background: #fafafa; }
+  tr.champion-row td:first-child::before { content: "★ "; color: #d4a017; }
+  .detail-row td { background: #fafafa; padding: 16px; }
+  .detail-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 16px; }
+  .detail-grid section { font-size: 13px; }
+  .detail-grid h3 { font-size: 13px; margin: 0 0 6px; color: #555;
+                    text-transform: uppercase; letter-spacing: 0.5px; }
+  .heatmap { display: grid; grid-auto-flow: row; gap: 2px; }
+  .heatmap-row { display: grid; grid-template-columns: 100px repeat(5, 1fr); gap: 2px;
+                 align-items: center; }
+  .heatmap-cell { padding: 4px 6px; font-size: 11px; text-align: center;
+                  color: #fff; border-radius: 2px; }
+  .partial-badge { display: inline-block; background: #fff3cd; color: #856404;
+                   padding: 1px 6px; border-radius: 8px; font-size: 11px;
+                   margin-left: 6px; }
+  .no-scores { color: #999; font-style: italic; }
+</style>
+</head>
+<body>
+<h1>SSDataAgent — Experiment Dashboard</h1>
+<p class="subtitle">
+  Generated: {{ generated_at }} ·
+  {{ experiments|length }} experiment{{ "" if experiments|length == 1 else "s" }}
+  {% if champion %} · current champion: <strong>{{ champion.exp_names[0] }}</strong>{% endif %}
+</p>
+
+{% if champion %}
+<div class="champion">
+  <h2>Champion</h2>
+  <div class="champion-title">
+    {{ champion.exp_names | join(" + ") }}
+    <span style="font-weight: normal; color: #666; font-size: 13px;"> · {{ champion.date }}</span>
+  </div>
+  <div class="champion-meta">
+    Overall mean (full_agent): <strong>{{ "%.3f"|format(champion.overall_mean_full_agent) }}</strong>
+    · Model: {{ champion.model }} · git: {{ champion.git_sha }}
+  </div>
+  <div class="bars">
+    {% for t in ["type1","type2","type3","type4","type5"] %}
+      {% set v = champion.by_type.get(t) %}
+      <div class="bar" title="{{ t }}: {{ '%.3f'|format(v) if v is not none else 'n/a' }}">
+        <div class="bar-fill" style="width: {{ ((v or 0) * 100)|round(0,'floor') }}%;"></div>
+        <span class="bar-label">{{ t }} {{ '%.2f'|format(v) if v is not none else '—' }}</span>
+      </div>
+    {% endfor %}
+  </div>
+  <ul class="workflow-bullets">
+    {% for b in champion.workflow_bullets %}<li>{{ b }}</li>{% endfor %}
+  </ul>
+  {% if champion.retro_link %}
+    <a href="../experiments/{{ champion.retro_link|replace('retros/','') }}">Read full retro →</a>
+  {% endif %}
+</div>
+{% endif %}
+
+<h2 style="font-size: 16px;">All experiments</h2>
+<div class="filters">
+  <input id="filter-text" type="text" placeholder="filter by name, hypothesis, variant…">
+  <label><input id="filter-pilots" type="checkbox" checked> show pilots</label>
+</div>
+
+<table id="exp-table">
+  <thead>
+    <tr>
+      <th data-sort="date">date</th>
+      <th data-sort="name">experiment</th>
+      <th data-sort="model">model</th>
+      <th data-sort="variant">variant</th>
+      <th data-sort="overall">overall</th>
+      <th>T1..T5</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for e in experiments %}
+    <tr class="experiment-row{% if e.is_pilot %} pilot{% endif %}{% if e.is_champion %} champion-row{% endif %}"
+        data-index="{{ loop.index0 }}"
+        data-pilot="{{ '1' if e.is_pilot else '0' }}"
+        data-search="{{ (e.exp_names|join(' ') + ' ' + e.hypothesis_text + ' ' + (e.configs[0].prompt_variant if e.configs else ''))|lower }}">
+      <td>{{ e.date }}</td>
+      <td>
+        {{ e.exp_names | join(" + ") }}
+        {% if e.is_partial %}<span class="partial-badge">partial</span>{% endif %}
+      </td>
+      <td>{{ e.model }}</td>
+      <td>{{ e.configs[0].prompt_variant if e.configs else "—" }}</td>
+      <td>{% if e.overall_mean_full_agent is not none %}{{ "%.3f"|format(e.overall_mean_full_agent) }}{% else %}<span class="no-scores">— no scores —</span>{% endif %}</td>
+      <td>
+        {% for t in ["type1","type2","type3","type4","type5"] %}
+          {%- set v = e.by_type.get(t) -%}
+          {% if v is not none %}<span title="{{ t }}={{ '%.3f'|format(v) }}">▮</span>{% else %}<span style="color:#ccc">▯</span>{% endif %}
+        {% endfor %}
+      </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<script id="dashboard-data" type="application/json">{{ payload_json | safe }}</script>
+<script>
+window.DASHBOARD_DATA = JSON.parse(document.getElementById("dashboard-data").textContent);
+
+function setupSorting() {
+  const table = document.getElementById("exp-table");
+  const headers = table.querySelectorAll("th[data-sort]");
+  let activeKey = null, asc = true;
+  headers.forEach(h => h.addEventListener("click", () => {
+    const key = h.dataset.sort;
+    asc = key === activeKey ? !asc : true;
+    activeKey = key;
+    headers.forEach(x => x.classList.remove("sorted-asc","sorted-desc"));
+    h.classList.add(asc ? "sorted-asc" : "sorted-desc");
+    const rows = Array.from(table.querySelectorAll("tbody tr.experiment-row"));
+    rows.sort((a,b) => {
+      const ea = window.DASHBOARD_DATA.experiments[+a.dataset.index];
+      const eb = window.DASHBOARD_DATA.experiments[+b.dataset.index];
+      let va = sortValue(ea, key), vb = sortValue(eb, key);
+      if (va == null) va = -Infinity; if (vb == null) vb = -Infinity;
+      if (va < vb) return asc ? -1 : 1;
+      if (va > vb) return asc ? 1 : -1;
+      return 0;
+    });
+    const tbody = table.querySelector("tbody");
+    rows.forEach(r => {
+      tbody.appendChild(r);
+      const detail = r.nextElementSibling;
+      if (detail && detail.classList.contains("detail-row")) tbody.appendChild(detail);
+    });
+  }));
+}
+
+function sortValue(e, key) {
+  if (key === "date") return e.date;
+  if (key === "name") return (e.exp_names[0] || "").toLowerCase();
+  if (key === "model") return (e.model || "").toLowerCase();
+  if (key === "variant") return (e.configs[0]?.prompt_variant || "").toLowerCase();
+  if (key === "overall") return e.overall_mean_full_agent;
+  return null;
+}
+
+function setupFilters() {
+  const text = document.getElementById("filter-text");
+  const pilots = document.getElementById("filter-pilots");
+  function apply() {
+    const q = text.value.trim().toLowerCase();
+    document.querySelectorAll("tr.experiment-row").forEach(r => {
+      const matchesText = !q || r.dataset.search.includes(q);
+      const isPilot = r.dataset.pilot === "1";
+      const matchesPilot = pilots.checked || !isPilot;
+      r.style.display = (matchesText && matchesPilot) ? "" : "none";
+    });
+  }
+  text.addEventListener("input", apply);
+  pilots.addEventListener("change", apply);
+}
+
+function setupDetailPanel() {
+  document.querySelectorAll("tr.experiment-row").forEach(r => {
+    r.addEventListener("click", () => {
+      const next = r.nextElementSibling;
+      if (next && next.classList.contains("detail-row")) {
+        next.remove();
+        return;
+      }
+      const e = window.DASHBOARD_DATA.experiments[+r.dataset.index];
+      const detail = document.createElement("tr");
+      detail.className = "detail-row";
+      const td = document.createElement("td");
+      td.colSpan = 6;
+      td.innerHTML = renderDetail(e);
+      detail.appendChild(td);
+      r.parentNode.insertBefore(detail, r.nextSibling);
+    });
+  });
+}
+
+function renderDetail(e) {
+  const cfg = e.configs[0] || {};
+  const heatmap = renderHeatmap(e.scores_grid);
+  const lessons = e.lessons_text ? `<p>${escapeHtml(e.lessons_text)}</p>` : "";
+  return `
+    <div class="detail-grid">
+      <section>
+        <h3>Config</h3>
+        <div><strong>prompt_variant:</strong> ${escapeHtml(cfg.prompt_variant || "—")}</div>
+        <div><strong>conditions:</strong> ${escapeHtml((cfg.conditions || []).join(", "))}</div>
+        <div><strong>datasets:</strong> ${escapeHtml((cfg.datasets || []).join(", "))}</div>
+        <div><strong>n_rows:</strong> ${cfg.n_rows ?? "—"}</div>
+        <div><strong>git_sha:</strong> ${escapeHtml(e.git_sha || "—")}</div>
+      </section>
+      <section>
+        <h3>Scores per condition × dataset × type</h3>
+        ${heatmap}
+        <h3 style="margin-top: 12px;">Hypothesis</h3>
+        <p>${escapeHtml(e.hypothesis_text)}</p>
+        ${lessons ? "<h3>Lesson</h3>" + lessons : ""}
+      </section>
+    </div>
+  `;
+}
+
+function renderHeatmap(grid) {
+  if (!grid || Object.keys(grid).length === 0) return '<span class="no-scores">no scores</span>';
+  const types = ["type1","type2","type3","type4","type5"];
+  let html = '<div class="heatmap">';
+  for (const cond of Object.keys(grid)) {
+    for (const dset of Object.keys(grid[cond])) {
+      html += `<div class="heatmap-row"><div style="font-size:11px;">${cond}/${dset}</div>`;
+      for (const t of types) {
+        const v = grid[cond][dset][t];
+        if (v == null) html += `<div class="heatmap-cell" style="background:#eee;color:#999;">—</div>`;
+        else html += `<div class="heatmap-cell" style="background:${colorFor(v)};">${v.toFixed(2)}</div>`;
+      }
+      html += "</div>";
+    }
+  }
+  html += "</div>";
+  return html;
+}
+
+function colorFor(v) {
+  const r = v < 0.5 ? 200 : Math.round(200 - (v - 0.5) * 400);
+  const g = v < 0.5 ? Math.round(v * 400) : 200;
+  return `rgb(${r},${g},80)`;
+}
+
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+setupSorting();
+setupFilters();
+setupDetailPanel();
+</script>
+</body>
+</html>
