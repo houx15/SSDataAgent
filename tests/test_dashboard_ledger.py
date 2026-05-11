@@ -1,0 +1,50 @@
+from pathlib import Path
+
+import pytest
+
+from ssdataagent.dashboard.ledger import LedgerEntry, parse_ledger
+
+FIXTURES = Path(__file__).parent / "fixtures" / "dashboard"
+
+
+def test_parse_ledger_returns_one_entry_per_row():
+    entries = parse_ledger(FIXTURES / "LEDGER.md")
+    assert len(entries) == 3
+
+
+def test_parse_ledger_extracts_basic_fields():
+    entries = parse_ledger(FIXTURES / "LEDGER.md")
+    a = next(e for e in entries if "exp_demo_a" in e.exp_names)
+    assert a.date == "2026-05-10"
+    assert a.exp_names == ["exp_demo_a"]
+    assert a.model == "gpt-5.4-2026-03-05"
+    assert a.git_sha == "def5678"
+    assert "demo experiment" in a.hypothesis
+    assert "0.42" in a.headline
+    assert a.retro_link.endswith("2026-05-10-exp_demo_a-report.md")
+
+
+def test_parse_ledger_splits_multi_exp_rows():
+    entries = parse_ledger(FIXTURES / "LEDGER.md")
+    b = next(e for e in entries if "exp_demo_b_cross" in e.exp_names)
+    assert b.exp_names == ["exp_demo_b_cross", "exp_demo_b_long"]
+
+
+def test_parse_ledger_flags_pilots():
+    entries = parse_ledger(FIXTURES / "LEDGER.md")
+    pilot = next(e for e in entries if "pilot_demo" in e.exp_names)
+    assert pilot.is_pilot is True
+    non_pilot = next(e for e in entries if "exp_demo_a" in e.exp_names)
+    assert non_pilot.is_pilot is False
+
+
+def test_parse_ledger_strips_backticks_from_exp_names():
+    entries = parse_ledger(FIXTURES / "LEDGER.md")
+    for e in entries:
+        for name in e.exp_names:
+            assert "`" not in name
+
+
+def test_parse_ledger_missing_file_raises():
+    with pytest.raises(FileNotFoundError):
+        parse_ledger(FIXTURES / "DOES_NOT_EXIST.md")
