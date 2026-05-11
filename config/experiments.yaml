@@ -382,6 +382,27 @@ experiments:
     llm_base_url: https://api.openai.com/v1
 
   # =========================================================================
+  # EXP-006f diagnostic — cfps + addhealth alone with the persist-on-error
+  # and soft-fail chronology gate fixes from commit b604880 in place.
+  # EXP-006e on the cloud crashed on both datasets after hitting max_turns
+  # against the chronology gate, and the pre-fix orchestrator lost the
+  # transcripts. Same prompt (rubric_tools_v3) and model as 006e so the
+  # comparison is clean — only the orchestrator + commit-gate plumbing
+  # changed. nlsy/us are excluded; they completed cleanly on 006e.
+  # =========================================================================
+  exp006f_tools_diag:
+    datasets: [cfps, addhealth]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    prompt_variant: rubric_tools_v3
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  # =========================================================================
   # EXP-006d — ablation on tools path. Tests whether the no_semantic
   # advantage seen in EXP-001 (agent_no_semantic outscored full_agent on
   # ACS by +0.27) persists on the tool-using path. Cross only — longitudinal
