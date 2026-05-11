@@ -1,0 +1,39 @@
+experiments:
+  exp_demo_a:
+    datasets: [demo]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+    prompt_variant: rubric_tools_v1
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+  exp_demo_b_cross:
+    datasets: [demo_x]
+    conditions: [full_agent, agent_no_semantic]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+    prompt_variant: rubric_tools_v2
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+  exp_demo_b_long:
+    datasets: [demo_y]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 100
+    prompt_variant: rubric_tools_v2
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+  pilot_demo:
+    datasets: [demo]
+    conditions: [full_agent]
+    max_iterations: 1
+    n_rows: 100
+    prompt_variant: paper_baseline
+    llm_model: deepseek-v4-flash
+    llm_provider: deepseek

@@ -1,0 +1,5 @@
+condition,dataset,type,pass_rate
+full_agent,demo_x,type1,0.6
+full_agent,demo_x,type2,0.7
+full_agent,demo_x,type3,0.4
+agent_no_semantic,demo_x,type1,0.55

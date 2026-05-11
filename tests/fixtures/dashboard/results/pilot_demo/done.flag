@@ -1,0 +1,8 @@
+{
+  "experiment": "pilot_demo",
+  "finished_at": "2026-05-09T09:00:00",
+  "n_dataset_condition_cells": 1,
+  "prompt_variant": "paper_baseline",
+  "llm_model": "deepseek-v4-flash",
+  "llm_provider": "deepseek"
+}

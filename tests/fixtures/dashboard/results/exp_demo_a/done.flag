@@ -1,0 +1,8 @@
+{
+  "experiment": "exp_demo_a",
+  "finished_at": "2026-05-10T11:00:00",
+  "n_dataset_condition_cells": 1,
+  "prompt_variant": "rubric_tools_v1",
+  "llm_model": "gpt-5.4-2026-03-05",
+  "llm_provider": "openai"
+}
