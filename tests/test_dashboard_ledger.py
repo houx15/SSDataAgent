@@ -63,3 +63,33 @@ def test_parse_ledger_splits_slash_separated_exp_names(tmp_path):
     assert entries[0].exp_names == ["pilot_a", "pilot_b", "pilot_c"]
     for name in entries[0].exp_names:
         assert "`" not in name
+
+
+def test_parse_ledger_strips_embedded_backticks_after_split(tmp_path):
+    """Real LEDGER has `name1` + `name2` (suffix) — both names must be clean."""
+    p = tmp_path / "LEDGER.md"
+    p.write_text(
+        "| date | exp_name | model | git_sha | hypothesis | headline | retro |\n"
+        "|------|----------|-------|---------|------------|----------|-------|\n"
+        "| 2026-05-07 | `exp_a` + `exp_b` (Stage B) | m | sha | h | hl | [r](x.md) |\n",
+        encoding="utf-8",
+    )
+    entries = parse_ledger(p)
+    assert entries[0].exp_names == ["exp_a", "exp_b"]
+    for name in entries[0].exp_names:
+        assert "`" not in name
+        assert "(" not in name
+
+
+def test_parse_ledger_strips_parenthetical_suffix_from_single_name(tmp_path):
+    """Some pilot rows have a single name with a parenthetical: `pilot_x` (full paper compare)."""
+    p = tmp_path / "LEDGER.md"
+    p.write_text(
+        "| date | exp_name | model | git_sha | hypothesis | headline | retro |\n"
+        "|------|----------|-------|---------|------------|----------|-------|\n"
+        "| 2026-05-03 | `pilot_paper_agents` (full paper compare) | m | sha | h | hl | [r](x.md) |\n",
+        encoding="utf-8",
+    )
+    entries = parse_ledger(p)
+    assert entries[0].exp_names == ["pilot_paper_agents"]
+    assert entries[0].is_pilot is True

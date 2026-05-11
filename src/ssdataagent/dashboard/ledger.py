@@ -68,7 +68,13 @@ def _row_to_entry(cells: list[str]) -> LedgerEntry:
 
 def _split_exp_names(field: str) -> list[str]:
     parts = re.split(r"\s*[+,/]\s*", field)
-    return [p.strip().strip("`").strip() for p in parts if p.strip()]
+    out: list[str] = []
+    for p in parts:
+        name = p.replace("`", "").strip()
+        name = re.sub(r"\s*\([^)]*\)\s*$", "", name).strip()
+        if name:
+            out.append(name)
+    return out
 
 
 def _extract_first_link(field: str) -> str:
