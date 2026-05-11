@@ -303,3 +303,44 @@ def test_commit_t4_unverified_does_not_bypass_other_errors(long_state):
     out = dispatch(long_state, "commit_generator", {})
     assert out.get("error") == "empty_chain"
     assert long_state.committed is False
+
+
+# ---------- EXP-006f follow-up: chain-consistency guard ----------
+
+
+def test_commit_rejects_when_step_given_not_in_order(tmp_path: Path):
+    """If a conditional Step's `given` column was dropped from
+    generation_order (e.g. because set_generation_order was called again with
+    a different list), commit must refuse rather than let sample() crash.
+
+    Reproduces the addhealth failure in exp006f_tools_diag: the agent
+    fit_copy_real'd several age cols (auto-extending the order), then issued
+    set_generation_order with a list missing age_at_first_marriage. The chain
+    committed anyway (n_steps=23, generation_order=20) and sample() raised
+    KeyError on the conditional whose given still referenced the dropped col.
+    """
+    rng = np.random.default_rng(0)
+    n = 300
+    age_m = rng.integers(20, 35, size=n).astype(float)
+    df = pd.DataFrame({
+        "gender": rng.choice(["F", "M"], size=n),
+        "age_at_first_marriage": age_m,
+        "age_at_first_child": age_m + rng.integers(1, 8, size=n).astype(float),
+    })
+    s = _make_state(df, tmp_path)
+    set_generation_order(s, ["gender", "age_at_first_marriage", "age_at_first_child"])
+    fit_marginal(s, "gender", family="categorical_empirical")
+    fit_marginal(s, "age_at_first_marriage", family="empirical")
+    fit_conditional(
+        s, "age_at_first_child",
+        given=["age_at_first_marriage"], family="empirical_lookup",
+    )
+    score_event_order(s, ["age_at_first_marriage", "age_at_first_child"])
+    # Now corrupt the chain by hand the way an over-eager set_generation_order
+    # would (validation is added in the same change, so we bypass it here to
+    # exercise the commit-side guard explicitly).
+    s.chain.generation_order = ["gender", "age_at_first_child"]
+    out = dispatch(s, "commit_generator", {})
+    assert out.get("error") == "inconsistent_chain"
+    assert "age_at_first_marriage" in out.get("details", "")
+    assert s.committed is False

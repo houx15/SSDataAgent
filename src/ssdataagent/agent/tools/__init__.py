@@ -6,6 +6,7 @@ registry. Tools never raise; on bad input they return {"error": ...}.
 """
 from __future__ import annotations
 
+import traceback
 from typing import Callable
 
 from ssdataagent.agent.tools import commit as _commit
@@ -63,10 +64,18 @@ def dispatch(state: RuntimeState, name: str, arguments: dict) -> dict:
     except Exception as e:
         # Genuine internal error inside a tool — usually a sklearn / pandas
         # surprise from an upstream fit. Surface it as a tool result so the
-        # agent can call replace_step / use a different family.
+        # agent can call replace_step / use a different family. Include a
+        # truncated traceback so post-mortem from tool_calls.json doesn't
+        # require re-running with a debugger (EXP-006f addhealth follow-up).
+        tb_text = traceback.format_exc()
+        # Keep the last ~12 lines — the frames closest to the actual raise
+        # are the diagnostic ones, and the LLM doesn't benefit from the
+        # full dispatch chain.
+        tb_short = "\n".join(tb_text.splitlines()[-12:])
         return {
             "error": "tool_internal_error",
             "details": f"{type(e).__name__}: {e}",
+            "traceback": tb_short,
         }
 
 

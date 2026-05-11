@@ -71,6 +71,46 @@ def test_set_generation_order_replaces(state):
     assert state.chain.generation_order == ["age", "gender"]
 
 
+def test_set_generation_order_rejects_dropping_registered_col(state):
+    """If a Step has been registered, a new order that omits its column would
+    orphan the Step. Reject so sampling can't crash with a missing column."""
+    set_generation_order(state, ["gender", "age", "child_number"])
+    fit_marginal(state, "age", family="empirical")
+    fit_copy_real(state, "child_number")
+    out = set_generation_order(state, ["gender", "age"])
+    assert out["error"] == "drops_registered_columns"
+    assert "child_number" in out["details"]
+    # Original order untouched.
+    assert state.chain.generation_order == ["gender", "age", "child_number"]
+
+
+def test_set_generation_order_rejects_breaking_given_constraint(state):
+    """If a conditional's `given` would land *after* the conditional in the
+    new order, the chain can't sample. Reject."""
+    set_generation_order(state, ["gender", "age", "child_number", "age_first_childbirth"])
+    fit_marginal(state, "gender")
+    fit_marginal(state, "age")
+    fit_marginal(state, "child_number")
+    fit_conditional(state, "age_first_childbirth", given=["age", "child_number"], family="linear_regression")
+    # Try to reorder so child_number comes AFTER age_first_childbirth.
+    out = set_generation_order(state, ["gender", "age", "age_first_childbirth", "child_number"])
+    assert out["error"] == "given_after_col"
+    assert "age_first_childbirth" in out["details"]
+    # Original order untouched.
+    assert state.chain.generation_order == ["gender", "age", "child_number", "age_first_childbirth"]
+
+
+def test_set_generation_order_accepts_safe_reorder(state):
+    """Reordering that preserves all Steps' constraints is still fine."""
+    set_generation_order(state, ["gender", "age", "child_number", "age_first_childbirth"])
+    fit_marginal(state, "gender")
+    fit_marginal(state, "age")
+    # Move age before gender — both are marginals, no given to break.
+    out = set_generation_order(state, ["age", "gender", "child_number", "age_first_childbirth"])
+    assert out["set"] is True
+    assert state.chain.generation_order == ["age", "gender", "child_number", "age_first_childbirth"]
+
+
 # ---------- fit_marginal ----------
 
 

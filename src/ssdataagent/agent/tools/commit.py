@@ -109,6 +109,28 @@ def commit_generator(state: RuntimeState) -> dict:
             chain.add(stub)
             auto_filled.append(col)
 
+    # Final consistency guard (EXP-006f addhealth follow-up): even after
+    # auto-fill, a conditional Step may still reference a `given` column
+    # that's no longer in generation_order — typically because the agent
+    # called set_generation_order again with a list that dropped some cols.
+    # Sample() would then raise KeyError. Catch it here instead.
+    pos = {c: i for i, c in enumerate(chain.generation_order)}
+    for col in chain.generation_order:
+        step = chain.steps.get(col)
+        given = getattr(step, "given", None) if step is not None else None
+        if not given:
+            continue
+        missing_or_late = [g for g in given if g not in pos or pos[g] >= pos[col]]
+        if missing_or_late:
+            return {
+                "error": "inconsistent_chain",
+                "details": (
+                    f"step for {col!r} has given={given} but {missing_or_late} "
+                    f"are not in generation_order before {col!r}; reorder or "
+                    "call replace_step on this column before committing"
+                ),
+            }
+
     state.committed = True
     result = {
         "committed": True,

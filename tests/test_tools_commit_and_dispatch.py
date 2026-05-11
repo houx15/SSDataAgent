@@ -101,3 +101,25 @@ def test_report_progress_appends_to_log(state):
     out = dispatch(state, "report_progress", {"message": "fitting age as kde"})
     assert out["logged"] is True
     assert state.progress_log == ["fitting age as kde"]
+
+
+def test_dispatch_tool_internal_error_includes_traceback(state, monkeypatch):
+    """When a tool raises an unexpected exception, the dispatch wrapper used
+    to discard the traceback — the agent (and us) only saw 'tool_internal_error'
+    with no clue what blew up. The error dict must now include a `traceback`
+    field so failures like the addhealth KeyError are diagnosable from
+    tool_calls.json alone."""
+    from ssdataagent.agent.tools import TOOL_REGISTRY
+
+    def boom(state, **kwargs):
+        raise RuntimeError("simulated upstream sklearn surprise")
+
+    monkeypatch.setitem(TOOL_REGISTRY, "_boom", boom)
+    out = dispatch(state, "_boom", {})
+    assert out["error"] == "tool_internal_error"
+    assert "RuntimeError" in out["details"]
+    assert "traceback" in out
+    # The traceback must include the actual exception line so we can grep for
+    # it after the fact. Keep this assertion narrow — we don't care about
+    # frame counts, just that the offending line made it through.
+    assert "simulated upstream sklearn surprise" in out["traceback"]

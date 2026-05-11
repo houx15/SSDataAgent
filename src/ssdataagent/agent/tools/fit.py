@@ -299,7 +299,9 @@ def _column_missing(state: RuntimeState, col: str) -> dict | None:
 
 def set_generation_order(state: RuntimeState, cols: list[str]) -> dict:
     """Declare the order columns will be sampled in. Required before any
-    fit_conditional. Calling again replaces the order."""
+    fit_conditional. Calling again replaces the order, but only if the new
+    order keeps every already-registered Step satisfiable — see EXP-006f
+    addhealth retro for the bug this prevents."""
     if (refusal := _refusal(state)) is not None:
         return refusal
     if not isinstance(cols, list) or not all(isinstance(c, str) for c in cols):
@@ -309,6 +311,39 @@ def set_generation_order(state: RuntimeState, cols: list[str]) -> dict:
         return {"error": "unknown_column", "details": f"unknown columns: {unknown}"}
     if len(set(cols)) != len(cols):
         return {"error": "duplicate_columns", "details": "cols contains duplicates"}
+
+    # Chain-consistency checks. If any Step is already registered, the new
+    # order must keep every fitted col present and respect every conditional's
+    # given-before-col constraint. Otherwise sample() will crash with a
+    # KeyError that nobody can diagnose from a generic tool_internal_error.
+    new_set = set(cols)
+    dropped = [c for c in state.chain.steps if c not in new_set]
+    if dropped:
+        return {
+            "error": "drops_registered_columns",
+            "details": (
+                f"new order omits already-registered columns {sorted(dropped)}; "
+                "call replace_step on each before reordering, or include them "
+                "in the new order"
+            ),
+        }
+    new_pos = {c: i for i, c in enumerate(cols)}
+    for col, step in state.chain.steps.items():
+        given = getattr(step, "given", None)
+        if not given:
+            continue
+        col_pos = new_pos[col]
+        late = [g for g in given if g not in new_pos or new_pos[g] >= col_pos]
+        if late:
+            return {
+                "error": "given_after_col",
+                "details": (
+                    f"conditional step for {col!r} requires {late} to appear "
+                    f"before it in generation_order; new order would put them "
+                    f"at or after position {col_pos}"
+                ),
+            }
+
     state.chain.generation_order = list(cols)
     return {"set": True, "order": list(cols)}
 
