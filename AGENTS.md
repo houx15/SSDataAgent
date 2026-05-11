@@ -4,7 +4,25 @@
 
 ## Guidelines
 
-<!-- Add your project-specific instructions here -->
+### Experiment dashboard
+
+After landing a new experiment (new `results/<exp>/done.flag`, new
+`docs/experiments/LEDGER.md` row, new retro), regenerate the dashboard:
+
+```bash
+.venv/bin/python scripts/build_dashboard.py
+git add docs/dashboard/index.html
+git commit -m "dashboard: rebuild after <exp_name>"
+```
+
+The dashboard is `docs/dashboard/index.html` — a self-contained HTML
+file teammates can `git pull && open` with no install. See
+`docs/dashboard/README.md` for what it reads, how the champion is
+chosen, and `--verbose` / `--strict` flags.
+
+Hypothesis text shown in the UI comes from the LEDGER `hypothesis`
+column for most rows (real retros rarely have a `## Hypothesis`
+section), so write a meaningful one-liner there when adding a LEDGER row.
 
 ## Shared Memory
 
