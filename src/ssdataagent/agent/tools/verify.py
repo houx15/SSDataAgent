@@ -252,9 +252,27 @@ def score_event_order(state: RuntimeState, events: list[str]) -> dict:
     for c in events:
         if c not in sim.columns:
             return {"error": "unknown_column", "details": f"event col {c!r} not in chain"}
-    sub = sim[events].dropna()
+    # Real survey data (addhealth, cfps) stores literal strings like
+    # 'never married' / 'never sex' in event-age columns for people who
+    # never had the event. Coerce non-numerics to NaN and drop those rows
+    # so the order check operates only on participants who actually had
+    # both events. (EXP-006f addhealth follow-up — was crashing here with
+    # `ValueError: could not convert string to float`.)
+    raw = sim[events]
+    coerced = raw.apply(pd.to_numeric, errors="coerce")
+    sub = coerced.dropna()
+    n_excluded = int(len(raw) - len(sub))
     if len(sub) == 0:
-        return {"error": "no_complete_rows", "details": "no sim rows have all event cols non-NA"}
+        return {
+            "error": "no_complete_rows",
+            "details": (
+                "no sim rows have all event cols numeric+non-NA; "
+                f"{n_excluded} rows were excluded as missing or as non-numeric "
+                "sentinels (e.g. 'never married'). Either the chain isn't "
+                "producing event ages for enough participants, or all sampled "
+                "rows are non-event sentinels."
+            ),
+        }
     arr = sub.to_numpy(dtype=float)
     compliant = np.all(np.diff(arr, axis=1) >= 0, axis=1)
     rate = float(compliant.mean())
@@ -269,6 +287,7 @@ def score_event_order(state: RuntimeState, events: list[str]) -> dict:
         "pass": bool(rate >= T4_THRESHOLD),
         "threshold": T4_THRESHOLD,
         "n_complete": int(len(sub)),
+        "n_excluded_non_numeric": n_excluded,
     }
 
 

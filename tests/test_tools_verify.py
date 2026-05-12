@@ -185,6 +185,71 @@ def test_score_event_order_needs_two_events(state):
     assert out["error"] == "bad_arguments"
 
 
+def test_score_event_order_excludes_string_sentinels(tmp_path):
+    """Real survey data (addhealth, cfps) stores literal strings like
+    'never married' / 'never sex' in event-age columns for people who never
+    had the event. score_event_order must coerce non-numerics to NaN and
+    drop those rows — not crash with `ValueError: could not convert string
+    to float`. This was the root cause of T4=0.0 in EXP-006f."""
+    rng = np.random.default_rng(0)
+    n = 200
+    # Construct an event-age column where some rows are real ages and some
+    # are the survey sentinel. dtype=object on purpose — that's what the
+    # cleaned CSVs deliver.
+    age_marriage = np.empty(n, dtype=object)
+    age_first_child = np.empty(n, dtype=object)
+    never_mask = rng.random(n) < 0.3
+    for i in range(n):
+        if never_mask[i]:
+            age_marriage[i] = "never married"
+            age_first_child[i] = "never had child"
+        else:
+            am = float(rng.integers(20, 35))
+            age_marriage[i] = am
+            age_first_child[i] = am + float(rng.integers(1, 8))
+    df = pd.DataFrame({"age_marriage": age_marriage, "age_first_child": age_first_child})
+    train = df.iloc[:160].reset_index(drop=True)
+    held = df.iloc[160:].reset_index(drop=True)
+    s = _make_state(train, held, tmp_path)
+    set_generation_order(s, ["age_marriage", "age_first_child"])
+    fit_marginal(s, "age_marriage", family="empirical")
+    fit_marginal(s, "age_first_child", family="empirical")
+
+    out = score_event_order(s, ["age_marriage", "age_first_child"])
+
+    # The contract: no crash, must return a real compliance result.
+    assert "error" not in out, f"unexpected error: {out}"
+    assert "compliance_rate" in out
+    # And the result must report sentinel exclusion so a human reading
+    # tool_calls.json can see what happened.
+    assert "n_excluded_non_numeric" in out
+    assert out["n_excluded_non_numeric"] > 0
+    # n_complete must reflect post-exclusion rows.
+    assert out["n_complete"] >= 1
+    assert out["n_complete"] + out["n_excluded_non_numeric"] <= max(200, len(held)) + 1
+
+
+def test_score_event_order_all_sentinels_returns_no_complete_rows(tmp_path):
+    """If every sampled row has a sentinel in some event col, there's nothing
+    to compare. Must surface a clean error, not crash."""
+    n = 100
+    df = pd.DataFrame({
+        "age_marriage": np.array(["never married"] * n, dtype=object),
+        "age_first_child": np.array(["never had child"] * n, dtype=object),
+    })
+    train = df.iloc[:80].reset_index(drop=True)
+    held = df.iloc[80:].reset_index(drop=True)
+    s = _make_state(train, held, tmp_path)
+    set_generation_order(s, ["age_marriage", "age_first_child"])
+    fit_marginal(s, "age_marriage", family="empirical")
+    fit_marginal(s, "age_first_child", family="empirical")
+
+    out = score_event_order(s, ["age_marriage", "age_first_child"])
+    assert out.get("error") == "no_complete_rows"
+    # Details should hint that sentinels were the reason, not silent dropna.
+    assert "sentinel" in out.get("details", "").lower() or "non-numeric" in out.get("details", "").lower()
+
+
 # ---------- score_overall ----------
 
 
