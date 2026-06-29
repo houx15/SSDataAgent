@@ -6,6 +6,7 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 from sklearn.neighbors import NearestNeighbors
+from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
 from ssdataagent.data.schema import DatasetSchema, load_schema
 from ssdataagent.strategies.base import InfoGate, StrategyResult
@@ -125,5 +126,59 @@ class HotDeckStrategy:
         return StrategyResult(
             generated=generated,
             meta_extras={"backend": "hotdeck", "k": 10,
+                         "n_train_fit": len(train), "n_individuals": len(bg)},
+        )
+
+
+def cart_generate(train, background, schema, *, min_samples_leaf=5, seed=42) -> pd.DataFrame:
+    bg_vars = list(schema.background_variables)
+    targets = list(schema.target_variables)
+    rng = np.random.default_rng(seed)
+    out = background_frame(background, schema)
+    feat_cols = list(bg_vars)
+    train_feat = train[bg_vars].copy().reset_index(drop=True)
+    gen_feat = background[bg_vars].copy().reset_index(drop=True)
+    for t in targets:
+        Xtr = ordinal_encode(train_feat, feat_cols, schema)
+        Xgen = ordinal_encode(gen_feat, feat_cols, schema)
+        is_num = t in schema.numeric_ranges
+        Tree = DecisionTreeRegressor if is_num else DecisionTreeClassifier
+        y = pd.to_numeric(train[t], errors="coerce").to_numpy() if is_num \
+            else train[t].astype(str).to_numpy()
+        model = Tree(min_samples_leaf=min_samples_leaf, random_state=seed).fit(Xtr, y)
+        leaf_tr = model.apply(Xtr)
+        leaf_gen = model.apply(Xgen)
+        raw = train[t].to_numpy()
+        by_leaf: dict[int, list] = {}
+        for lid, v in zip(leaf_tr, raw):
+            by_leaf.setdefault(int(lid), []).append(v)
+        drawn = []
+        for lid in leaf_gen:
+            pool = by_leaf.get(int(lid)) or list(raw)
+            drawn.append(pool[int(rng.integers(0, len(pool)))])
+        out[t] = drawn
+        feat_cols = feat_cols + [t]
+        train_feat[t] = train[t].to_numpy()
+        gen_feat[t] = drawn
+    return clip_decode(out, schema)
+
+
+class CartStrategy:
+    name = "cart"
+
+    def generate(self, gate: InfoGate, run_dir: Path, cfg) -> StrategyResult:
+        train = gate.fit_microdata()
+        if train is None:
+            raise ValueError("cart requires microdata; this condition exposes none")
+        schema = load_schema(gate.dataset_name)
+        bg = gate.background()
+        generated = cart_generate(train, bg, schema, min_samples_leaf=5, seed=42)
+        Path(run_dir, "fit_summary.json").write_text(json.dumps(
+            {"backend": "cart", "min_samples_leaf": 5,
+             "target_order": list(schema.target_variables), "n_train_fit": len(train)},
+            indent=2))
+        return StrategyResult(
+            generated=generated,
+            meta_extras={"backend": "cart", "min_samples_leaf": 5,
                          "n_train_fit": len(train), "n_individuals": len(bg)},
         )
