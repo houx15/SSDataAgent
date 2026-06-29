@@ -31,3 +31,10 @@ def test_direct_generation_is_not_agent():
 def test_unknown_condition_raises():
     with pytest.raises(KeyError):
         get_condition("nope")
+
+
+def test_baseline_conditions_registered():
+    for name in ("hotdeck", "cart", "copula"):
+        spec = get_condition(name)
+        assert spec.context_condition is Condition.FULL
+        assert spec.strategy == name

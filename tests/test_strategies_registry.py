@@ -1,6 +1,11 @@
 import pytest
 
 from ssdataagent.strategies.agent_strategy import AgentStrategy
+from ssdataagent.strategies.baselines import (
+    CartStrategy,
+    CopulaStrategy,
+    HotDeckStrategy,
+)
 from ssdataagent.strategies.direct_strategy import DirectGenerationStrategy
 from ssdataagent.strategies.registry import get_strategy
 
@@ -16,3 +21,9 @@ def test_get_strategy_returns_direct():
 def test_get_strategy_unknown_raises():
     with pytest.raises(KeyError):
         get_strategy("nope")
+
+
+def test_get_strategy_returns_baselines():
+    assert isinstance(get_strategy("hotdeck"), HotDeckStrategy)
+    assert isinstance(get_strategy("cart"), CartStrategy)
+    assert isinstance(get_strategy("copula"), CopulaStrategy)

@@ -24,6 +24,9 @@ CONDITIONS: dict[str, ConditionSpec] = {
     "direct_generation": ConditionSpec(
         "direct_generation", Condition.DIRECT, strategy="direct"
     ),
+    "hotdeck": ConditionSpec("hotdeck", Condition.FULL, strategy="hotdeck"),
+    "cart": ConditionSpec("cart", Condition.FULL, strategy="cart"),
+    "copula": ConditionSpec("copula", Condition.FULL, strategy="copula"),
 }
 
 
