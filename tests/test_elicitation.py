@@ -2,7 +2,6 @@ import json
 from pathlib import Path
 
 import numpy as np
-import pandas as pd
 
 from ssdataagent.data.schema import DatasetSchema
 from ssdataagent.strategies import elicitation as E
@@ -79,3 +78,21 @@ def test_malformed_json_falls_back_to_known(tmp_path):
         run_dir=tmp_path, cache_dir=tmp_path / "cache", max_retries=3,
     )
     assert np.allclose(out["N"]["vote"], [0.6, 0.4])        # fell back to known marginal
+
+
+def test_partial_parse_keeps_good_target(tmp_path):
+    s = toy_schema()
+    sup = {"vote": E.target_support(s, "vote"),
+           "income": E.target_support(s, "income", n_numeric_bins=4)}
+    kv = {"vote": np.array([0.6, 0.4]), "income": np.full(4, 0.25)}
+    # vote always parses (len-2 ok); income always wrong length (len-3 != 4 bins) -> bad every attempt
+    bad = json.dumps({"vote": [0.5, 0.5], "income": [0.3, 0.3, 0.4]})
+    client = FakeClient([bad, bad, bad, bad])
+    out = E.elicit_cell_distributions(
+        client, dataset="toy", condition="full_agent",
+        cell_descs={"N": {"region": "N"}}, schema=s,
+        targets=["vote", "income"], supports=sup, known_vectors=kv,
+        run_dir=tmp_path, cache_dir=tmp_path / "cache", max_retries=3,
+    )
+    assert np.allclose(out["N"]["vote"], [0.5, 0.5])   # good target kept its parsed value
+    assert np.allclose(out["N"]["income"], [0.25, 0.25, 0.25, 0.25])  # bad target fell back

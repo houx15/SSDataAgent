@@ -141,8 +141,6 @@ def elicit_cell_distributions(
                 parsed[t] = vec
             if ok:
                 break
-        else:
-            parsed = {}
         # fallback for any target not successfully parsed
         for t in targets:
             if t not in parsed:
