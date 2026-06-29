@@ -5,6 +5,7 @@ from pathlib import Path
 
 import numpy as np
 import pandas as pd
+from scipy.stats import norm
 from sklearn.neighbors import NearestNeighbors
 from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
@@ -181,4 +182,113 @@ class CartStrategy:
             generated=generated,
             meta_extras={"backend": "cart", "min_samples_leaf": 5,
                          "n_train_fit": len(train), "n_individuals": len(bg)},
+        )
+
+
+_EPS = 1e-6
+
+
+def _build_cuts(train, cols, schema) -> dict:
+    """Per-column inversion data. numeric -> sorted train values;
+    categorical -> (categories, cumulative upper edges)."""
+    cuts: dict[str, dict] = {}
+    n = len(train)
+    for c in cols:
+        if c in schema.numeric_ranges:
+            vals = pd.to_numeric(train[c], errors="coerce").dropna().to_numpy()
+            cuts[c] = {"kind": "num", "sorted": np.sort(vals)}
+        else:
+            cats = schema.allowed_values.get(c) or sorted(train[c].dropna().unique().tolist())
+            counts = train[c].value_counts()
+            probs = np.array([max(counts.get(v, 0), 0) for v in cats], dtype=float)
+            probs = probs / probs.sum() if probs.sum() > 0 else np.full(len(cats), 1.0 / len(cats))
+            cuts[c] = {"kind": "cat", "cats": list(cats), "cum": np.cumsum(probs)}
+    return cuts
+
+
+def _latent_value(col_cut, value) -> float:
+    if col_cut["kind"] == "num":
+        s = col_cut["sorted"]
+        if len(s) == 0 or pd.isna(value):
+            return 0.0
+        pos = int(np.searchsorted(s, float(value), side="right"))
+        u = min(max((pos - 0.5) / len(s), _EPS), 1 - _EPS)
+        return float(norm.ppf(u))
+    cats, cum = col_cut["cats"], col_cut["cum"]
+    if value not in cats:
+        return 0.0
+    i = cats.index(value)
+    lo = cum[i - 1] if i > 0 else 0.0
+    u = min(max((lo + cum[i]) / 2.0, _EPS), 1 - _EPS)
+    return float(norm.ppf(u))
+
+
+def _latent_matrix(df, cols, schema, cuts) -> np.ndarray:
+    out = np.zeros((len(df), len(cols)))
+    for j, c in enumerate(cols):
+        out[:, j] = [_latent_value(cuts[c], v) for v in df[c].tolist()]
+    return out
+
+
+def _invert(z_array, col, schema, col_cut) -> list:
+    u = np.clip(norm.cdf(z_array), _EPS, 1 - _EPS)
+    if col_cut["kind"] == "num":
+        s = col_cut["sorted"]
+        return list(np.quantile(s, u)) if len(s) else [0.0] * len(u)
+    cats, cum = col_cut["cats"], col_cut["cum"]
+    idx = np.searchsorted(cum, u, side="left")
+    idx = np.clip(idx, 0, len(cats) - 1)
+    return [cats[i] for i in idx]
+
+
+def _make_pd(M, reg) -> np.ndarray:
+    M = (M + M.T) / 2.0
+    M = M + reg * np.eye(M.shape[0])
+    w, V = np.linalg.eigh(M)
+    w = np.clip(w, reg, None)
+    return (V * w) @ V.T
+
+
+def copula_generate(train, background, schema, *, regularization=1e-6, seed=42) -> pd.DataFrame:
+    bg_vars = list(schema.background_variables)
+    targets = list(schema.target_variables)
+    cols = bg_vars + targets
+    cuts = _build_cuts(train, cols, schema)
+    Z = _latent_matrix(train, cols, schema, cuts)
+    Sigma = _make_pd(np.corrcoef(Z, rowvar=False), regularization)
+    bi = list(range(len(bg_vars)))
+    ti = list(range(len(bg_vars), len(cols)))
+    Sbb = Sigma[np.ix_(bi, bi)]
+    Stt = Sigma[np.ix_(ti, ti)]
+    Stb = Sigma[np.ix_(ti, bi)]
+    Sbb_inv = np.linalg.pinv(Sbb)
+    cond_cov = _make_pd(Stt - Stb @ Sbb_inv @ Stb.T, regularization)
+    L = np.linalg.cholesky(cond_cov)
+    Zb = _latent_matrix(background, bg_vars, schema, cuts)
+    mu = (Stb @ Sbb_inv @ Zb.T).T
+    rng = np.random.default_rng(seed)
+    eps = rng.standard_normal((len(background), len(ti))) @ L.T
+    Zt = mu + eps
+    out = background_frame(background, schema)
+    for j, t in enumerate(targets):
+        out[t] = _invert(Zt[:, j], t, schema, cuts[t])
+    return clip_decode(out, schema)
+
+
+class CopulaStrategy:
+    name = "copula"
+
+    def generate(self, gate: InfoGate, run_dir: Path, cfg) -> StrategyResult:
+        train = gate.fit_microdata()
+        if train is None:
+            raise ValueError("copula requires microdata; this condition exposes none")
+        schema = load_schema(gate.dataset_name)
+        bg = gate.background()
+        generated = copula_generate(train, bg, schema, seed=42)
+        Path(run_dir, "fit_summary.json").write_text(json.dumps(
+            {"backend": "copula", "regularization": 1e-6, "n_train_fit": len(train)}, indent=2))
+        return StrategyResult(
+            generated=generated,
+            meta_extras={"backend": "copula", "n_train_fit": len(train),
+                         "n_individuals": len(bg)},
         )
