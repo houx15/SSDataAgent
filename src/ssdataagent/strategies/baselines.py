@@ -1,9 +1,14 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
+from sklearn.neighbors import NearestNeighbors
 
-from ssdataagent.data.schema import DatasetSchema
+from ssdataagent.data.schema import DatasetSchema, load_schema
+from ssdataagent.strategies.base import InfoGate, StrategyResult
 
 
 def classify_columns(schema: DatasetSchema, columns) -> tuple[list[str], list[str]]:
@@ -72,3 +77,53 @@ def background_frame(background, schema) -> pd.DataFrame:
     if "profile_id" not in out.columns:
         out.insert(0, "profile_id", range(len(out)))
     return out
+
+
+def hotdeck_generate(train, background, schema, *, k=10, seed=42) -> pd.DataFrame:
+    """Generate targets for background rows via k-NN hot-deck imputation.
+
+    For each background row, find its k nearest neighbors in the training set
+    (by background variables), randomly pick one, and donate its targets.
+    Returns a DataFrame with background variables + all targets, clipped to range.
+    """
+    bg_vars = list(schema.background_variables)
+    targets = list(schema.target_variables)
+    Xtr, stats = encode_numeric(train, bg_vars, schema)
+    Xev, _ = encode_numeric(background, bg_vars, schema, stats=stats)
+    k_eff = max(1, min(k, len(train)))
+    nn = NearestNeighbors(n_neighbors=k_eff).fit(Xtr)
+    _, idx = nn.kneighbors(Xev)
+    rng = np.random.default_rng(seed)
+    pick = rng.integers(0, k_eff, size=len(Xev))
+    chosen = idx[np.arange(len(idx)), pick]
+    donor = train.iloc[chosen][targets].reset_index(drop=True)
+    out = background_frame(background, schema)
+    for c in targets:
+        out[c] = donor[c].to_numpy()
+    return clip_decode(out, schema)
+
+
+class HotDeckStrategy:
+    """Hot-deck / k-NN baseline: donor imputation by nearest background neighbors."""
+
+    name = "hotdeck"
+
+    def generate(self, gate: InfoGate, run_dir: Path, cfg) -> StrategyResult:
+        """Generate synthetic data using hot-deck imputation.
+
+        Raises ValueError if no microdata is available (fit_microdata() is None).
+        """
+        train = gate.fit_microdata()
+        if train is None:
+            raise ValueError("hotdeck requires microdata; this condition exposes none")
+        schema = load_schema(gate.dataset_name)
+        bg = gate.background()
+        generated = hotdeck_generate(train, bg, schema, k=10, seed=42)
+        Path(run_dir, "fit_summary.json").write_text(
+            json.dumps({"backend": "hotdeck", "k": 10, "n_train_fit": len(train)}, indent=2)
+        )
+        return StrategyResult(
+            generated=generated,
+            meta_extras={"backend": "hotdeck", "k": 10,
+                         "n_train_fit": len(train), "n_individuals": len(bg)},
+        )
