@@ -50,6 +50,9 @@ def test_agent_strategy_runs_orchestrator_and_logs(MockBuild, MockOrch, mock_log
     # log_run is called with the orchestrator result and the run_dir, no meta:
     _, kwargs = mock_log.call_args
     assert kwargs["run_dir"] == tmp_path
+    # FULL is not UNSEEN, so build_context must be told unseen_variables=None:
+    _, build_kwargs = MockBuild.call_args
+    assert build_kwargs["unseen_variables"] is None
 
 
 @patch("ssdataagent.strategies.agent_strategy.log_run")
