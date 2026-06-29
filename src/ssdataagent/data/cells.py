@@ -45,3 +45,23 @@ def assign(df, scheme: CellScheme) -> pd.Series:
             parts.append(df[v].astype(str).to_numpy())
     keys = ["|".join(t) for t in zip(*parts)] if parts else ["_"] * len(df)
     return pd.Series(keys, index=df.index)
+
+
+def describe_cell(scheme: CellScheme, key: str) -> dict[str, str]:
+    """Map a cell key back to human-readable demographic values: numeric vars
+    -> the bin's "[lo,hi)" range string; categorical vars -> their value."""
+    parts = key.split("|")
+    desc: dict[str, str] = {}
+    for v, p in zip(scheme.variables, parts):
+        if v in scheme.edges:
+            edges = scheme.edges[v]
+            try:
+                i = int(p)
+            except ValueError:
+                desc[v] = p
+                continue
+            i = max(0, min(i, len(edges) - 2))
+            desc[v] = f"[{edges[i]:.4g},{edges[i + 1]:.4g})"
+        else:
+            desc[v] = p
+    return desc

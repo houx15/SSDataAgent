@@ -23,21 +23,25 @@ def rake(cell_vectors, cell_weights, known_vec, *, max_iter: int = 50, tol: floa
     known_vec, preserving relative cross-cell differences. Per-cell vectors
     stay normalized."""
     known = np.asarray(known_vec, float)
-    cells = list(cell_vectors)
-    P = {c: np.asarray(cell_vectors[c], float).copy() for c in cells}
-    total_w = sum(cell_weights[c] for c in cells) or 1.0
-    w = {c: cell_weights[c] / total_w for c in cells}
+    keys = list(cell_vectors)
+    P = {c: np.asarray(cell_vectors[c], float).copy() for c in keys}
+    total_w = sum(cell_weights[c] for c in keys) or 1.0
+    w = {c: cell_weights[c] / total_w for c in keys}
     for _ in range(max_iter):
-        mix = sum(w[c] * P[c] for c in cells)
+        mix = sum(w[c] * P[c] for c in keys)
         if np.max(np.abs(mix - known)) < tol:
             break
         ratio = np.divide(known, mix, out=np.ones_like(known), where=mix > 0)
-        for c in cells:
+        for c in keys:
             v = P[c] * ratio
             s = v.sum()
             if s > 0:
                 P[c] = v / s
     return P
+
+
+def _copula_mode(ref, targets) -> str:
+    return "identity" if (ref is None or len(targets) < 2 or len(ref) < 2) else "data"
 
 
 def build_target_copula(ref, targets, schema, *, reg: float = 1e-6) -> np.ndarray:
@@ -106,7 +110,7 @@ class DesignBStrategy:
         unique_cells = sorted(set(eval_cell_keys))
         counts = pd.Series(eval_cell_keys).value_counts()
         cell_weights = {c: float(counts[c]) for c in unique_cells}
-        cell_descs = {c: dict(zip(scheme.variables, c.split("|"))) for c in unique_cells}
+        cell_descs = {c: cells.describe_cell(scheme, c) for c in unique_cells}
 
         # elicit per-cell vectors (cached + logged)
         cell_dists = E.elicit_cell_distributions(
@@ -137,7 +141,7 @@ class DesignBStrategy:
         Path(run_dir, "fit_summary.json").write_text(json.dumps(
             {"backend": "design_b", "condition": gate.condition.value,
              "n_cells": len(unique_cells), "n_targets": len(targets),
-             "copula": "identity" if (ref is None or len(targets) < 2) else "data"}, indent=2))
+             "copula": _copula_mode(ref, targets)}, indent=2))
         return StrategyResult(
             generated=generated,
             meta_extras={"backend": "design_b", "condition": gate.condition.value,

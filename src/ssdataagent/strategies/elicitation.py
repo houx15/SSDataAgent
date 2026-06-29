@@ -113,9 +113,12 @@ def elicit_cell_distributions(
         key = _cache_key(dataset, condition, model, cell_key, targets)
         cache_file = cache_dir / f"{key}.json"
         if cache_file.exists():
-            cached = json.loads(cache_file.read_text())
-            result[cell_key] = {t: np.array(cached[t], float) for t in targets}
-            continue
+            try:
+                cached = json.loads(cache_file.read_text())
+                result[cell_key] = {t: np.array(cached[t], float) for t in targets}
+                continue
+            except (json.JSONDecodeError, KeyError, ValueError):
+                pass  # corrupt/partial cache -> re-elicit below
 
         prompt = _build_prompt(dataset=dataset, cell_desc=cell_desc, schema=schema,
                                targets=targets, supports=supports,

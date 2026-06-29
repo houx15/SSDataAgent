@@ -46,3 +46,13 @@ def test_metric_still_works_after_refactor():
                         "vote": ["A"] * 40})
     res = overdetermination(real=real, sim=sim, schema=s, min_count=10)
     assert "cell_based" in res
+
+
+def test_describe_cell_maps_numeric_index_to_range():
+    s = toy_schema()
+    train = pd.DataFrame({"age": np.linspace(20, 80, 40), "region": ["N", "S"] * 20})
+    scheme = cells.fit_scheme(train, ["age", "region"], s, n_bins=4)
+    key = cells.assign(train, scheme).iloc[0]   # e.g. "0|N"
+    desc = cells.describe_cell(scheme, key)
+    assert desc["region"] in ("N", "S")          # categorical passthrough
+    assert desc["age"].startswith("[") and "," in desc["age"]   # numeric -> range, not a bare index
