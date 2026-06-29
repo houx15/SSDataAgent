@@ -22,7 +22,6 @@ def _discretize(values, edges):
 
 def _coarsen(real, sim, schema, n_demo_bins):
     """Return (real_cells, sim_cells): a string cell key per row."""
-    real_keys, sim_keys = [], []
     parts_real, parts_sim = [], []
     for v in schema.background_variables:
         if v in schema.numeric_ranges:
@@ -79,6 +78,9 @@ def _cell_based(real, sim, schema, n_target_bins, n_demo_bins, min_count):
         h_real, h_sim = num_r / denom, num_s / denom
         per_target[t] = {"h_real": h_real, "h_sim": h_sim, "gap": h_real - h_sim}
     coverage = float(real_cells.isin(kept).sum()) / len(real)
+    if not per_target:
+        return {"headline_gap": None, "coverage": coverage, "n_cells": len(kept),
+                "per_target": {}, "reason": "kept cells had no sim rows"}
     gaps = [v["gap"] for v in per_target.values()]
     headline = float(np.mean(gaps)) if gaps else None
     return {"headline_gap": headline, "coverage": coverage,
@@ -100,9 +102,12 @@ def _model_based(real, sim, schema, n_target_bins, seed):
             continue
         try:
             mr = HistGradientBoostingClassifier(random_state=seed).fit(Xr, yr)
-            ms = HistGradientBoostingClassifier(random_state=seed).fit(Xs, ys)
+            if len(np.unique(ys)) < 2:
+                h_sim = 0.0   # point mass: entropy of a degenerate distribution is 0 bits
+            else:
+                ms = HistGradientBoostingClassifier(random_state=seed).fit(Xs, ys)
+                h_sim = float(np.mean([entropy(p, base=2) for p in ms.predict_proba(Xs)]))
             h_real = float(np.mean([entropy(p, base=2) for p in mr.predict_proba(Xr)]))
-            h_sim = float(np.mean([entropy(p, base=2) for p in ms.predict_proba(Xs)]))
         except Exception:
             continue
         per_target[t] = {"h_real": h_real, "h_sim": h_sim, "gap": h_real - h_sim}
