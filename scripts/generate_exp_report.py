@@ -98,6 +98,25 @@ def _fmt(v) -> str:
     return str(v)
 
 
+def _overdetermination_section(cells: dict, datasets: list) -> str:
+    """Markdown table of the over-determination gap per dataset (cell-based
+    headline + coverage, and the model-based cross-check)."""
+    headers = ["Dataset", "gap (cell)", "coverage", "n_cells", "gap (model)"]
+    rows = []
+    for ds in datasets:
+        cell = cells.get(ds)
+        od = (cell or {}).get("overdetermination") if cell else None
+        if not od:
+            rows.append([ds, "—", "—", "—", "—"])
+            continue
+        cb = od.get("cell_based", {}) or {}
+        mb = od.get("model_based", {}) or {}
+        rows.append([ds, _fmt(cb.get("headline_gap")), _fmt(cb.get("coverage")),
+                     _fmt(cb.get("n_cells")), _fmt(mb.get("headline_gap"))])
+    return ("## Over-determination gap — `H_real − H_sim` (bits, higher = sim more collapsed)\n\n"
+            + _md_table(headers, rows))
+
+
 def _delta(a: float | None, b: float | None) -> str:
     if a is None or b is None or (isinstance(a, float) and a != a) or (isinstance(b, float) and b != b):
         return "—"
@@ -165,6 +184,10 @@ def main() -> int:
             row.append(_fmt(cell.get("overall_average")))
         rows.append(row)
     bits.append(_md_table(headers, rows))
+    bits.append("")
+
+    # Section 2b: Over-determination gap
+    bits.append(_overdetermination_section(cells, datasets))
     bits.append("")
 
     # Section 3: vs paper
