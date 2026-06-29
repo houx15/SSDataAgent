@@ -21,11 +21,11 @@ def test_condition_to_context_mapping():
     spec = get_condition("full_agent")
     assert isinstance(spec, ConditionSpec)
     assert spec.context_condition is Condition.FULL
-    assert spec.is_agent is True
+    assert spec.strategy == "agent"
 
 
 def test_direct_generation_is_not_agent():
-    assert get_condition("direct_generation").is_agent is False
+    assert get_condition("direct_generation").strategy == "direct"
 
 
 def test_unknown_condition_raises():

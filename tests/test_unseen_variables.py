@@ -31,7 +31,7 @@ def test_unseen_descriptions_present(tmp_path):
 def test_unseen_condition_is_registered():
     spec = get_condition("full_agent_unseen")
     assert spec.context_condition is Condition.UNSEEN
-    assert spec.is_agent is True
+    assert spec.strategy == "agent"
 
 
 def test_seen_unseen_split_partitions_correctly():

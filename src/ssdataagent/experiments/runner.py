@@ -6,16 +6,15 @@ import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 
-from ssdataagent.agent.context import Condition, build_context
 from ssdataagent.agent.llm_client import build_client
-from ssdataagent.agent.orchestrator import Orchestrator
 from ssdataagent.config import REPO_ROOT, load_llm_config, results_root
 from ssdataagent.data.loader import load_real_data
 from ssdataagent.data.splitter import split_train_eval
 from ssdataagent.data.schema import load_schema
 from ssdataagent.evaluation.runner import PassRates, by_domain, run_evaluation
 from ssdataagent.experiments.conditions import get_condition
-from ssdataagent.experiments.logger import log_run
+from ssdataagent.strategies.base import InfoGate
+from ssdataagent.strategies.registry import get_strategy
 
 
 @dataclass
@@ -154,57 +153,27 @@ def run_experiment(
 def _run_one_condition(
     *, spec, dataset, run_id, run_dir, workspace, train, eval_df, cfg, client, llm_cfg,
 ) -> PassRates:
-    if not spec.is_agent:
-        from ssdataagent.experiments.direct_generation import generate_direct
-        transcript: list[dict] = []
-        generated = generate_direct(
-            client=client, sampled=eval_df, dataset_name=dataset,
-            transcript_out=transcript,
-        )
-        prompts_lines = [
-            json.dumps({"row": e["row"], "role": "user", "content": e["prompt"]})
-            for e in transcript
-        ]
-        responses_lines = [
-            json.dumps({"row": e["row"], "role": "assistant", "content": e["response"]})
-            for e in transcript
-        ]
-        (run_dir / "prompts.jsonl").write_text(
-            "\n".join(prompts_lines) + ("\n" if prompts_lines else "")
-        )
-        (run_dir / "responses.jsonl").write_text(
-            "\n".join(responses_lines) + ("\n" if responses_lines else "")
-        )
-        meta = {
-            "experiment": cfg.name, "dataset": dataset, "condition": spec.name,
-            "run_id": run_id, "git_sha": _git_sha(), "model": llm_cfg.model,
-            "provider": llm_cfg.provider, "n_individuals": len(eval_df),
-        }
-        return _write_common(
-            run_dir=run_dir, meta=meta, generated=generated,
-            dataset=dataset, run_id=run_id, eval_df=eval_df,
-        )
-
-    unseen = cfg.unseen_variables.get(dataset, [])
-    ctx = build_context(
-        condition=spec.context_condition, dataset_name=dataset, train_df=train,
+    gate = InfoGate(
+        condition=spec.context_condition,
+        dataset_name=dataset,
         workspace=workspace,
-        unseen_variables=unseen if spec.context_condition is Condition.UNSEEN else None,
+        client=client,
+        train=train,
+        eval_rows=eval_df,
+        unseen_variables=tuple(cfg.unseen_variables.get(dataset, [])),
     )
-    orch = Orchestrator(
-        client=client, n_rows=cfg.n_rows, max_validation_iters=cfg.max_iterations,
-        sandbox_timeout=cfg.sandbox_timeout, prompt_variant=cfg.prompt_variant,
-    )
-    result = orch.run(
-        condition=spec.context_condition, dataset_name=dataset, workspace=workspace,
-        has_data=ctx.has_data, has_descriptions=ctx.has_descriptions,
-    )
-    log_run(result, run_dir=run_dir)
+    strategy = get_strategy(spec.strategy)
+    result = strategy.generate(gate, run_dir, cfg)
     meta = {
-        "experiment": cfg.name, "dataset": dataset, "condition": spec.name,
-        "run_id": run_id, "git_sha": _git_sha(), "model": llm_cfg.model,
-        "provider": llm_cfg.provider, "unseen_variables": unseen,
+        "experiment": cfg.name,
+        "dataset": dataset,
+        "condition": spec.name,
+        "run_id": run_id,
+        "git_sha": _git_sha(),
+        "model": llm_cfg.model,
+        "provider": llm_cfg.provider,
     }
+    meta.update(result.meta_extras)
     return _write_common(
         run_dir=run_dir, meta=meta, generated=result.generated,
         dataset=dataset, run_id=run_id, eval_df=eval_df,

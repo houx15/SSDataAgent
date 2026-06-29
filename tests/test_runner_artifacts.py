@@ -37,7 +37,7 @@ def _only_run_dir(cond_dir):
 @patch("ssdataagent.experiments.runner._git_sha", return_value="testsha")
 @patch("ssdataagent.experiments.runner.run_evaluation",
        return_value=PassRates(by_type={"type1": 0.5}, overall_average=0.5))
-@patch("ssdataagent.experiments.runner.Orchestrator")
+@patch("ssdataagent.strategies.agent_strategy.Orchestrator")
 @patch("ssdataagent.experiments.runner.build_client")
 @patch("ssdataagent.experiments.runner.load_llm_config")
 def test_agent_artifacts_are_stable(_cfg, _client, MockOrch, _eval, _sha, tmp_path):
@@ -73,11 +73,11 @@ def _fake_direct(*, client, sampled, dataset_name, transcript_out=None):
     return pd.DataFrame({"profile_id": [0], "gender": ["Male"]})
 
 
-@patch("ssdataagent.experiments.direct_generation.generate_direct", side_effect=_fake_direct)
+@patch("ssdataagent.strategies.direct_strategy.generate_direct", side_effect=_fake_direct)
 @patch("ssdataagent.experiments.runner._git_sha", return_value="testsha")
 @patch("ssdataagent.experiments.runner.run_evaluation",
        return_value=PassRates(by_type={"type1": 0.5}, overall_average=0.5))
-@patch("ssdataagent.experiments.runner.Orchestrator")
+@patch("ssdataagent.strategies.agent_strategy.Orchestrator")
 @patch("ssdataagent.experiments.runner.build_client")
 @patch("ssdataagent.experiments.runner.load_llm_config")
 def test_direct_artifacts_are_stable(_cfg, _client, MockOrch, _eval, _sha, _direct, tmp_path):

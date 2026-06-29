@@ -9,20 +9,20 @@ from ssdataagent.agent.context import Condition
 class ConditionSpec:
     name: str
     context_condition: Condition
-    is_agent: bool
+    strategy: str
 
 
 CONDITIONS: dict[str, ConditionSpec] = {
-    "full_agent": ConditionSpec("full_agent", Condition.FULL, is_agent=True),
+    "full_agent": ConditionSpec("full_agent", Condition.FULL, strategy="agent"),
     "agent_no_semantic": ConditionSpec(
-        "agent_no_semantic", Condition.NO_SEMANTIC, is_agent=True
+        "agent_no_semantic", Condition.NO_SEMANTIC, strategy="agent"
     ),
-    "agent_no_data": ConditionSpec("agent_no_data", Condition.NO_DATA, is_agent=True),
+    "agent_no_data": ConditionSpec("agent_no_data", Condition.NO_DATA, strategy="agent"),
     "full_agent_unseen": ConditionSpec(
-        "full_agent_unseen", Condition.UNSEEN, is_agent=True
+        "full_agent_unseen", Condition.UNSEEN, strategy="agent"
     ),
     "direct_generation": ConditionSpec(
-        "direct_generation", Condition.DIRECT, is_agent=False
+        "direct_generation", Condition.DIRECT, strategy="direct"
     ),
 }
 
