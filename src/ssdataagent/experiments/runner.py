@@ -6,11 +6,13 @@ import subprocess
 from dataclasses import dataclass, field
 from pathlib import Path
 
+from ssdataagent.agent.context import Condition
 from ssdataagent.agent.llm_client import build_client
 from ssdataagent.config import REPO_ROOT, load_llm_config, results_root
 from ssdataagent.data.loader import load_real_data
-from ssdataagent.data.splitter import split_train_eval
 from ssdataagent.data.schema import load_schema
+from ssdataagent.data.splitter import split_train_eval
+from ssdataagent.data.transfer import TRANSFER_PAIRS, compute_crosswalk, load_source_wave
 from ssdataagent.evaluation.overdetermination import overdetermination
 from ssdataagent.evaluation.runner import PassRates, by_domain, run_evaluation
 from ssdataagent.experiments.conditions import get_condition
@@ -168,15 +170,28 @@ def run_experiment(
 def _run_one_condition(
     *, spec, dataset, run_id, run_dir, workspace, train, eval_df, cfg, client, llm_cfg,
 ) -> PassRates:
-    gate = InfoGate(
-        condition=spec.context_condition,
-        dataset_name=dataset,
-        workspace=workspace,
-        client=client,
-        train=train,
-        eval_rows=eval_df,
-        unseen_variables=tuple(cfg.unseen_variables.get(dataset, [])),
-    )
+    if spec.context_condition is Condition.TRANSFER and dataset in TRANSFER_PAIRS:
+        source_name = TRANSFER_PAIRS[dataset]
+        source_df = load_source_wave(source_name)
+        crosswalk = compute_crosswalk(
+            load_schema(dataset), load_schema(source_name), source_df, eval_df,
+        )
+        gate = InfoGate(
+            condition=spec.context_condition, dataset_name=dataset, workspace=workspace,
+            client=client, train=train, eval_rows=eval_df,
+            unseen_variables=tuple(cfg.unseen_variables.get(dataset, [])),
+            source=source_df, source_name=source_name, crosswalk=tuple(crosswalk),
+        )
+    else:
+        gate = InfoGate(
+            condition=spec.context_condition,
+            dataset_name=dataset,
+            workspace=workspace,
+            client=client,
+            train=train,
+            eval_rows=eval_df,
+            unseen_variables=tuple(cfg.unseen_variables.get(dataset, [])),
+        )
     strategy = get_strategy(spec.strategy)
     result = strategy.generate(gate, run_dir, cfg)
     meta = {
