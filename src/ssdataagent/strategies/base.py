@@ -7,6 +7,8 @@ from typing import TYPE_CHECKING, Protocol, runtime_checkable
 import pandas as pd
 
 from ssdataagent.agent.context import Condition
+from ssdataagent.data.aggregates import associations, marginals
+from ssdataagent.data.schema import load_schema
 
 if TYPE_CHECKING:
     from ssdataagent.agent.llm_client import LLMClient
@@ -28,20 +30,47 @@ class InfoGate:
     train: pd.DataFrame
     eval_rows: pd.DataFrame
     unseen_variables: tuple[str, ...] = ()
+    source: pd.DataFrame | None = None
+    source_name: str | None = None
+    crosswalk: tuple[str, ...] = ()
 
     def background(self) -> pd.DataFrame:
         """Test/eval rows — always allowed."""
         return self.eval_rows
 
     def fit_microdata(self) -> pd.DataFrame | None:
-        """Train split when the condition permits microdata; None otherwise.
-
-        Mirrors agent.context.build_context's has_data gating exactly:
-        FULL / NO_SEMANTIC / UNSEEN expose data; NO_DATA / DIRECT do not.
-        """
+        """Microdata a strategy may fit on. Source (crosswalk cols) under
+        TRANSFER; train under FULL/NO_SEMANTIC/UNSEEN; None under NO_DATA/DIRECT."""
+        if self.condition is Condition.TRANSFER:
+            return None if self.source is None else self.source[list(self.crosswalk)]
         if self.condition in (Condition.FULL, Condition.NO_SEMANTIC, Condition.UNSEEN):
             return self.train
         return None
+
+    def _reference_microdata(self) -> pd.DataFrame | None:
+        """Frame the aggregates are computed from: source for TRANSFER, train for
+        FULL/NO_SEMANTIC/UNSEEN/NO_DATA, None for DIRECT."""
+        if self.condition is Condition.DIRECT:
+            return None
+        if self.condition is Condition.TRANSFER:
+            return None if self.source is None else self.source[list(self.crosswalk)]
+        return self.train
+
+    def known_marginals(self) -> dict | None:
+        ref = self._reference_microdata()
+        if ref is None:
+            return None
+        schema = load_schema(self.dataset_name)
+        targets = [t for t in schema.target_variables if t in ref.columns]
+        return marginals(ref, targets, schema)
+
+    def known_associations(self) -> dict | None:
+        ref = self._reference_microdata()
+        if ref is None:
+            return None
+        schema = load_schema(self.dataset_name)
+        targets = [t for t in schema.target_variables if t in ref.columns]
+        return associations(ref, targets, schema)
 
 
 @runtime_checkable

@@ -16,6 +16,7 @@ class Condition(str, Enum):
     NO_DATA = "agent_no_data"
     UNSEEN = "full_agent_unseen"
     DIRECT = "direct_generation"
+    TRANSFER = "transfer"
 
 
 @dataclass(frozen=True)
