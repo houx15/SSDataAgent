@@ -38,3 +38,11 @@ def test_baseline_conditions_registered():
         spec = get_condition(name)
         assert spec.context_condition is Condition.FULL
         assert spec.strategy == name
+
+
+def test_design_b_conditions_registered():
+    assert get_condition("design_b_full").context_condition is Condition.FULL
+    assert get_condition("design_b_aggregate").context_condition is Condition.NO_DATA
+    assert get_condition("design_b_transfer").context_condition is Condition.TRANSFER
+    for n in ("design_b_full", "design_b_aggregate", "design_b_transfer"):
+        assert get_condition(n).strategy == "design_b"

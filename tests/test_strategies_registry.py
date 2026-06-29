@@ -27,3 +27,8 @@ def test_get_strategy_returns_baselines():
     assert isinstance(get_strategy("hotdeck"), HotDeckStrategy)
     assert isinstance(get_strategy("cart"), CartStrategy)
     assert isinstance(get_strategy("copula"), CopulaStrategy)
+
+
+def test_get_strategy_returns_design_b():
+    from ssdataagent.strategies.design_b import DesignBStrategy
+    assert isinstance(get_strategy("design_b"), DesignBStrategy)
