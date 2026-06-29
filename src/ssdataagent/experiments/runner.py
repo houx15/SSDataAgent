@@ -11,6 +11,7 @@ from ssdataagent.config import REPO_ROOT, load_llm_config, results_root
 from ssdataagent.data.loader import load_real_data
 from ssdataagent.data.splitter import split_train_eval
 from ssdataagent.data.schema import load_schema
+from ssdataagent.evaluation.overdetermination import overdetermination
 from ssdataagent.evaluation.runner import PassRates, by_domain, run_evaluation
 from ssdataagent.experiments.conditions import get_condition
 from ssdataagent.strategies.base import InfoGate
@@ -65,11 +66,23 @@ def _write_common(
     rates = run_evaluation(
         dataset_name=dataset, run_id=run_id, generated=generated, sampled=eval_df,
     )
-    (run_dir / "eval.json").write_text(_serialize_rates(rates, dataset))
+    od = _safe_overdetermination(generated=generated, eval_df=eval_df, dataset=dataset)
+    (run_dir / "eval.json").write_text(_serialize_rates(rates, dataset, overdetermination=od))
     return rates
 
 
-def _serialize_rates(r: PassRates, dataset_name: str | None = None) -> str:
+def _safe_overdetermination(*, generated, eval_df, dataset) -> dict:
+    """Compute the over-determination block; never break the scoring tail."""
+    try:
+        return overdetermination(
+            real=eval_df, sim=generated, schema=load_schema(dataset),
+        )
+    except Exception as e:
+        return {"error": f"{type(e).__name__}: {e}"}
+
+
+def _serialize_rates(r: PassRates, dataset_name: str | None = None,
+                     *, overdetermination: dict | None = None) -> str:
     payload: dict = {
         "by_type": r.by_type,
         "by_variable": r.by_variable,
@@ -81,6 +94,8 @@ def _serialize_rates(r: PassRates, dataset_name: str | None = None) -> str:
             payload["by_domain"] = by_domain(r, load_schema(dataset_name))
         except Exception:
             pass
+    if overdetermination is not None:
+        payload["overdetermination"] = overdetermination
     return json.dumps(payload, indent=2)
 
 

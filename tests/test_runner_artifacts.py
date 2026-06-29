@@ -99,3 +99,30 @@ def test_direct_artifacts_are_stable(_cfg, _client, MockOrch, _eval, _sha, _dire
         json.dumps({"row": 0, "role": "user", "content": "P"}) + "\n"
     assert _read(run_dir, "responses.jsonl") == \
         json.dumps({"row": 0, "role": "assistant", "content": "R"}) + "\n"
+
+
+def _fake_overdet(*, real, sim, schema, **kw):
+    return {"cell_based": {"headline_gap": 0.42, "coverage": 1.0, "n_cells": 1,
+                           "per_target": {}}, "model_based": {"headline_gap": None,
+                           "per_target": {}}}
+
+
+@patch("ssdataagent.experiments.runner.overdetermination", side_effect=_fake_overdet)
+@patch("ssdataagent.experiments.runner._git_sha", return_value="testsha")
+@patch("ssdataagent.experiments.runner.run_evaluation",
+       return_value=PassRates(by_type={"type1": 0.5}, overall_average=0.5))
+@patch("ssdataagent.strategies.agent_strategy.Orchestrator")
+@patch("ssdataagent.experiments.runner.build_client")
+@patch("ssdataagent.experiments.runner.load_llm_config")
+def test_eval_json_has_overdetermination(_cfg, _client, MockOrch, _eval, _sha, _od, tmp_path):
+    _cfg.return_value = MagicMock(model="m1", provider="p1")
+    MockOrch.return_value.run.return_value = _agent_run_result()
+    cfg = ExperimentConfig(
+        name="charexp", datasets=["gss"], conditions=["full_agent"],
+        max_iterations=1, sandbox_timeout=10, train_eval_split=0.5,
+        n_rows=10, results_root=tmp_path,
+    )
+    run_experiment(cfg)
+    run_dir = _only_run_dir(tmp_path / "charexp" / "full_agent" / "gss")
+    blob = json.loads(_read(run_dir, "eval.json"))
+    assert blob["overdetermination"]["cell_based"]["headline_gap"] == 0.42
