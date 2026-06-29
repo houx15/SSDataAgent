@@ -31,6 +31,16 @@ def test_marginals_categorical_normalizes_over_allowed():
     assert abs(sum(probs.values()) - 1.0) < 1e-9
 
 
+def test_marginals_categorical_sums_to_one_with_out_of_domain_value():
+    s = toy_schema()
+    df = pd.DataFrame({"vote": ["A", "B", "Z"]})  # 'Z' not in allowed_values ["A","B","C"]
+    m = marginals(df, ["vote"], s)
+    probs = m["vote"]["probs"]
+    assert set(probs) == {"A", "B", "C"}            # only allowed cats
+    assert abs(sum(probs.values()) - 1.0) < 1e-9     # normalized over in-domain count
+    assert "Z" not in probs
+
+
 def test_marginals_numeric_quantiles_and_moments():
     s = toy_schema()
     df = pd.DataFrame({"income": [0.0, 50.0, 100.0, 150.0, 200.0]})

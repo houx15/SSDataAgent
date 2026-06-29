@@ -48,7 +48,7 @@ class InfoGate:
         return None
 
     def _reference_microdata(self) -> pd.DataFrame | None:
-        """Frame the aggregates are computed from: source for TRANSFER, train for
+        """source restricted to crosswalk columns for TRANSFER, train for
         FULL/NO_SEMANTIC/UNSEEN/NO_DATA, None for DIRECT."""
         if self.condition is Condition.DIRECT:
             return None

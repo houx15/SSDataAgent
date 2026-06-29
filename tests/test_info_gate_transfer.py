@@ -56,6 +56,8 @@ def test_known_marginals_and_associations_sources(_ls):
     g = _gate(Condition.TRANSFER, source=src, crosswalk=("age", "region", "vote"))
     km = g.known_marginals()
     assert "vote" in km and "income" not in km   # only crosswalk targets
+    ka = g.known_associations()
+    assert ka is not None and "income" not in ka   # non-crosswalk target absent from associations too
 
 
 @patch("ssdataagent.strategies.base.load_schema", side_effect=lambda n: toy_schema())

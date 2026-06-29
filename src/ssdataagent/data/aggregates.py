@@ -14,7 +14,7 @@ def _is_numeric(schema: DatasetSchema, col: str) -> bool:
 def marginals(df: pd.DataFrame, variables, schema: DatasetSchema, *, n_bins: int = 10) -> dict:
     """Univariate marginal per variable.
     Categorical -> {"kind": "categorical", "probs": {value: prob}} over allowed_values
-      (missing categories at 0.0; normalized over non-null rows).
+      (missing categories at 0.0; normalized over in-domain (allowed) non-null rows).
     Numeric -> {"kind": "numeric", "quantiles": {q: value}, "mean": float, "std": float}."""
     out: dict[str, dict] = {}
     for v in variables:
@@ -33,7 +33,7 @@ def marginals(df: pd.DataFrame, variables, schema: DatasetSchema, *, n_bins: int
         else:
             cats = schema.allowed_values.get(v) or sorted(col.unique().tolist())
             counts = col.value_counts()
-            total = float(counts.sum()) or 1.0
+            total = float(sum(counts.get(c, 0) for c in cats)) or 1.0
             out[v] = {"kind": "categorical",
                       "probs": {str(c): float(counts.get(c, 0)) / total for c in cats}}
     return out
