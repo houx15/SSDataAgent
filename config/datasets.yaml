@@ -17,6 +17,22 @@ datasets:
     ssdatabench_sim_subdir: acs_1980
     evaluation_script: scripts/evaluation/acs_1980.py
     type: cross-sectional
+  # Transfer sources (Part 3a) — earlier waves, loaded as condition-B source
+  # microdata only; never scored. Reuse the target wave's ssdatabench_yaml since
+  # GSS/CPS variable names are stable across waves (verified: gss1994 shares ~25
+  # vars with gss2018; cps-asec1970 shares all 12 with cps1980).
+  gss1994:
+    real_data_path: real_data/gss/gss1994.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/gss2018.yaml
+    ssdatabench_sim_subdir: gss_2018
+    evaluation_script: scripts/evaluation/gss_2018.py
+    type: cross-sectional
+  cps1970:
+    real_data_path: real_data/cps/cps-asec1970.csv
+    ssdatabench_yaml: ssdatabench/real_data/data_configs/cps1980.yaml
+    ssdatabench_sim_subdir: cps_1980
+    evaluation_script: scripts/evaluation/cps_1980.py
+    type: cross-sectional
   # Longitudinal panels (added 2026-05-03 to extend coverage to T4/T5).
   # Sequential per-age columns (income_14..65 etc.) are filtered by the schema
   # loader because SSDataBench's T1-T5 only references static aggregates.
