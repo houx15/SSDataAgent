@@ -11,6 +11,12 @@ from sklearn.tree import DecisionTreeClassifier, DecisionTreeRegressor
 
 from ssdataagent.data.schema import DatasetSchema, load_schema
 from ssdataagent.strategies.base import InfoGate, StrategyResult
+from ssdataagent.strategies.copula import (
+    build_cuts as _build_cuts,
+    invert as _invert,
+    latent_matrix as _latent_matrix,
+    make_pd as _make_pd,
+)
 
 
 def classify_columns(schema: DatasetSchema, columns) -> tuple[list[str], list[str]]:
@@ -183,69 +189,6 @@ class CartStrategy:
             meta_extras={"backend": "cart", "min_samples_leaf": 5,
                          "n_train_fit": len(train), "n_individuals": len(bg)},
         )
-
-
-_EPS = 1e-6
-
-
-def _build_cuts(train, cols, schema) -> dict:
-    """Per-column inversion data. numeric -> sorted train values;
-    categorical -> (categories, cumulative upper edges)."""
-    cuts: dict[str, dict] = {}
-    for c in cols:
-        if c in schema.numeric_ranges:
-            vals = pd.to_numeric(train[c], errors="coerce").dropna().to_numpy()
-            cuts[c] = {"kind": "num", "sorted": np.sort(vals)}
-        else:
-            cats = schema.allowed_values.get(c) or sorted(train[c].dropna().unique().tolist())
-            counts = train[c].value_counts()
-            probs = np.array([max(counts.get(v, 0), 0) for v in cats], dtype=float)
-            probs = probs / probs.sum() if probs.sum() > 0 else np.full(len(cats), 1.0 / len(cats))
-            cuts[c] = {"kind": "cat", "cats": list(cats), "cum": np.cumsum(probs)}
-    return cuts
-
-
-def _latent_value(col_cut, value) -> float:
-    if col_cut["kind"] == "num":
-        s = col_cut["sorted"]
-        if len(s) == 0 or pd.isna(value):
-            return 0.0
-        pos = int(np.searchsorted(s, float(value), side="right"))
-        u = min(max((pos - 0.5) / len(s), _EPS), 1 - _EPS)
-        return float(norm.ppf(u))
-    cats, cum = col_cut["cats"], col_cut["cum"]
-    if value not in cats:
-        return 0.0
-    i = cats.index(value)
-    lo = cum[i - 1] if i > 0 else 0.0
-    u = min(max((lo + cum[i]) / 2.0, _EPS), 1 - _EPS)
-    return float(norm.ppf(u))
-
-
-def _latent_matrix(df, cols, cuts) -> np.ndarray:
-    out = np.zeros((len(df), len(cols)))
-    for j, c in enumerate(cols):
-        out[:, j] = [_latent_value(cuts[c], v) for v in df[c].tolist()]
-    return out
-
-
-def _invert(z_array, col_cut) -> list:
-    u = np.clip(norm.cdf(z_array), _EPS, 1 - _EPS)
-    if col_cut["kind"] == "num":
-        s = col_cut["sorted"]
-        return list(np.quantile(s, u)) if len(s) else [0.0] * len(u)
-    cats, cum = col_cut["cats"], col_cut["cum"]
-    idx = np.searchsorted(cum, u, side="left")
-    idx = np.clip(idx, 0, len(cats) - 1)
-    return [cats[i] for i in idx]
-
-
-def _make_pd(M, reg) -> np.ndarray:
-    M = (M + M.T) / 2.0
-    M = M + reg * np.eye(M.shape[0])
-    w, V = np.linalg.eigh(M)
-    w = np.clip(w, reg, None)
-    return (V * w) @ V.T
 
 
 def copula_generate(train, background, schema, *, regularization=1e-6, seed=42) -> pd.DataFrame:
