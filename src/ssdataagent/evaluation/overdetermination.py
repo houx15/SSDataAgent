@@ -5,35 +5,21 @@ import pandas as pd
 from scipy.stats import entropy
 
 from ssdataagent.data.schema import DatasetSchema
+from ssdataagent.data import cells
 from ssdataagent.strategies.baselines import ordinal_encode
 
 
 def _bin_edges(real_vals, n_bins):
-    qs = np.linspace(0, 1, n_bins + 1)
-    edges = np.unique(np.quantile(pd.to_numeric(real_vals, errors="coerce").dropna(), qs))
-    if len(edges) < 2:
-        edges = np.array([edges.min() - 1e-9, edges.max() + 1e-9]) if len(edges) else np.array([0.0, 1.0])
-    return edges
+    return cells.bin_edges(real_vals, n_bins)
 
 
 def _discretize(values, edges):
-    return np.clip(np.digitize(pd.to_numeric(values, errors="coerce").to_numpy(), edges[1:-1]), 0, len(edges) - 2)
+    return cells.discretize(values, edges)
 
 
 def _coarsen(real, sim, schema, n_demo_bins):
-    """Return (real_cells, sim_cells): a string cell key per row."""
-    parts_real, parts_sim = [], []
-    for v in schema.background_variables:
-        if v in schema.numeric_ranges:
-            edges = _bin_edges(real[v], n_demo_bins)
-            parts_real.append(_discretize(real[v], edges).astype(str))
-            parts_sim.append(_discretize(sim[v], edges).astype(str))
-        else:
-            parts_real.append(real[v].astype(str).to_numpy())
-            parts_sim.append(sim[v].astype(str).to_numpy())
-    real_keys = ["|".join(t) for t in zip(*parts_real)] if parts_real else ["_"] * len(real)
-    sim_keys = ["|".join(t) for t in zip(*parts_sim)] if parts_sim else ["_"] * len(sim)
-    return np.array(real_keys), np.array(sim_keys)
+    scheme = cells.fit_scheme(real, schema.background_variables, schema, n_bins=n_demo_bins)
+    return cells.assign(real, scheme).to_numpy(), cells.assign(sim, scheme).to_numpy()
 
 
 def _target_series(df, t, schema, edges_map):
