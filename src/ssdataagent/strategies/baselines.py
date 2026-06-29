@@ -192,7 +192,6 @@ def _build_cuts(train, cols, schema) -> dict:
     """Per-column inversion data. numeric -> sorted train values;
     categorical -> (categories, cumulative upper edges)."""
     cuts: dict[str, dict] = {}
-    n = len(train)
     for c in cols:
         if c in schema.numeric_ranges:
             vals = pd.to_numeric(train[c], errors="coerce").dropna().to_numpy()
@@ -223,14 +222,14 @@ def _latent_value(col_cut, value) -> float:
     return float(norm.ppf(u))
 
 
-def _latent_matrix(df, cols, schema, cuts) -> np.ndarray:
+def _latent_matrix(df, cols, cuts) -> np.ndarray:
     out = np.zeros((len(df), len(cols)))
     for j, c in enumerate(cols):
         out[:, j] = [_latent_value(cuts[c], v) for v in df[c].tolist()]
     return out
 
 
-def _invert(z_array, col, schema, col_cut) -> list:
+def _invert(z_array, col_cut) -> list:
     u = np.clip(norm.cdf(z_array), _EPS, 1 - _EPS)
     if col_cut["kind"] == "num":
         s = col_cut["sorted"]
@@ -254,7 +253,7 @@ def copula_generate(train, background, schema, *, regularization=1e-6, seed=42) 
     targets = list(schema.target_variables)
     cols = bg_vars + targets
     cuts = _build_cuts(train, cols, schema)
-    Z = _latent_matrix(train, cols, schema, cuts)
+    Z = _latent_matrix(train, cols, cuts)
     Sigma = _make_pd(np.corrcoef(Z, rowvar=False), regularization)
     bi = list(range(len(bg_vars)))
     ti = list(range(len(bg_vars), len(cols)))
@@ -264,14 +263,14 @@ def copula_generate(train, background, schema, *, regularization=1e-6, seed=42) 
     Sbb_inv = np.linalg.pinv(Sbb)
     cond_cov = _make_pd(Stt - Stb @ Sbb_inv @ Stb.T, regularization)
     L = np.linalg.cholesky(cond_cov)
-    Zb = _latent_matrix(background, bg_vars, schema, cuts)
+    Zb = _latent_matrix(background, bg_vars, cuts)
     mu = (Stb @ Sbb_inv @ Zb.T).T
     rng = np.random.default_rng(seed)
     eps = rng.standard_normal((len(background), len(ti))) @ L.T
     Zt = mu + eps
     out = background_frame(background, schema)
     for j, t in enumerate(targets):
-        out[t] = _invert(Zt[:, j], t, schema, cuts[t])
+        out[t] = _invert(Zt[:, j], cuts[t])
     return clip_decode(out, schema)
 
 

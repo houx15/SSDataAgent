@@ -62,9 +62,19 @@ def test_misaligned_backgrounds_report_reason():
     real = pd.DataFrame({"region": ["N"] * 10, "vote": ["A", "B"] * 5})
     sim = pd.DataFrame({"region": ["S"] * 10, "vote": ["A"] * 10})
     res = overdetermination(real=real, sim=sim, schema=s, min_count=1)
-    # backgrounds differ -> cell-based still computes per-cell, but alignment
-    # guard records a warning; ensure it does not raise and returns a dict
+    # same shape/columns but divergent background VALUES: the cell-based stage handles
+    # this via its per-cell logic (no kept cell has sim rows -> reason), it does not raise
     assert isinstance(res, dict) and "cell_based" in res
+
+
+def test_length_mismatch_reports_reason():
+    s = cat_schema()
+    real = pd.DataFrame({"region": ["N"] * 10, "vote": ["A", "B"] * 5})
+    sim = pd.DataFrame({"region": ["N"] * 8, "vote": ["A"] * 8})
+    res = overdetermination(real=real, sim=sim, schema=s, min_count=1)
+    assert res["cell_based"]["headline_gap"] is None
+    assert "mismatch" in res["cell_based"]["reason"]
+    assert "mismatch" in res["model_based"]["reason"]
 
 
 def test_model_based_present_and_directional():

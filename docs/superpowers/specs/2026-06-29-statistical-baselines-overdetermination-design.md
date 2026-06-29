@@ -187,9 +187,14 @@ each eval row's background**. No new dependency.
 
 ## §3 — Over-determination metric (`overdetermination.py`)
 
-Computed locally on `generated.csv` (sim targets) vs. the real eval rows,
-aligned **positionally** (same background rows, same order — asserted by
-comparing the background columns). Not via SSDataBench.
+Computed locally on `generated.csv` (sim targets) vs. the real eval rows. Not
+via SSDataBench. Both frames describe the **same background population** (sim is
+generated over the eval backgrounds), so the metric is **permutation-invariant**:
+each stage bins each frame independently and compares within matching demographic
+cells — row order does not matter. A lightweight **sanity guard** runs first
+(equal length + the background columns present in both); on violation the metric
+returns the standard two-stage shape with a `reason` instead of computing,
+never raising.
 
 ```python
 def overdetermination(
@@ -286,8 +291,9 @@ Fast local loop, mocked nothing (baselines and metric are pure compute).
 - `tests/test_overdetermination.py` — hand-built small frames with known
   entropies → assert exact `gap` per target; collapsed sim (constant target
   within cell) gives a positive gap; numerical-target binning uses real edges;
-  coverage + `n_cells` reported; positional-alignment guard; both variants;
-  degenerate inputs return `null` reason, not an exception.
+  coverage + `n_cells` reported; divergent-background values handled (no kept
+  cell has sim rows → reason); the length/column sanity guard reports a reason;
+  both variants; degenerate inputs return `null` reason, not an exception.
 - `tests/test_strategies_registry.py` — extend: `get_strategy` returns each new
   class; unknown still raises.
 - `tests/test_conditions.py` — extend: the three specs map to the right
@@ -333,5 +339,7 @@ optional, non-blocking confidence check.
   non-degenerate output variance.
 - **Metric breaking the scoring tail.** Mitigated by wrapping the metric so any
   failure yields a `null` block + logged reason, never an exception.
-- **Positional misalignment** between `generated` and `eval_df`. Mitigated by an
-  assertion comparing background columns before computing the gap.
+- **Background mismatch** between `generated` and `eval_df`. The metric is
+  permutation-invariant (bins each frame independently, compares within matching
+  cells), so row order is irrelevant. A length/column sanity guard runs first and
+  returns a `reason` rather than computing on mismatched frames.

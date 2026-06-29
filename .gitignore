@@ -128,3 +128,6 @@ ssdatabench/evaluation_results/agent_*/
 # manually (see docs/experiments/CLOUD_SETUP.md).
 real_data/
 
+
+# Local backup of the git dir (never commit)
+.git.backup/

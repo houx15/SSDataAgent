@@ -122,6 +122,15 @@ def overdetermination(*, real: pd.DataFrame, sim: pd.DataFrame, schema: DatasetS
     """gap = H_real(target | demographics) - H_sim(target | demographics), in bits.
     Positive gap => sim is over-determined (collapsed within-group variance).
     Never raises: a failing stage returns a dict with a 'reason' instead."""
+    # Background-alignment guard: real and sim must describe the same background population
+    missing = [c for c in schema.background_variables if c not in real.columns or c not in sim.columns]
+    if len(real) != len(sim) or missing:
+        detail = (f"len(real)={len(real)} != len(sim)={len(sim)}" if len(real) != len(sim)
+                  else f"missing background columns: {missing}")
+        reason = f"real/sim background mismatch: {detail}"
+        return {"cell_based": {"headline_gap": None, "coverage": 0.0, "n_cells": 0,
+                               "per_target": {}, "reason": reason},
+                "model_based": {"headline_gap": None, "per_target": {}, "reason": reason}}
     try:
         cell = _cell_based(real, sim, schema, n_target_bins, n_demo_bins, min_count)
     except Exception as e:
