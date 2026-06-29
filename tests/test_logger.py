@@ -27,19 +27,18 @@ def _fake_run_result():
 
 def test_log_run_writes_expected_files(tmp_path):
     run_dir = tmp_path / "experiments" / "exp1" / "full_agent" / "gss" / "20260429-120000"
-    log_run(_fake_run_result(), run_dir=run_dir, meta={"git_sha": "abc", "model": "m"})
-    assert (run_dir / "meta.json").exists()
+    log_run(_fake_run_result(), run_dir=run_dir)
     assert (run_dir / "prompts.jsonl").exists()
     assert (run_dir / "responses.jsonl").exists()
     assert (run_dir / "code" / "step_001.py").exists()
     assert (run_dir / "code" / "step_001.stdout").exists()
-    assert (run_dir / "generated.csv").exists()
-    meta = json.loads((run_dir / "meta.json").read_text())
-    assert meta["git_sha"] == "abc"
+    # meta.json and generated.csv are now written by the runner, not log_run:
+    assert not (run_dir / "meta.json").exists()
+    assert not (run_dir / "generated.csv").exists()
 
 
 def test_log_run_handles_empty_results(tmp_path):
     run_dir = tmp_path / "empty"
     empty = RunResult(generated=pd.DataFrame(), transcript=[], code_steps=[], sandbox_results=[])
-    log_run(empty, run_dir=run_dir, meta={})
+    log_run(empty, run_dir=run_dir)
     assert run_dir.exists()

@@ -52,6 +52,24 @@ def _git_sha() -> str:
         return "unknown"
 
 
+def _write_common(
+    *,
+    run_dir: Path,
+    meta: dict,
+    generated,
+    dataset: str,
+    run_id: str,
+    eval_df,
+) -> PassRates:
+    (run_dir / "meta.json").write_text(json.dumps(meta, indent=2, default=str))
+    generated.to_csv(run_dir / "generated.csv", index=False)
+    rates = run_evaluation(
+        dataset_name=dataset, run_id=run_id, generated=generated, sampled=eval_df,
+    )
+    (run_dir / "eval.json").write_text(_serialize_rates(rates, dataset))
+    return rates
+
+
 def _serialize_rates(r: PassRates, dataset_name: str | None = None) -> str:
     payload: dict = {
         "by_type": r.by_type,
@@ -140,22 +158,9 @@ def _run_one_condition(
         from ssdataagent.experiments.direct_generation import generate_direct
         transcript: list[dict] = []
         generated = generate_direct(
-            client=client,
-            sampled=eval_df,
-            dataset_name=dataset,
+            client=client, sampled=eval_df, dataset_name=dataset,
             transcript_out=transcript,
         )
-        meta = {
-            "experiment": cfg.name,
-            "dataset": dataset,
-            "condition": spec.name,
-            "run_id": run_id,
-            "git_sha": _git_sha(),
-            "model": llm_cfg.model,
-            "provider": llm_cfg.provider,
-            "n_individuals": len(eval_df),
-        }
-        (run_dir / "meta.json").write_text(json.dumps(meta, indent=2, default=str))
         prompts_lines = [
             json.dumps({"row": e["row"], "role": "user", "content": e["prompt"]})
             for e in transcript
@@ -170,58 +175,37 @@ def _run_one_condition(
         (run_dir / "responses.jsonl").write_text(
             "\n".join(responses_lines) + ("\n" if responses_lines else "")
         )
-        generated.to_csv(run_dir / "generated.csv", index=False)
-        rates = run_evaluation(
-            dataset_name=dataset,
-            run_id=run_id,
-            generated=generated,
-            sampled=eval_df,
+        meta = {
+            "experiment": cfg.name, "dataset": dataset, "condition": spec.name,
+            "run_id": run_id, "git_sha": _git_sha(), "model": llm_cfg.model,
+            "provider": llm_cfg.provider, "n_individuals": len(eval_df),
+        }
+        return _write_common(
+            run_dir=run_dir, meta=meta, generated=generated,
+            dataset=dataset, run_id=run_id, eval_df=eval_df,
         )
-        (run_dir / "eval.json").write_text(_serialize_rates(rates, dataset))
-        return rates
 
     unseen = cfg.unseen_variables.get(dataset, [])
     ctx = build_context(
-        condition=spec.context_condition,
-        dataset_name=dataset,
-        train_df=train,
+        condition=spec.context_condition, dataset_name=dataset, train_df=train,
         workspace=workspace,
         unseen_variables=unseen if spec.context_condition is Condition.UNSEEN else None,
     )
     orch = Orchestrator(
-        client=client,
-        n_rows=cfg.n_rows,
-        max_validation_iters=cfg.max_iterations,
-        sandbox_timeout=cfg.sandbox_timeout,
-        prompt_variant=cfg.prompt_variant,
+        client=client, n_rows=cfg.n_rows, max_validation_iters=cfg.max_iterations,
+        sandbox_timeout=cfg.sandbox_timeout, prompt_variant=cfg.prompt_variant,
     )
     result = orch.run(
-        condition=spec.context_condition,
-        dataset_name=dataset,
-        workspace=workspace,
-        has_data=ctx.has_data,
-        has_descriptions=ctx.has_descriptions,
+        condition=spec.context_condition, dataset_name=dataset, workspace=workspace,
+        has_data=ctx.has_data, has_descriptions=ctx.has_descriptions,
     )
-    log_run(
-        result,
-        run_dir=run_dir,
-        meta={
-            "experiment": cfg.name,
-            "dataset": dataset,
-            "condition": spec.name,
-            "run_id": run_id,
-            "git_sha": _git_sha(),
-            "model": llm_cfg.model,
-            "provider": llm_cfg.provider,
-            "unseen_variables": unseen,
-        },
+    log_run(result, run_dir=run_dir)
+    meta = {
+        "experiment": cfg.name, "dataset": dataset, "condition": spec.name,
+        "run_id": run_id, "git_sha": _git_sha(), "model": llm_cfg.model,
+        "provider": llm_cfg.provider, "unseen_variables": unseen,
+    }
+    return _write_common(
+        run_dir=run_dir, meta=meta, generated=result.generated,
+        dataset=dataset, run_id=run_id, eval_df=eval_df,
     )
-
-    rates = run_evaluation(
-        dataset_name=dataset,
-        run_id=run_id,
-        generated=result.generated,
-        sampled=eval_df,
-    )
-    (run_dir / "eval.json").write_text(_serialize_rates(rates, dataset))
-    return rates
