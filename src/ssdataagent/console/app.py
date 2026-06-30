@@ -10,7 +10,7 @@ from pydantic import BaseModel
 
 from ssdataagent.config import REPO_ROOT, results_root as default_results_root
 from ssdataagent.console import compare as _compare
-from ssdataagent.console import db, forking, leaderboard, queue as _q, sync
+from ssdataagent.console import db, forking, leaderboard, notebook as _notebook, queue as _q, sync
 from ssdataagent import reports as _reports
 
 
@@ -30,6 +30,15 @@ class ReportRequest(BaseModel):
     condition: str = "full_agent"
     baseline: str | None = None
     format: str = "md"
+
+
+class NotebookEntry(BaseModel):
+    hypothesis: str = ""
+    change: str = ""
+    result: str = ""
+    interpretation: str = ""
+    next: str = ""
+    linked_experiments: list[str] = []
 
 
 def create_app(
@@ -149,6 +158,18 @@ def create_app(
             paper_baselines=REPO_ROOT / "config" / "paper_baselines.json")
         content = _reports.render_html_report(md) if req.format == "html" else md
         return {"format": req.format, "content": content}
+
+    @app.get("/api/notebook")
+    def get_notebook():
+        return {"entries": _notebook.list_entries(conn)}
+
+    @app.post("/api/notebook")
+    def post_notebook(req: NotebookEntry):
+        ledger = REPO_ROOT / "docs" / "experiments" / "LEDGER.md"
+        return _notebook.create_entry(
+            conn, hypothesis=req.hypothesis, change=req.change, result=req.result,
+            interpretation=req.interpretation, next=req.next,
+            linked_experiments=req.linked_experiments, ledger_path=ledger)
 
     return app
 
