@@ -67,3 +67,36 @@ def test_sync_is_idempotent_and_disk_wins(tmp_path: Path):
     sync.sync_index(conn, root)   # second pass: no duplicate rows
     assert conn.execute("SELECT COUNT(*) FROM experiments").fetchone()[0] == 1
     assert conn.execute("SELECT COUNT(*) FROM runs").fetchone()[0] == 1
+
+
+def test_sync_protects_console_row_until_flag_appears(tmp_path: Path):
+    root = tmp_path / "results"
+    conn = db.connect(db.default_db_path(root))
+
+    # Insert a console-owned row directly
+    conn.execute(
+        "INSERT INTO experiments(name, status, source) VALUES ('exp_live','queued','console')"
+    )
+    conn.commit()
+
+    # Create experiment dir on disk WITHOUT any flag
+    (root / "exp_live").mkdir(parents=True)
+
+    # First sync: row should be PROTECTED
+    sync.sync_index(conn, root)
+    row = conn.execute("SELECT status, source FROM experiments WHERE name = 'exp_live'").fetchone()
+    assert row["status"] == "queued", "Console-owned row status should remain unchanged"
+    assert row["source"] == "console", "Console-owned row source should remain unchanged"
+
+    # Now write a terminating flag
+    _write(root / "exp_live" / "done.flag", {
+        "experiment": "exp_live", "finished_at": "2026-06-30T10:00:00",
+        "prompt_variant": "baseline", "llm_model": "gpt-5.4",
+        "llm_provider": "openai", "n_dataset_condition_cells": 1,
+    })
+
+    # Second sync: row should be RECONCILED
+    sync.sync_index(conn, root)
+    row = conn.execute("SELECT status, source FROM experiments WHERE name = 'exp_live'").fetchone()
+    assert row["status"] == "done", "Console-owned row should reconcile to disk state after flag"
+    assert row["source"] == "disk", "Console-owned row source should update to disk after flag"
