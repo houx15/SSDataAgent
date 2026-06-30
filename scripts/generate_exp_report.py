@@ -95,6 +95,10 @@ def _md_table(headers, rows) -> str:
     return reports._md_table(headers, rows)
 
 
+def _overdetermination_section(cells: dict, datasets: list) -> str:
+    return reports._overdetermination_section(cells, datasets)
+
+
 def main() -> int:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("experiment")
