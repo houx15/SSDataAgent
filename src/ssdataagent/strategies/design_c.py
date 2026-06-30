@@ -48,3 +48,41 @@ def encode_to_codes(donors, targets, supports) -> dict[str, np.ndarray]:
             idx = np.searchsorted(edges[1:-1], vals, side="right")
             codes[t] = np.clip(idx, 0, len(edges) - 2).astype(int)
     return codes
+
+
+def repair_weights(neighbor_idx, donor_codes, goal_vectors, supports, targets,
+                   *, max_iter: int = 50, tol: float = 1e-6) -> np.ndarray:
+    """Global non-negative donor weights, raked so each eval row's
+    candidate-weighted target marginal matches goal_vectors[t]. Each IPF pass,
+    for every target/bin, scale the weight of donors coded to that bin by
+    q_t(bin)/m_t(bin); renormalize for scale stability. Approximate IPF (per-row
+    normalization couples the bins), so iterate. Returns (n_donor,) weights."""
+    if not targets:
+        return np.ones(0, dtype=float)
+    n_donor = len(donor_codes[targets[0]])
+    w = np.ones(n_donor, dtype=float)
+    if neighbor_idx.size == 0 or n_donor == 0:
+        return w
+    n_eval = neighbor_idx.shape[0]
+    for _ in range(max_iter):
+        max_gap = 0.0
+        for t in targets:
+            q = np.asarray(goal_vectors[t], float)
+            n_bins = len(q)
+            codes_t = donor_codes[t]
+            cand_codes = codes_t[neighbor_idx]
+            cand_w = w[neighbor_idx]
+            row_sum = cand_w.sum(axis=1, keepdims=True)
+            row_sum = np.where(row_sum > 0, row_sum, 1.0)
+            sel = cand_w / row_sum
+            m = np.bincount(cand_codes.ravel(), weights=sel.ravel(),
+                            minlength=n_bins)[:n_bins] / n_eval
+            max_gap = max(max_gap, float(np.max(np.abs(m - q))))
+            ratio = np.divide(q, m, out=np.ones_like(q), where=m > 0)
+            w = w * ratio[codes_t]
+        s = w.sum()
+        if s > 0:
+            w = w * (n_donor / s)
+        if max_gap < tol:
+            break
+    return w
