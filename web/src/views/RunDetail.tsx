@@ -2,29 +2,47 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { api } from "../api";
 
-export function RunDetail() {
-  const { name } = useParams<{ name: string }>();
-  const [detail, setDetail] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+interface RunArtifacts {
+  [key: string]: string;
+}
 
-  useEffect(() => {
-    if (!name) return;
-    api
-      .runDetail(name)
-      .then(setDetail)
-      .catch((e: unknown) => setError(String(e)))
-      .finally(() => setLoading(false));
-  }, [name]);
+interface RunEval {
+  by_type?: Record<string, number>;
+  overall_average?: number;
+  overdetermination?: Record<string, unknown>;
+}
 
-  if (loading) return <p>Loading…</p>;
-  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
-  if (!detail) return <p>Not found.</p>;
+interface RunEntry {
+  condition: string;
+  dataset: string;
+  run_id?: string;
+  eval?: RunEval;
+  meta?: Record<string, unknown>;
+  artifacts: RunArtifacts;
+}
 
+interface ExperimentInfo {
+  name: string;
+  status?: string;
+  model?: string;
+}
+
+export interface RunDetail {
+  experiment: ExperimentInfo;
+  runs: RunEntry[];
+}
+
+export function RunDetailView({ detail }: { detail: RunDetail }) {
   return (
     <div>
-      <h2>Experiment: {detail.experiment}</h2>
-      {Array.isArray(detail.runs) && detail.runs.map((run: any, i: number) => (
+      <h2>Experiment: <span>{detail.experiment.name}</span></h2>
+      {detail.experiment.status && (
+        <p>
+          Status: {detail.experiment.status}
+          {detail.experiment.model ? ` · Model: ${detail.experiment.model}` : ""}
+        </p>
+      )}
+      {Array.isArray(detail.runs) && detail.runs.map((run, i) => (
         <div
           key={i}
           style={{ border: "1px solid #ccc", margin: "8px 0", padding: "12px", borderRadius: "4px" }}
@@ -49,19 +67,42 @@ export function RunDetail() {
               </pre>
             </details>
           )}
-          {run.run_dir && (
+          {run.artifacts && Object.keys(run.artifacts).length > 0 && (
             <div style={{ marginTop: "8px" }}>
-              <strong>Artifacts: </strong>
-              <code>{run.run_dir}</code>
-              {Array.isArray(run.artifacts) && run.artifacts.map((a: string, j: number) => (
-                <span key={j} style={{ marginLeft: "8px" }}>
-                  <a href={`file://${run.run_dir}/${a}`} target="_blank" rel="noreferrer">{a}</a>
-                </span>
-              ))}
+              <strong>Artifacts:</strong>
+              <ul style={{ margin: "4px 0", paddingLeft: "20px" }}>
+                {Object.entries(run.artifacts).map(([key, path]) => (
+                  <li key={key}>
+                    {key}: <code>{path}</code>
+                  </li>
+                ))}
+              </ul>
             </div>
           )}
         </div>
       ))}
     </div>
   );
+}
+
+export function RunDetail() {
+  const { name } = useParams<{ name: string }>();
+  const [detail, setDetail] = useState<RunDetail | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!name) return;
+    api
+      .runDetail(name)
+      .then(setDetail)
+      .catch((e: unknown) => setError(String(e)))
+      .finally(() => setLoading(false));
+  }, [name]);
+
+  if (loading) return <p>Loading…</p>;
+  if (error) return <p style={{ color: "red" }}>Error: {error}</p>;
+  if (!detail) return <p>Not found.</p>;
+
+  return <RunDetailView detail={detail} />;
 }

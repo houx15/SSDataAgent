@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
@@ -54,45 +55,48 @@ def create_app(
     app = FastAPI(title="SSDataAgent console")
     app.state.results_root = root
     app.state.conn = conn
+    app.state.db_lock = threading.Lock()
 
     @app.get("/api/leaderboard")
     def get_leaderboard(condition: str | None = None,
                         dataset: str | None = None,
                         model: str | None = None):
-        sync.sync_index(conn, root)
-        q = ("SELECT r.*, e.model AS model FROM runs r "
-             "JOIN experiments e ON e.name = r.experiment WHERE 1=1")
-        params: list = []
-        if condition:
-            q += " AND r.condition = ?"; params.append(condition)
-        if dataset:
-            q += " AND r.dataset = ?"; params.append(dataset)
-        if model:
-            q += " AND e.model = ?"; params.append(model)
-        records = [dict(row) for row in conn.execute(q, params).fetchall()]
-        return {"rows": leaderboard.build_rows(records)}
+        with app.state.db_lock:
+            sync.sync_index(conn, root)
+            q = ("SELECT r.*, e.model AS model FROM runs r "
+                 "JOIN experiments e ON e.name = r.experiment WHERE 1=1")
+            params: list = []
+            if condition:
+                q += " AND r.condition = ?"; params.append(condition)
+            if dataset:
+                q += " AND r.dataset = ?"; params.append(dataset)
+            if model:
+                q += " AND e.model = ?"; params.append(model)
+            records = [dict(row) for row in conn.execute(q, params).fetchall()]
+            return {"rows": leaderboard.build_rows(records)}
 
     @app.get("/api/runs/{name}/detail")
     def get_run_detail(name: str):
-        sync.sync_index(conn, root)
-        erow = conn.execute(
-            "SELECT * FROM experiments WHERE name=?", (name,)
-        ).fetchone()
-        if erow is None:
-            raise HTTPException(status_code=404, detail=f"unknown experiment {name!r}")
-        runs = []
-        for r in conn.execute("SELECT * FROM runs WHERE experiment=?", (name,)):
-            run_dir = Path(r["run_dir"])
-            runs.append({
-                "condition": r["condition"],
-                "dataset": r["dataset"],
-                "run_id": r["run_id"],
-                "run_dir": r["run_dir"],
-                "eval": _read_json(run_dir / "eval.json"),
-                "meta": _read_json(run_dir / "meta.json"),
-                "artifacts": _artifacts(run_dir, root),
-            })
-        return {"experiment": dict(erow), "runs": runs}
+        with app.state.db_lock:
+            sync.sync_index(conn, root)
+            erow = conn.execute(
+                "SELECT * FROM experiments WHERE name=?", (name,)
+            ).fetchone()
+            if erow is None:
+                raise HTTPException(status_code=404, detail=f"unknown experiment {name!r}")
+            runs = []
+            for r in conn.execute("SELECT * FROM runs WHERE experiment=?", (name,)):
+                run_dir = Path(r["run_dir"])
+                runs.append({
+                    "condition": r["condition"],
+                    "dataset": r["dataset"],
+                    "run_id": r["run_id"],
+                    "run_dir": r["run_dir"],
+                    "eval": _read_json(run_dir / "eval.json"),
+                    "meta": _read_json(run_dir / "meta.json"),
+                    "artifacts": _artifacts(run_dir, root),
+                })
+            return {"experiment": dict(erow), "runs": runs}
 
     # --- Launcher routes ---
     _experiments_yaml = experiments_yaml if experiments_yaml is not None else REPO_ROOT / "config" / "experiments.yaml"
@@ -100,7 +104,7 @@ def create_app(
     if job_queue is not None:
         app.state.job_queue = job_queue
     else:
-        app.state.job_queue = _q.JobQueue(conn, root, concurrency=1)
+        app.state.job_queue = _q.JobQueue(db.connect(db.default_db_path(root)), root, concurrency=1)
         app.state.job_queue.start()
 
     @app.post("/api/runs")
@@ -125,9 +129,10 @@ def create_app(
 
     @app.get("/api/runs")
     def list_runs():
-        sync.sync_index(conn, root)
-        rows = [dict(r) for r in conn.execute("SELECT * FROM experiments")]
-        return {"experiments": rows}
+        with app.state.db_lock:
+            sync.sync_index(conn, root)
+            rows = [dict(r) for r in conn.execute("SELECT * FROM experiments")]
+            return {"experiments": rows}
 
     @app.post("/api/runs/{name}/cancel")
     def cancel_run(name: str):
@@ -162,15 +167,17 @@ def create_app(
 
     @app.get("/api/notebook")
     def get_notebook():
-        return {"entries": _notebook.list_entries(conn)}
+        with app.state.db_lock:
+            return {"entries": _notebook.list_entries(conn)}
 
     @app.post("/api/notebook")
     def post_notebook(req: NotebookEntry):
         ledger = REPO_ROOT / "docs" / "experiments" / "LEDGER.md"
-        return _notebook.create_entry(
-            conn, hypothesis=req.hypothesis, change=req.change, result=req.result,
-            interpretation=req.interpretation, next=req.next,
-            linked_experiments=req.linked_experiments, ledger_path=ledger)
+        with app.state.db_lock:
+            return _notebook.create_entry(
+                conn, hypothesis=req.hypothesis, change=req.change, result=req.result,
+                interpretation=req.interpretation, next=req.next,
+                linked_experiments=req.linked_experiments, ledger_path=ledger)
 
     web_dist = REPO_ROOT / "web" / "dist"
     if web_dist.exists():
