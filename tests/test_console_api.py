@@ -90,3 +90,12 @@ def test_post_runs_enqueues_named_experiment(tmp_path, results):
     assert any(e["name"] == "exp_new" and e["status"] == "done" for e in listing)
     log = client.get("/api/runs/exp_new/log").json()["log"]
     assert "hello from run" in log
+
+
+def test_compare_endpoint_returns_matrix(client: TestClient):
+    r = client.post("/api/compare", json={"selectors": [
+        {"experiment": "exp_a", "condition": "full_agent", "dataset": "gss"}]})
+    assert r.status_code == 200
+    body = r.json()
+    assert body["types"] == ["type1"]
+    assert body["matrix"][0] == [0.6]

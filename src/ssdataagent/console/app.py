@@ -9,6 +9,7 @@ from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 
 from ssdataagent.config import REPO_ROOT, results_root as default_results_root
+from ssdataagent.console import compare as _compare
 from ssdataagent.console import db, forking, leaderboard, queue as _q, sync
 
 
@@ -17,6 +18,10 @@ class RunRequest(BaseModel):
     fork_from: str | None = None
     new_name: str | None = None
     overrides: dict = {}
+
+
+class CompareRequest(BaseModel):
+    selectors: list[dict]
 
 
 def create_app(
@@ -117,6 +122,15 @@ def create_app(
             return {"log": ""}
         lines = log_path.read_text(errors="replace").splitlines()
         return {"log": "\n".join(lines[-tail:])}
+
+    def _latest_eval(sel: dict) -> dict | None:
+        cond_dir = root / sel["experiment"] / sel["condition"] / sel["dataset"]
+        cands = sorted(cond_dir.glob("*/eval.json"))
+        return _read_json(cands[-1]) if cands else None
+
+    @app.post("/api/compare")
+    def post_compare(req: CompareRequest):
+        return _compare.build_matrix(req.selectors, _latest_eval)
 
     return app
 
