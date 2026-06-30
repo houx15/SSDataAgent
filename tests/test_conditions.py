@@ -55,3 +55,14 @@ def test_design_c_conditions():
     assert get_condition("design_c_full").strategy == "design_c"
     assert get_condition("design_c_transfer").context_condition is Condition.TRANSFER
     assert get_condition("design_c_aggregate").context_condition is Condition.NO_DATA
+
+
+def test_design_a_conditions():
+    from ssdataagent.agent.context import Condition
+    from ssdataagent.experiments.conditions import get_condition
+    assert get_condition("design_a_full").context_condition is Condition.FULL
+    assert get_condition("design_a_full").strategy == "design_a"
+    assert get_condition("design_a_transfer").context_condition is Condition.TRANSFER
+    assert get_condition("design_a_transfer").strategy == "design_a"
+    assert get_condition("design_a_aggregate").context_condition is Condition.NO_DATA
+    assert get_condition("design_a_aggregate").strategy == "design_a"
