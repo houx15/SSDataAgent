@@ -205,3 +205,68 @@ def sample_from_known(support, known_vec, n, rng):
     edges = np.asarray(support["edges"], float)
     lo, hi = edges[idx], edges[idx + 1]
     return lo + rng.random(n) * (hi - lo)
+
+
+class DesignAStrategy:
+    name = "design_a"
+
+    def generate(self, gate: InfoGate, run_dir: Path, cfg) -> StrategyResult:
+        schema = load_schema(gate.dataset_name)
+        bg = gate.background()
+        train = gate.fit_microdata()           # train (A) / source[crosswalk] (B) / None (C)
+        known_m = gate.known_marginals() or {}
+
+        targets = [t for t in schema.target_variables if t in known_m]
+        if not targets:
+            return StrategyResult(generated=background_frame(bg, schema),
+                                  meta_extras={"backend": "design_a", "n_targets": 0,
+                                               "n_individuals": len(bg)})
+
+        supports = {t: E.target_support(schema, t, n_numeric_bins=_N_NUMERIC_BINS) for t in targets}
+        backgrounds = list(schema.background_variables)
+        struct = elicit_structure(
+            gate.client, dataset=gate.dataset_name, condition=gate.condition.value,
+            schema=schema, targets=targets, backgrounds=backgrounds, run_dir=run_dir,
+            cache_dir=Path(getattr(cfg, "results_root", run_dir)) / "_structure_cache",
+            transport=(gate.condition is Condition.TRANSFER),
+        )
+
+        rng = np.random.default_rng(_SEED)
+        sampled = background_frame(bg, schema)
+        node_types: dict[str, str] = {}
+        is_transfer = gate.condition is Condition.TRANSFER
+        for t in struct.order:
+            if t not in supports:
+                continue
+            sup = supports[t]
+            is_num = sup["kind"] == "num"
+            node_types[t] = "numeric" if is_num else "categorical"
+            if train is None:                                   # condition C
+                vals = sample_from_known(sup, E.known_vector(known_m.get(t), sup), len(bg), rng)
+            else:
+                parents = [p for p in struct.parents.get(t, [])
+                           if p in train.columns and p in sampled.columns]
+                X_train, stats = _design_matrix(train, parents, schema)
+                X_eval, _ = _design_matrix(sampled, parents, schema, stats=stats)
+                offset = float(struct.offsets.get(t, 0.0)) if (is_transfer and is_num) else 0.0
+                if is_num:
+                    y = pd.to_numeric(train[t], errors="coerce").fillna(0.0).to_numpy()
+                    model = fit_numeric_node(X_train, y, struct.prior_scale.get(t, 1.0))
+                else:
+                    model = fit_categorical_node(X_train, train[t].astype(str).to_numpy(),
+                                                 struct.prior_scale.get(t, 1.0), sup["support"])
+                vals = sample_node(model, X_eval, sup, offset=offset, rng=rng)
+            sampled[t] = vals
+        generated = clip_decode(sampled, schema)
+
+        Path(run_dir, "fit_summary.json").write_text(json.dumps(
+            {"backend": "design_a", "condition": gate.condition.value,
+             "order": struct.order, "parents": struct.parents, "node_types": node_types,
+             "n_train_fit": (0 if train is None else len(train)),
+             "calibrated": train is None, "transport": is_transfer}, indent=2))
+        return StrategyResult(
+            generated=generated,
+            meta_extras={"backend": "design_a", "condition": gate.condition.value,
+                         "n_targets": len(targets), "calibrated": train is None,
+                         "transport": is_transfer, "n_individuals": len(bg)},
+        )
