@@ -57,6 +57,8 @@ def test_run_detail_exposes_eval_and_artifacts(client: TestClient):
     assert run["meta"]["git_sha"] == "abc"
     assert "generated_csv" in run["artifacts"]
     assert "prompts_jsonl" in run["artifacts"]
+    assert run["artifacts"]["generated_csv"] == "exp_a/full_agent/gss/20260630-100000/generated.csv"
+    assert not run["artifacts"]["generated_csv"].startswith("/")
 
 
 def test_run_detail_unknown_is_404(client: TestClient):

@@ -54,7 +54,7 @@ def create_app(results_root: Path | None = None) -> FastAPI:
                 "run_dir": r["run_dir"],
                 "eval": _read_json(run_dir / "eval.json"),
                 "meta": _read_json(run_dir / "meta.json"),
-                "artifacts": _artifacts(run_dir),
+                "artifacts": _artifacts(run_dir, root),
             })
         return {"experiment": dict(erow), "runs": runs}
 
@@ -68,12 +68,12 @@ def _read_json(path: Path) -> dict | None:
         return None
 
 
-def _artifacts(run_dir: Path) -> dict[str, str]:
+def _artifacts(run_dir: Path, root: Path) -> dict[str, str]:
     out: dict[str, str] = {}
     for key, rel in [("generated_csv", "generated.csv"),
                      ("prompts_jsonl", "prompts.jsonl"),
                      ("responses_jsonl", "responses.jsonl"),
                      ("workspace_dir", "workspace")]:
         if (run_dir / rel).exists():
-            out[key] = (run_dir / rel).as_posix()
+            out[key] = (run_dir / rel).relative_to(root).as_posix()
     return out
