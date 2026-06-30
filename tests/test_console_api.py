@@ -74,10 +74,9 @@ def test_post_runs_enqueues_named_experiment(tmp_path, results):
         log_path.write_text("hello from run\n")
         return 0
 
-    app = create_app(results_root=results)
-    # Inject a queue using the app's own connection.
-    jq = queue.JobQueue(app.state.conn, results, concurrency=1, runner=fake_runner)
-    app.state.job_queue = jq
+    conn = db.connect(db.default_db_path(results))
+    jq = queue.JobQueue(conn, results, concurrency=1, runner=fake_runner)
+    app = create_app(results_root=results, job_queue=jq)
     jq.start()
     client = TestClient(app)
 

@@ -19,7 +19,12 @@ class RunRequest(BaseModel):
     overrides: dict = {}
 
 
-def create_app(results_root: Path | None = None) -> FastAPI:
+def create_app(
+    results_root: Path | None = None,
+    *,
+    job_queue=None,
+    experiments_yaml: Path | None = None,
+) -> FastAPI:
     root = Path(results_root) if results_root else default_results_root()
     conn = db.connect(db.default_db_path(root))
 
@@ -67,9 +72,11 @@ def create_app(results_root: Path | None = None) -> FastAPI:
         return {"experiment": dict(erow), "runs": runs}
 
     # --- Launcher routes ---
-    experiments_yaml = REPO_ROOT / "config" / "experiments.yaml"
+    _experiments_yaml = experiments_yaml if experiments_yaml is not None else REPO_ROOT / "config" / "experiments.yaml"
 
-    if not hasattr(app.state, "job_queue"):
+    if job_queue is not None:
+        app.state.job_queue = job_queue
+    else:
         app.state.job_queue = _q.JobQueue(conn, root, concurrency=1)
         app.state.job_queue.start()
 
@@ -79,7 +86,7 @@ def create_app(results_root: Path | None = None) -> FastAPI:
             if not req.new_name:
                 raise HTTPException(400, "new_name required when forking")
             try:
-                forking.fork_experiment(experiments_yaml, req.fork_from,
+                forking.fork_experiment(_experiments_yaml, req.fork_from,
                                         req.new_name, req.overrides)
             except KeyError as e:
                 raise HTTPException(400, str(e))
