@@ -84,45 +84,47 @@ class JobQueue:
         return False
 
     def wait_idle(self, timeout: float = 10.0) -> None:
-        import time
-        deadline = time.monotonic() + timeout
-        while time.monotonic() < deadline:
-            with self._lock:
-                busy = bool(self._running)
-            if self._q.empty() and not busy:
-                return
-            time.sleep(0.02)
+        done = threading.Event()
+
+        def _waiter() -> None:
+            self._q.join()
+            done.set()
+
+        t = threading.Thread(target=_waiter, daemon=True)
+        t.start()
+        done.wait(timeout=timeout)
 
     def _worker(self) -> None:
         while not self._stop.is_set():
             item = self._q.get()
-            if item is _SENTINEL:
-                self._q.task_done()
-                return
-            name = item
-            self._set_status(name, "running")
-            log_path = self._root / name / "run.log"
-            code = 1
             try:
-                if self._runner is _default_runner:
-                    log_path.parent.mkdir(parents=True, exist_ok=True)
-                    with log_path.open("w") as log:
-                        proc = subprocess.Popen(
-                            [sys.executable,
-                             str(REPO_ROOT / "scripts" / "run_experiment.py"),
-                             "--experiment", name],
-                            stdout=log, stderr=subprocess.STDOUT,
-                            cwd=str(REPO_ROOT),
-                        )
-                        with self._lock:
-                            self._running[name] = proc
-                        code = proc.wait()
-                else:
-                    code = self._runner(name, log_path)
-            except Exception:
+                if item is _SENTINEL:
+                    return
+                name = item
+                self._set_status(name, "running")
+                log_path = self._root / name / "run.log"
                 code = 1
+                try:
+                    if self._runner is _default_runner:
+                        log_path.parent.mkdir(parents=True, exist_ok=True)
+                        with log_path.open("w") as log:
+                            proc = subprocess.Popen(
+                                [sys.executable,
+                                 str(REPO_ROOT / "scripts" / "run_experiment.py"),
+                                 "--experiment", name],
+                                stdout=log, stderr=subprocess.STDOUT,
+                                cwd=str(REPO_ROOT),
+                            )
+                            with self._lock:
+                                self._running[name] = proc
+                            code = proc.wait()
+                    else:
+                        code = self._runner(name, log_path)
+                except Exception:
+                    code = 1
+                finally:
+                    with self._lock:
+                        self._running.pop(name, None)
+                self._set_status(name, "done" if code == 0 else "failed")
             finally:
-                with self._lock:
-                    self._running.pop(name, None)
-            self._set_status(name, "done" if code == 0 else "failed")
-            self._q.task_done()
+                self._q.task_done()
