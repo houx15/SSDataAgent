@@ -5,6 +5,7 @@ from __future__ import annotations
 import datetime as dt
 import json
 import sqlite3
+from pathlib import Path
 
 
 def create_entry(conn: sqlite3.Connection, *, hypothesis: str, change: str,
@@ -36,13 +37,12 @@ def create_entry(conn: sqlite3.Connection, *, hypothesis: str, change: str,
 
 
 def _append_ledger(ledger_path, linked: list[str], hypothesis: str, headline: str) -> None:
-    from pathlib import Path
     date = dt.date.today().isoformat()
-    exp_field = " + ".join(f"`{n}`" for n in linked) if linked else "—"
+    exp_field = " + ".join(f"`{n}`" for n in linked) if linked else ""
     row = f"| {date} | {exp_field} | — | — | {hypothesis} | {headline} | — |\n"
     p = Path(ledger_path)
-    existing = p.read_text() if p.exists() else ""
-    p.write_text(existing + row)
+    existing = p.read_text(encoding="utf-8") if p.exists() else ""
+    p.write_text(existing + row, encoding="utf-8")
 
 
 def _mirror_to_notion(notion_token: str | None):
