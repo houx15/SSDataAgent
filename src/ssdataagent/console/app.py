@@ -6,9 +6,17 @@ import json
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from pydantic import BaseModel
 
-from ssdataagent.config import results_root as default_results_root
-from ssdataagent.console import db, leaderboard, sync
+from ssdataagent.config import REPO_ROOT, results_root as default_results_root
+from ssdataagent.console import db, forking, leaderboard, queue as _q, sync
+
+
+class RunRequest(BaseModel):
+    name: str | None = None
+    fork_from: str | None = None
+    new_name: str | None = None
+    overrides: dict = {}
 
 
 def create_app(results_root: Path | None = None) -> FastAPI:
@@ -57,6 +65,51 @@ def create_app(results_root: Path | None = None) -> FastAPI:
                 "artifacts": _artifacts(run_dir, root),
             })
         return {"experiment": dict(erow), "runs": runs}
+
+    # --- Launcher routes ---
+    experiments_yaml = REPO_ROOT / "config" / "experiments.yaml"
+
+    if not hasattr(app.state, "job_queue"):
+        app.state.job_queue = _q.JobQueue(conn, root, concurrency=1)
+        app.state.job_queue.start()
+
+    @app.post("/api/runs")
+    def post_run(req: RunRequest):
+        if req.fork_from:
+            if not req.new_name:
+                raise HTTPException(400, "new_name required when forking")
+            try:
+                forking.fork_experiment(experiments_yaml, req.fork_from,
+                                        req.new_name, req.overrides)
+            except KeyError as e:
+                raise HTTPException(400, str(e))
+            except ValueError as e:
+                raise HTTPException(409, str(e))
+            target = req.new_name
+        elif req.name:
+            target = req.name
+        else:
+            raise HTTPException(400, "name or fork_from required")
+        app.state.job_queue.enqueue(target)
+        return {"enqueued": target}
+
+    @app.get("/api/runs")
+    def list_runs():
+        sync.sync_index(conn, root)
+        rows = [dict(r) for r in conn.execute("SELECT * FROM experiments")]
+        return {"experiments": rows}
+
+    @app.post("/api/runs/{name}/cancel")
+    def cancel_run(name: str):
+        return {"cancelled": app.state.job_queue.cancel(name)}
+
+    @app.get("/api/runs/{name}/log")
+    def get_log(name: str, tail: int = 200):
+        log_path = root / name / "run.log"
+        if not log_path.exists():
+            return {"log": ""}
+        lines = log_path.read_text(errors="replace").splitlines()
+        return {"log": "\n".join(lines[-tail:])}
 
     return app
 

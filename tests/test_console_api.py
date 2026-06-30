@@ -63,3 +63,31 @@ def test_run_detail_exposes_eval_and_artifacts(client: TestClient):
 
 def test_run_detail_unknown_is_404(client: TestClient):
     assert client.get("/api/runs/nope/detail").status_code == 404
+
+
+def test_post_runs_enqueues_named_experiment(tmp_path, results):
+    from ssdataagent.console import db, queue
+    from ssdataagent.console.app import create_app
+
+    def fake_runner(name, log_path):
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        log_path.write_text("hello from run\n")
+        return 0
+
+    app = create_app(results_root=results)
+    # Inject a queue using the app's own connection.
+    jq = queue.JobQueue(app.state.conn, results, concurrency=1, runner=fake_runner)
+    app.state.job_queue = jq
+    jq.start()
+    client = TestClient(app)
+
+    r = client.post("/api/runs", json={"name": "exp_new"})
+    assert r.status_code == 200
+    assert r.json()["enqueued"] == "exp_new"
+    jq.wait_idle(timeout=5)
+    jq.stop()
+
+    listing = client.get("/api/runs").json()["experiments"]
+    assert any(e["name"] == "exp_new" and e["status"] == "done" for e in listing)
+    log = client.get("/api/runs/exp_new/log").json()["log"]
+    assert "hello from run" in log
