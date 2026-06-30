@@ -30,6 +30,9 @@ CONDITIONS: dict[str, ConditionSpec] = {
     "design_b_full": ConditionSpec("design_b_full", Condition.FULL, strategy="design_b"),
     "design_b_aggregate": ConditionSpec("design_b_aggregate", Condition.NO_DATA, strategy="design_b"),
     "design_b_transfer": ConditionSpec("design_b_transfer", Condition.TRANSFER, strategy="design_b"),
+    "design_c_full": ConditionSpec("design_c_full", Condition.FULL, strategy="design_c"),
+    "design_c_aggregate": ConditionSpec("design_c_aggregate", Condition.NO_DATA, strategy="design_c"),
+    "design_c_transfer": ConditionSpec("design_c_transfer", Condition.TRANSFER, strategy="design_c"),
 }
 
 

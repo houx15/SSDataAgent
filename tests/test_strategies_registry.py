@@ -32,3 +32,9 @@ def test_get_strategy_returns_baselines():
 def test_get_strategy_returns_design_b():
     from ssdataagent.strategies.design_b import DesignBStrategy
     assert isinstance(get_strategy("design_b"), DesignBStrategy)
+
+
+def test_design_c_registered():
+    from ssdataagent.strategies.registry import get_strategy
+    s = get_strategy("design_c")
+    assert s.name == "design_c"
