@@ -216,3 +216,67 @@ def elicit_cell_personas(client, *, dataset, condition, cell_descs, schema, targ
              for s in subs]))
         result[cell_key] = subs
     return result
+
+
+def sample_personas(eval_cell_keys, cell_personas, supports, targets, *, seed=42) -> dict[str, list]:
+    """Per eval row: pick a subtype ~ its cell's weights, then sample each target
+    independently from that subtype's distribution. Categorical -> support member;
+    numeric -> uniform within the chosen even-width bin."""
+    rng = np.random.default_rng(seed)
+    n = len(eval_cell_keys)
+    cell_w, cell_cum = {}, {}
+    for c, subs in cell_personas.items():
+        w = np.array([s["weight"] for s in subs], float)
+        s = w.sum()
+        cell_w[c] = w / s if s > 0 else np.full(len(subs), 1.0 / len(subs))
+        cell_cum[c] = [{t: np.cumsum(np.asarray(sub["dists"][t], float)) for t in targets}
+                       for sub in subs]
+    out: dict[str, list] = {t: [None] * n for t in targets}
+    for i in range(n):
+        c = eval_cell_keys[i]
+        w, cums = cell_w[c], cell_cum[c]
+        j = int(rng.choice(len(w), p=w))
+        for t in targets:
+            cum = cums[j][t]
+            idx = int(np.searchsorted(cum, rng.random(), side="left"))
+            idx = min(max(idx, 0), len(cum) - 1)
+            sup = supports[t]
+            if sup["kind"] == "cat":
+                out[t][i] = sup["support"][idx]
+            else:
+                lo, hi = float(sup["edges"][idx]), float(sup["edges"][idx + 1])
+                out[t][i] = float(lo + rng.random() * (hi - lo))
+    return out
+
+
+class S1PersonasStrategy(_S1Base):
+    name = "s1_personas"
+    variant = "personas"
+
+    def generate(self, gate: InfoGate, run_dir: Path, cfg) -> StrategyResult:
+        p = _prepare(gate)
+        if not p["targets"]:
+            return _empty_result(p, self.variant)
+        cell_personas = elicit_cell_personas(
+            gate.client, dataset=gate.dataset_name, condition=gate.condition.value,
+            cell_descs=p["cell_descs"], schema=p["schema"], targets=p["targets"],
+            supports=p["supports"], known_vectors=p["known_vecs"], run_dir=run_dir,
+            cache_dir=Path(getattr(cfg, "results_root", run_dir)) / "_elicitation_cache",
+            n_personas=_N_PERSONAS,
+        )
+        drawn = sample_personas(p["eval_cell_keys"], cell_personas, p["supports"],
+                                p["targets"], seed=_SEED)
+        out = background_frame(p["bg"], p["schema"])
+        for t in p["targets"]:
+            out[t] = drawn[t]
+        generated = clip_decode(out, p["schema"])
+        Path(run_dir, "fit_summary.json").write_text(json.dumps(
+            {"backend": "s1", "variant": "personas", "condition": gate.condition.value,
+             "raked": False, "n_cells": len(p["unique_cells"]),
+             "n_targets": len(p["targets"]), "n_personas": _N_PERSONAS}, indent=2))
+        return StrategyResult(
+            generated=generated,
+            meta_extras={"backend": "s1", "variant": "personas",
+                         "condition": gate.condition.value, "raked": False,
+                         "n_cells": len(p["unique_cells"]), "n_targets": len(p["targets"]),
+                         "n_personas": _N_PERSONAS, "n_individuals": len(p["bg"])})
