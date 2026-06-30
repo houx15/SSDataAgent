@@ -131,3 +131,16 @@ real_data/
 
 # Local backup of the git dir (never commit)
 .git.backup/
+
+# =============================================================================
+# WEB FRONTEND (web/)
+# =============================================================================
+
+# npm install output — never commit
+web/node_modules/
+
+# Vite production build output — served by the Python backend, not committed
+web/dist/
+
+# TypeScript incremental build cache
+web/tsconfig.tsbuildinfo
