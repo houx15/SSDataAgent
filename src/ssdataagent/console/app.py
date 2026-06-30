@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 
 from fastapi import FastAPI, HTTPException
+from fastapi.staticfiles import StaticFiles
 from pydantic import BaseModel
 
 from ssdataagent.config import REPO_ROOT, results_root as default_results_root
@@ -170,6 +171,10 @@ def create_app(
             conn, hypothesis=req.hypothesis, change=req.change, result=req.result,
             interpretation=req.interpretation, next=req.next,
             linked_experiments=req.linked_experiments, ledger_path=ledger)
+
+    web_dist = REPO_ROOT / "web" / "dist"
+    if web_dist.exists():
+        app.mount("/", StaticFiles(directory=str(web_dist), html=True), name="spa")
 
     return app
 

@@ -99,3 +99,11 @@ def test_compare_endpoint_returns_matrix(client: TestClient):
     body = r.json()
     assert body["types"] == ["type1"]
     assert body["matrix"][0] == [0.6]
+
+
+def test_app_builds_without_web_dist(tmp_path):
+    # No web/dist in tmp results; app still builds and /api works.
+    from ssdataagent.console.app import create_app
+    app = create_app(results_root=tmp_path / "results")
+    c = TestClient(app)
+    assert c.get("/api/leaderboard").status_code == 200
