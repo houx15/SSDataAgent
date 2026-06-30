@@ -72,3 +72,51 @@ def test_full_condition_is_deterministic(tmp_path):
     r2 = DesignCStrategy().generate(g2, tmp_path / "b", cfg=type("Cfg", (), {"results_root": tmp_path})())
     # same train/bg seeds -> identical output
     pd.testing.assert_frame_equal(r1.generated, r2.generated)
+
+
+def test_transfer_condition_end_to_end_no_leakage(tmp_path):
+    schema = load_schema("gss")
+    source = _train(schema, n=200, seed=2)
+    crosswalk = tuple(list(schema.background_variables) + list(schema.target_variables))
+    n_eval = 30  # _gate uses _train(schema, n=30, seed=1) for eval_rows
+
+    # --- first run ---
+    g1 = _gate(Condition.TRANSFER, schema, tmp_path / "a",
+               source=source, crosswalk=crosswalk)
+    (tmp_path / "a").mkdir()
+    cfg = type("Cfg", (), {"results_root": tmp_path})()
+    res = DesignCStrategy().generate(g1, tmp_path / "a", cfg=cfg)
+
+    # (a) all target columns present, correct row count
+    for t in schema.target_variables:
+        assert t in res.generated.columns
+    assert len(res.generated) == n_eval
+
+    # (b) transport flag in meta_extras
+    assert res.meta_extras["transport"] is True
+
+    # (c) transport flag in written fit_summary.json
+    fit_summary = json.loads(Path(tmp_path / "a", "fit_summary.json").read_text())
+    assert fit_summary["transport"] is True
+
+    # (d) no-leakage: every emitted value traces to a source donor
+    generated = res.generated
+    for t in schema.target_variables:
+        if t not in generated.columns:
+            continue
+        if t in schema.numeric_ranges:
+            gen_vals = set(round(float(v), 6) for v in generated[t])
+            src_vals = set(round(float(v), 6) for v in source[t])
+        else:
+            gen_vals = set(generated[t])
+            src_vals = set(source[t])
+        assert gen_vals <= src_vals, (
+            f"Leakage detected in target '{t}': values not in source: {gen_vals - src_vals}"
+        )
+
+    # (e) determinism: two identically-built gates yield identical output
+    g2 = _gate(Condition.TRANSFER, schema, tmp_path / "b",
+               source=source, crosswalk=crosswalk)
+    (tmp_path / "b").mkdir()
+    res2 = DesignCStrategy().generate(g2, tmp_path / "b", cfg=cfg)
+    pd.testing.assert_frame_equal(res.generated, res2.generated)
