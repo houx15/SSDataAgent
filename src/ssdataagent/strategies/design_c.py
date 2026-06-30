@@ -122,3 +122,64 @@ def draw_targets(neighbor_idx, weights, donors, targets, *, seed: int = 42) -> d
         chosen[i] = cand[rng.choice(k, p=p)]
     donor_vals = donors.reset_index(drop=True)
     return {t: donor_vals[t].to_numpy()[chosen] for t in targets}
+
+
+class DesignCStrategy:
+    name = "design_c"
+
+    def generate(self, gate: InfoGate, run_dir: Path, cfg) -> StrategyResult:
+        schema = load_schema(gate.dataset_name)
+        bg = gate.background()
+        ref = gate.fit_microdata()            # train (A) / source[crosswalk] (B) / None (C)
+        known_m = gate.known_marginals() or {}
+
+        targets = [t for t in schema.target_variables if t in known_m]
+        if not targets:
+            return StrategyResult(generated=background_frame(bg, schema),
+                                  meta_extras={"backend": "design_c", "n_targets": 0,
+                                               "n_individuals": len(bg)})
+
+        supports = {t: E.target_support(schema, t, n_numeric_bins=_N_NUMERIC_BINS) for t in targets}
+
+        if ref is None:
+            donors = bootstrap_pool(bg, known_m, supports, schema, seed=42)
+        else:
+            donors = ref.reset_index(drop=True)
+
+        if gate.condition is Condition.TRANSFER:
+            anchors = {t: E.known_vector(known_m.get(t), supports[t]) for t in targets}
+            transported = E.elicit_cell_distributions(
+                gate.client, dataset=gate.dataset_name, condition=gate.condition.value,
+                cell_descs={"__population__": {"population": schema.population_context}},
+                schema=schema, targets=targets, supports=supports, known_vectors=anchors,
+                run_dir=run_dir,
+                cache_dir=Path(getattr(cfg, "results_root", run_dir)) / "_elicitation_cache",
+                transport=True,
+            )
+            goal = {t: transported["__population__"][t] for t in targets}
+            transport_used = True
+        else:
+            goal = {t: E.known_vector(known_m.get(t), supports[t]) for t in targets}
+            transport_used = False
+
+        neighbor_idx = retrieve_candidates(donors, bg, schema, k=_K)
+        donor_codes = encode_to_codes(donors, targets, supports)
+        weights = repair_weights(neighbor_idx, donor_codes, goal, supports, targets,
+                                 max_iter=_REPAIR_ITERS)
+        drawn = draw_targets(neighbor_idx, weights, donors, targets, seed=42)
+
+        out = background_frame(bg, schema)
+        for t in targets:
+            out[t] = drawn[t]
+        generated = clip_decode(out, schema)
+
+        Path(run_dir, "fit_summary.json").write_text(json.dumps(
+            {"backend": "design_c", "condition": gate.condition.value, "k": _K,
+             "n_donors": len(donors), "n_targets": len(targets),
+             "repair_iters": _REPAIR_ITERS, "transport": transport_used}, indent=2))
+        return StrategyResult(
+            generated=generated,
+            meta_extras={"backend": "design_c", "condition": gate.condition.value,
+                         "k": _K, "n_donors": len(donors), "n_targets": len(targets),
+                         "transport": transport_used, "n_individuals": len(bg)},
+        )
