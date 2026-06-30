@@ -30,3 +30,18 @@ def test_none_overall_never_champion():
     rows = leaderboard.build_rows([_rec("exp_a", "c", "d", None)])
     assert not any(r["is_champion"] for r in rows)
     assert rows[0]["by_type"] == {"type1": None}
+
+
+def test_tie_broken_by_experiment_name_desc():
+    recs = [_rec("exp_a", "c", "d", 0.5), _rec("exp_z", "c", "d", 0.5)]
+    rows = leaderboard.build_rows(recs)
+    champ = next(r for r in rows if r["is_champion"])
+    assert champ["experiment"] == "exp_z"
+
+
+def test_malformed_by_type_json_degrades_to_empty_dict():
+    rec = {"experiment": "exp_a", "condition": "c", "dataset": "d",
+           "by_type_json": "not-json", "overall_average": 0.5,
+           "overdetermination_gap": None}
+    rows = leaderboard.build_rows([rec])
+    assert rows[0]["by_type"] == {}
