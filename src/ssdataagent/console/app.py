@@ -11,6 +11,7 @@ from pydantic import BaseModel
 from ssdataagent.config import REPO_ROOT, results_root as default_results_root
 from ssdataagent.console import compare as _compare
 from ssdataagent.console import db, forking, leaderboard, queue as _q, sync
+from ssdataagent import reports as _reports
 
 
 class RunRequest(BaseModel):
@@ -22,6 +23,13 @@ class RunRequest(BaseModel):
 
 class CompareRequest(BaseModel):
     selectors: list[dict]
+
+
+class ReportRequest(BaseModel):
+    experiment: str
+    condition: str = "full_agent"
+    baseline: str | None = None
+    format: str = "md"
 
 
 def create_app(
@@ -131,6 +139,16 @@ def create_app(
     @app.post("/api/compare")
     def post_compare(req: CompareRequest):
         return _compare.build_matrix(req.selectors, _latest_eval)
+
+    @app.post("/api/reports")
+    def post_report(req: ReportRequest):
+        md = _reports.render_markdown_report(
+            req.experiment, condition=req.condition, baseline=req.baseline,
+            results_root=root,
+            experiments_yaml=REPO_ROOT / "config" / "experiments.yaml",
+            paper_baselines=REPO_ROOT / "config" / "paper_baselines.json")
+        content = _reports.render_html_report(md) if req.format == "html" else md
+        return {"format": req.format, "content": content}
 
     return app
 

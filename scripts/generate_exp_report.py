@@ -35,6 +35,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(REPO_ROOT / "src"))
 from ssdataagent.config import results_root  # noqa: E402
+from ssdataagent import reports  # noqa: E402
 
 RESULTS_ROOT = results_root()
 EXPERIMENTS_YAML = REPO_ROOT / "config" / "experiments.yaml"
@@ -42,8 +43,8 @@ PAPER_BASELINES = REPO_ROOT / "config" / "paper_baselines.json"
 STRATEGY_MD = REPO_ROOT / "docs" / "experiments" / "STRATEGY.md"
 REPORTS_DIR = REPO_ROOT / "docs" / "experiments"
 
-T_KEYS = ["type1", "type2", "type3", "type4", "type5"]
-T_LABELS = {"type1": "T1", "type2": "T2", "type3": "T3", "type4": "T4", "type5": "T5"}
+T_KEYS = reports.T_KEYS
+T_LABELS = reports.T_LABELS
 
 
 def _exp_spec(exp: str) -> dict:
@@ -82,47 +83,16 @@ def _strategy_blurb(exp: str) -> str:
     return ""
 
 
-def _md_table(headers: list[str], rows: list[list[str]]) -> str:
-    out = ["| " + " | ".join(headers) + " |",
-           "|" + "|".join(["---:" if i > 0 else "---" for i in range(len(headers))]) + "|"]
-    for r in rows:
-        out.append("| " + " | ".join(r) + " |")
-    return "\n".join(out)
-
-
 def _fmt(v) -> str:
-    if v is None:
-        return "—"
-    if isinstance(v, float):
-        return "NaN" if v != v else f"{v:.3f}"
-    return str(v)
+    return reports._fmt(v)
 
 
-def _overdetermination_section(cells: dict, datasets: list) -> str:
-    """Markdown table of the over-determination gap per dataset (cell-based
-    headline + coverage, and the model-based cross-check)."""
-    headers = ["Dataset", "gap (cell)", "coverage", "n_cells", "gap (model)"]
-    rows = []
-    for ds in datasets:
-        cell = cells.get(ds)
-        od = (cell or {}).get("overdetermination") if cell else None
-        if not od:
-            rows.append([ds, "—", "—", "—", "—"])
-            continue
-        cb = od.get("cell_based", {}) or {}
-        mb = od.get("model_based", {}) or {}
-        rows.append([ds, _fmt(cb.get("headline_gap")), _fmt(cb.get("coverage")),
-                     _fmt(cb.get("n_cells")), _fmt(mb.get("headline_gap"))])
-    return ("## Over-determination gap — `H_real − H_sim` (bits, higher = sim more collapsed)\n\n"
-            + _md_table(headers, rows))
+def _delta(a, b) -> str:
+    return reports._delta(a, b)
 
 
-def _delta(a: float | None, b: float | None) -> str:
-    if a is None or b is None or (isinstance(a, float) and a != a) or (isinstance(b, float) and b != b):
-        return "—"
-    d = a - b
-    sign = "+" if d >= 0 else ""
-    return f"{sign}{d:.3f}"
+def _md_table(headers, rows) -> str:
+    return reports._md_table(headers, rows)
 
 
 def main() -> int:
@@ -136,88 +106,63 @@ def main() -> int:
     args = p.parse_args()
 
     spec = _exp_spec(args.experiment)
-    paper = json.loads(PAPER_BASELINES.read_text())
-    by_dataset_paper = paper["by_dataset_by_type"]
-    overall_paper = paper["by_dataset_overall"]
     strategy_line = _strategy_blurb(args.experiment)
 
     datasets: list[str] = spec["datasets"]
-    cells: dict[str, dict | None] = {
-        ds: _latest_eval(args.experiment, args.condition, ds) for ds in datasets
-    }
     baseline_cells: dict[str, dict | None] = {}
     if args.baseline:
         baseline_cells = {
             ds: _latest_eval(args.baseline, args.condition, ds) for ds in datasets
         }
 
-    # Section 1: Strategy
-    bits: list[str] = []
+    # Build the shared report body (Strategy + Results + vs Paper)
+    body = reports.render_markdown_report(
+        args.experiment,
+        condition=args.condition,
+        baseline=args.baseline,
+        results_root=RESULTS_ROOT,
+        experiments_yaml=EXPERIMENTS_YAML,
+        paper_baselines=PAPER_BASELINES,
+    )
+
+    # The shared body uses a generic header; we want the script's richer header
+    # (date, llm_model, max_iterations, strategy_line, A/B baseline note).
+    # Replace the first heading line and Strategy section.
     today = dt.date.today().isoformat()
-    bits.append(f"# {args.experiment} — report ({today})\n")
-    bits.append("## Strategy\n")
+
+    strategy_section_lines: list[str] = []
+    strategy_section_lines.append(f"# {args.experiment} — report ({today})\n")
+    strategy_section_lines.append("## Strategy\n")
     if strategy_line:
-        bits.append(f"From STRATEGY.md backlog:\n\n> {strategy_line}\n")
-    bits.append(f"- **prompt_variant:** `{spec.get('prompt_variant', 'baseline')}`")
-    bits.append(f"- **llm_model:** `{spec.get('llm_model') or '(from .env)'}`")
-    bits.append(f"- **datasets:** {', '.join(datasets)}")
-    bits.append(f"- **conditions:** {', '.join(spec['conditions'])}")
-    bits.append(f"- **n_rows / dataset:** {spec.get('n_rows')}")
-    bits.append(f"- **max_iterations:** {spec.get('max_iterations')}")
+        strategy_section_lines.append(f"From STRATEGY.md backlog:\n\n> {strategy_line}\n")
+    strategy_section_lines.append(f"- **prompt_variant:** `{spec.get('prompt_variant', 'baseline')}`")
+    strategy_section_lines.append(f"- **llm_model:** `{spec.get('llm_model') or '(from .env)'}`")
+    strategy_section_lines.append(f"- **datasets:** {', '.join(datasets)}")
+    strategy_section_lines.append(f"- **conditions:** {', '.join(spec['conditions'])}")
+    strategy_section_lines.append(f"- **n_rows / dataset:** {spec.get('n_rows')}")
+    strategy_section_lines.append(f"- **max_iterations:** {spec.get('max_iterations')}")
     if args.baseline:
-        bits.append(f"- **A/B baseline experiment:** `{args.baseline}`")
-    bits.append("")
+        strategy_section_lines.append(f"- **A/B baseline experiment:** `{args.baseline}`")
+    strategy_section_lines.append("")
 
-    # Section 2: Results — per (dataset, T-type)
-    bits.append(f"## Results — `{args.condition}`\n")
-    headers = ["Dataset"] + [T_LABELS[k] for k in T_KEYS] + ["overall"]
-    rows = []
-    for ds in datasets:
-        cell = cells[ds]
-        row: list[str] = [ds]
-        if cell is None:
-            row += ["—"] * len(T_KEYS) + ["(no eval)"]
-        else:
-            by_type = cell.get("by_type", {})
-            for k in T_KEYS:
-                row.append(_fmt(by_type.get(k)))
-            row.append(_fmt(cell.get("overall_average")))
-        rows.append(row)
-    bits.append(_md_table(headers, rows))
-    bits.append("")
+    # Strip the generic header and Strategy block from the shared body, then
+    # prepend the richer script-specific header.
+    body_lines = body.splitlines()
+    # Find where "## Results" begins in the shared body to splice after Strategy
+    results_start = 0
+    for i, line in enumerate(body_lines):
+        if line.startswith("## Results"):
+            results_start = i
+            break
 
-    # Section 2b: Over-determination gap
-    bits.append(_overdetermination_section(cells, datasets))
-    bits.append("")
-
-    # Section 3: vs paper
-    bits.append("## vs Paper-best (best of 15 LLMs in SSDataBench)\n")
-    bits.append("Side-by-side per (dataset, T-type) cell. Δ = ours − paper-best.\n")
-    headers = ["Dataset", "T-type", "ours", "paper-best", "Δ"]
-    rows = []
-    for ds in datasets:
-        cell = cells[ds]
-        ds_paper = by_dataset_paper.get(ds, {})
-        if cell is None:
-            rows.append([ds, "—", "(no eval)", "—", "—"])
-            continue
-        by_type = cell.get("by_type", {})
-        for k in T_KEYS:
-            ours = by_type.get(k)
-            pb = ds_paper.get(T_LABELS[k])
-            if ours is None and pb is None:
-                continue  # T4/T5 don't apply to cross-sectional, skip blank row
-            rows.append([ds, T_LABELS[k], _fmt(ours), _fmt(pb), _delta(ours, pb)])
-        # Overall
-        rows.append([ds, "**overall**",
-                     _fmt(cell.get("overall_average")),
-                     _fmt(overall_paper.get(ds)),
-                     _delta(cell.get("overall_average"), overall_paper.get(ds))])
-    bits.append(_md_table(headers, rows))
-    bits.append("")
+    bits: list[str] = strategy_section_lines + body_lines[results_start:]
 
     # Section 4: vs baseline (only if --baseline supplied)
     if args.baseline:
+        paper = json.loads(PAPER_BASELINES.read_text())
+        cells: dict[str, dict | None] = {
+            ds: _latest_eval(args.experiment, args.condition, ds) for ds in datasets
+        }
         bits.append(f"## vs Baseline experiment `{args.baseline}`\n")
         bits.append("Δ = this experiment − baseline. Positive = improvement.\n")
         headers = ["Dataset", "T-type", "this", "baseline", "Δ"]
