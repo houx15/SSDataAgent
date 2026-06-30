@@ -191,3 +191,17 @@ def sample_node(model, X_eval, support, *, offset, rng):
         p = p / s if s > 0 else np.full(len(classes), 1.0 / len(classes))
         out.append(classes[int(rng.choice(len(classes), p=p))])
     return np.array(out, dtype=object)
+
+
+def sample_from_known(support, known_vec, n, rng):
+    """Condition-C draw: sample a support index from the known marginal, then a
+    category (categorical) or a uniform value within the chosen bin (numeric)."""
+    vec = np.asarray(known_vec, float)
+    s = vec.sum()
+    vec = vec / s if s > 0 else np.full(len(vec), 1.0 / len(vec))
+    idx = rng.choice(len(vec), size=n, p=vec)
+    if support["kind"] == "cat":
+        return np.array([support["support"][i] for i in idx], dtype=object)
+    edges = np.asarray(support["edges"], float)
+    lo, hi = edges[idx], edges[idx + 1]
+    return lo + rng.random(n) * (hi - lo)
