@@ -86,3 +86,39 @@ def repair_weights(neighbor_idx, donor_codes, goal_vectors, supports, targets,
         if max_gap < tol:
             break
     return w
+
+
+def bootstrap_pool(background, known_marginals, supports, schema, *, seed: int = 42) -> pd.DataFrame:
+    """Condition-C synthetic donor pool: backgrounds = eval backgrounds; each
+    donor's targets drawn independently from known_marginals (numeric -> uniform
+    within the sampled bin; categorical -> the sampled category)."""
+    rng = np.random.default_rng(seed)
+    pool = background.reset_index(drop=True).copy()
+    n = len(pool)
+    for t, sup in supports.items():
+        vec = np.asarray(E.known_vector(known_marginals.get(t), sup), float)
+        idx = rng.choice(len(vec), size=n, p=vec)
+        if sup["kind"] == "cat":
+            pool[t] = [sup["support"][i] for i in idx]
+        else:
+            edges = np.asarray(sup["edges"], float)
+            lo = edges[idx]
+            hi = edges[idx + 1]
+            pool[t] = lo + rng.random(n) * (hi - lo)
+    return pool
+
+
+def draw_targets(neighbor_idx, weights, donors, targets, *, seed: int = 42) -> dict[str, np.ndarray]:
+    """Each eval row samples one donor from its candidate set ∝ weights, then
+    emits that donor's actual target value (a real observation)."""
+    rng = np.random.default_rng(seed)
+    n_eval, k = neighbor_idx.shape
+    chosen = np.empty(n_eval, dtype=int)
+    for i in range(n_eval):
+        cand = neighbor_idx[i]
+        wv = weights[cand]
+        s = wv.sum()
+        p = wv / s if s > 0 else np.full(k, 1.0 / k)
+        chosen[i] = cand[rng.choice(k, p=p)]
+    donor_vals = donors.reset_index(drop=True)
+    return {t: donor_vals[t].to_numpy()[chosen] for t in targets}
