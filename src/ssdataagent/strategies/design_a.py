@@ -133,3 +133,61 @@ def elicit_structure(client, *, dataset, condition, schema, targets, backgrounds
                                       "prior_scale": struct.prior_scale,
                                       "offsets": struct.offsets}))
     return struct
+
+
+def _design_matrix(df, parents, schema, stats=None):
+    """Parent design matrix via encode_numeric; an intercept-only ones column
+    when there are no parents (so sklearn always has >=1 feature)."""
+    if not parents:
+        return np.ones((len(df), 1)), (stats or {})
+    X, st = encode_numeric(df, list(parents), schema, stats=stats)
+    if X.shape[1] == 0:
+        return np.ones((len(df), 1)), st
+    return X, st
+
+
+def fit_numeric_node(X_train, y_train, prior_scale):
+    """Conjugate Bayesian linear regression. Wider prior_scale -> weaker
+    coefficient shrinkage (smaller lambda_init)."""
+    lam = 1.0 / max(float(prior_scale), 1e-6)
+    try:
+        model = BayesianRidge(lambda_init=lam)
+    except TypeError:               # older sklearn without lambda_init
+        model = BayesianRidge()
+    model.fit(X_train, np.asarray(y_train, float))
+    return model
+
+
+def fit_categorical_node(X_train, y_train, prior_scale, classes):
+    """Multinomial logistic MAP (C = prior_scale = inverse Gaussian-prior
+    precision). Single-class training -> a constant model."""
+    y = np.asarray(y_train, dtype=object).astype(str)
+    uniq = list(dict.fromkeys(y.tolist()))
+    if len(uniq) < 2:
+        return ("constant", uniq[0] if uniq else (classes[0] if classes else None))
+    # sklearn>=1.7 removed the `multi_class` kwarg; multinomial is the default for
+    # multiclass. C = inverse Gaussian-prior precision (larger prior_scale = wider).
+    model = LogisticRegression(C=max(float(prior_scale), 1e-6), max_iter=1000)
+    model.fit(X_train, y)
+    return model
+
+
+def sample_node(model, X_eval, support, *, offset, rng):
+    """Numeric: draw Normal(mu+offset, sd) from BayesianRidge predictive.
+    Categorical: draw a class ~ predict_proba (offset not applied)."""
+    n = len(X_eval)
+    if support["kind"] == "num":
+        mu, sd = model.predict(X_eval, return_std=True)
+        sd = np.where(np.asarray(sd) > 0, sd, 1e-6)
+        return rng.normal(np.asarray(mu) + float(offset), sd)
+    if isinstance(model, tuple) and model[0] == "constant":
+        return np.array([model[1]] * n, dtype=object)
+    P = model.predict_proba(X_eval)
+    classes = list(model.classes_)
+    out = []
+    for i in range(n):
+        p = np.asarray(P[i], float)
+        s = p.sum()
+        p = p / s if s > 0 else np.full(len(classes), 1.0 / len(classes))
+        out.append(classes[int(rng.choice(len(classes), p=p))])
+    return np.array(out, dtype=object)
