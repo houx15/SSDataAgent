@@ -11,6 +11,7 @@ from ssdataagent.strategies.design_b import DesignBStrategy
 from ssdataagent.strategies.design_a import DesignAStrategy
 from ssdataagent.strategies.design_c import DesignCStrategy
 from ssdataagent.strategies.direct_strategy import DirectGenerationStrategy
+from ssdataagent.strategies.s1 import S1PersonasStrategy, S1RakedStrategy, S1RawStrategy
 
 STRATEGIES: dict[str, type] = {
     "agent": AgentStrategy,
@@ -21,6 +22,9 @@ STRATEGIES: dict[str, type] = {
     "design_b": DesignBStrategy,
     "design_c": DesignCStrategy,
     "design_a": DesignAStrategy,
+    "s1_raw": S1RawStrategy,
+    "s1_raked": S1RakedStrategy,
+    "s1_personas": S1PersonasStrategy,
 }
 
 

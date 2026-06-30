@@ -213,3 +213,32 @@ def test_design_c_transfer_builds_source_gate(_cfg, _client, _eval, _sha, tmp_pa
     meta = json.loads(_read(run_dir, "meta.json"))
     assert meta["backend"] == "design_c"
     assert json.loads(_read(run_dir, "eval.json"))  # eval.json written
+
+
+def _fake_s1_raked_generate(self, gate, run_dir, cfg):
+    # assert the runner built a transfer gate, then emit a trivial frame
+    from ssdataagent.strategies.base import StrategyResult
+    import pandas as pd
+    assert gate.source is not None and len(gate.crosswalk) > 0
+    out = pd.DataFrame({"profile_id": range(len(gate.background()))})
+    return StrategyResult(generated=out, meta_extras={"backend": "s1"})
+
+
+@patch("ssdataagent.strategies.s1.S1RakedStrategy.generate", _fake_s1_raked_generate)
+@patch("ssdataagent.experiments.runner._git_sha", return_value="testsha")
+@patch("ssdataagent.experiments.runner.run_evaluation",
+       return_value=PassRates(by_type={"type1": 0.5}, overall_average=0.5))
+@patch("ssdataagent.experiments.runner.build_client")
+@patch("ssdataagent.experiments.runner.load_llm_config")
+def test_s1_raked_transfer_builds_source_gate(_cfg, _client, _eval, _sha, tmp_path):
+    _cfg.return_value = MagicMock(model="m1", provider="p1")
+    cfg = ExperimentConfig(
+        name="s1exp", datasets=["gss"], conditions=["s1_raked_transfer"],
+        max_iterations=1, sandbox_timeout=10, train_eval_split=0.5,
+        n_rows=10, results_root=tmp_path,
+    )
+    run_experiment(cfg)
+    run_dir = _only_run_dir(tmp_path / "s1exp" / "s1_raked_transfer" / "gss")
+    meta = json.loads(_read(run_dir, "meta.json"))
+    assert meta["backend"] == "s1"
+    assert json.loads(_read(run_dir, "eval.json"))  # eval.json written

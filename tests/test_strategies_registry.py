@@ -43,3 +43,10 @@ def test_design_c_registered():
 def test_design_a_registered():
     from ssdataagent.strategies.registry import get_strategy
     assert get_strategy("design_a").name == "design_a"
+
+
+def test_s1_strategies_registered():
+    from ssdataagent.strategies.registry import get_strategy
+    assert get_strategy("s1_raw").name == "s1_raw"
+    assert get_strategy("s1_raked").name == "s1_raked"
+    assert get_strategy("s1_personas").name == "s1_personas"

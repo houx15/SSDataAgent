@@ -66,3 +66,18 @@ def test_design_a_conditions():
     assert get_condition("design_a_transfer").strategy == "design_a"
     assert get_condition("design_a_aggregate").context_condition is Condition.NO_DATA
     assert get_condition("design_a_aggregate").strategy == "design_a"
+
+
+def test_s1_conditions():
+    from ssdataagent.agent.context import Condition
+    from ssdataagent.experiments.conditions import get_condition
+    assert get_condition("s1_raw").context_condition is Condition.NO_DATA
+    assert get_condition("s1_raw").strategy == "s1_raw"
+    assert get_condition("s1_raked_full").context_condition is Condition.FULL
+    assert get_condition("s1_raked_full").strategy == "s1_raked"
+    assert get_condition("s1_raked_transfer").context_condition is Condition.TRANSFER
+    assert get_condition("s1_raked_transfer").strategy == "s1_raked"
+    assert get_condition("s1_raked_aggregate").context_condition is Condition.NO_DATA
+    assert get_condition("s1_raked_aggregate").strategy == "s1_raked"
+    assert get_condition("s1_personas").context_condition is Condition.NO_DATA
+    assert get_condition("s1_personas").strategy == "s1_personas"
