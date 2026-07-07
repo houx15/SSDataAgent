@@ -21,6 +21,9 @@ test("board shows strategy, best dataset, overall and vs-PNAS delta", () => {
   expect(screen.getByText("gss")).toBeTruthy();
   expect(screen.getByText("0.610")).toBeTruthy();      // overall
   expect(screen.getByText(/\+0\.220/)).toBeTruthy();   // delta vs PNAS
+  // T1 cell is paired ours / paper: 0.400 (ours) and its PNAS baseline 0.130
+  expect(screen.getByText("0.400")).toBeTruthy();
+  expect(screen.getByText(/\/ 0\.130/)).toBeTruthy();
   // family name links to its detail page
   const link = screen.getByText("Design A").closest("a");
   expect(link?.getAttribute("href")).toBe("/strategy/Design%20A");

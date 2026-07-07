@@ -23,18 +23,20 @@ export function DeltaBadge({ d, big }: { d: number | null | undefined; big?: boo
   );
 }
 
-/** A T-score cell: our value colored by whether it beats the paper, with the
- *  paper value + delta in the hover title. */
+/** A T-score cell showing `ours / paper`: our value colored by whether it beats
+ *  the PNAS paper best for this benchmark, the paper value muted alongside, and
+ *  the delta in the hover title. */
 export function ScoreCell({ c }: { c: TypeCmp }) {
   const title =
     c.paper == null
-      ? "no paper baseline"
+      ? "no PNAS baseline for this benchmark"
       : `ours ${fmt(c.ours)} vs PNAS ${fmt(c.paper)} (Δ ${
           c.delta == null ? "—" : (c.delta >= 0 ? "+" : "−") + Math.abs(c.delta).toFixed(3)
         })`;
   return (
-    <span title={title} style={{ color: deltaColor(c.delta) }}>
-      {fmt(c.ours)}
+    <span title={title} style={{ whiteSpace: "nowrap" }}>
+      <span style={{ color: deltaColor(c.delta), fontWeight: 600 }}>{fmt(c.ours)}</span>
+      <span style={{ color: "#999" }}> / {fmt(c.paper)}</span>
     </span>
   );
 }
@@ -50,9 +52,10 @@ export function BenchmarkLegend() {
           <strong>{b.short}</strong> {b.label}
         </span>
       ))}
-      . Scores are pass-rates (higher = closer to real data);{" "}
-      <span style={{ color: "#1b7a3d" }}>green</span> beats the PNAS paper best,{" "}
-      <span style={{ color: "#b23b3b" }}>red</span> is worse.
+. Each benchmark cell reads <strong>ours / PNAS-best</strong> (pass-rates, higher =
+      closer to real data); the ours value is{" "}
+      <span style={{ color: "#1b7a3d" }}>green</span> when it beats the PNAS paper best for
+      that benchmark, <span style={{ color: "#b23b3b" }}>red</span> when worse.
     </p>
   );
 }
