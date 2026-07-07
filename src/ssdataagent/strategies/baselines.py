@@ -61,7 +61,9 @@ def ordinal_encode(df, columns, schema) -> np.ndarray:
         if c in schema.numeric_ranges:
             cols.append(pd.to_numeric(df[c], errors="coerce").fillna(0.0).to_numpy().reshape(-1, 1))
         else:
-            cats = schema.allowed_values.get(c) or sorted(df[c].dropna().unique().tolist())
+            # key=str: real data has columns mixing strings and floats (e.g.
+            # "No Child" alongside numeric codes), which a bare sort can't order.
+            cats = schema.allowed_values.get(c) or sorted(df[c].dropna().unique().tolist(), key=str)
             idx = {v: i for i, v in enumerate(cats)}
             cols.append(np.array([idx.get(v, -1) for v in df[c].tolist()], dtype=float).reshape(-1, 1))
     return np.hstack(cols) if cols else np.zeros((len(df), 0))

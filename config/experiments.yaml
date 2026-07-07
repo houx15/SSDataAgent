@@ -1,4 +1,91 @@
 experiments:
+  # =========================================================================
+  # SHIP demonstration (2026-07-06): exercise every refactor strategy on real
+  # data and surface it in the web console. Baselines are zero-API-cost and
+  # deterministic; Design A/B/C + S1 use LLM elicitation (gpt-5.4, cached).
+  # Agent-family conditions already have results under pilot_paper_*/exp*.
+  # Tier 0 — statistical baselines (FULL only; microdata; free & fast).
+  # =========================================================================
+  ship_baselines_cross:
+    datasets: [gss, cps, acs]
+    conditions: [hotdeck, cart, copula]
+    max_iterations: 1
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  ship_baselines_long:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [hotdeck, cart, copula]
+    max_iterations: 1
+    sandbox_timeout: 60
+    train_eval_split: 0.5
+    n_rows: 1000
+
+  # Tier 1 — Design A + Design C on all 8 datasets. Both are ~1 LLM call per
+  # (dataset, condition): Design A elicits a DAG once; Design C elicits one
+  # population-level transport prior (condition B only). Cheap everywhere.
+  ship_designs_ac_cross:
+    datasets: [gss, cps, acs]
+    conditions: [design_a_full, design_a_aggregate, design_c_full, design_c_aggregate]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  ship_designs_ac_long:
+    datasets: [nlsy, addhealth, cfps, us]
+    conditions: [design_a_full, design_a_aggregate, design_c_full, design_c_aggregate]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  # Tier 2 — per-cell strategies (Design B + S1) ONLY on the small-cell datasets
+  # cps (35 cells) and acs (54 cells). One gpt-5.4 call per cell, so these are
+  # deliberately kept off gss/longitudinal (hundreds of cells each).
+  ship_percell_small:
+    datasets: [cps, acs]
+    conditions: [design_b_full, design_b_aggregate,
+                 s1_raw, s1_raked_full, s1_raked_aggregate, s1_personas]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  # Tier 3 — TRANSFER (source wave -> target wave). Cheap A/C transfer on both
+  # gss+cps; per-cell B / S1 transfer only on cps (small cell count).
+  ship_transfer_cheap:
+    datasets: [gss, cps]
+    conditions: [design_a_transfer, design_c_transfer]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
+  ship_transfer_percell:
+    datasets: [cps]
+    conditions: [design_b_transfer, s1_raked_transfer]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 1000
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
   smoke_gss:
     # Tiny end-to-end sanity check: one condition, one dataset.
     datasets: [gss]

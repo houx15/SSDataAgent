@@ -57,6 +57,17 @@ def test_ordinal_encode_codes_categoricals():
     assert X[2, 1] == 40.0
 
 
+def test_ordinal_encode_handles_mixed_type_categorical_without_allowed():
+    # Real data has categorical columns with no schema `allowed` list whose
+    # values mix strings and floats (e.g. "No Child" alongside numeric codes).
+    # The fallback sort must not raise "'<' not supported between str and float".
+    s = toy_schema()
+    df = pd.DataFrame({"mixed": ["No Child", 3.0, "Two", 1.0], "age": [20.0, 30.0, 40.0, 50.0]})
+    X = ordinal_encode(df, ["mixed", "age"], s)   # "mixed" not in allowed_values -> fallback
+    assert X.shape == (4, 2)
+    assert set(X[:, 0].tolist()) == {0.0, 1.0, 2.0, 3.0}   # 4 distinct codes, deterministic
+
+
 def test_clip_decode_clips_numeric_to_range():
     s = toy_schema()
     df = pd.DataFrame({"income": [-5.0, 250.0, 50.0], "vote": ["A", "B", "C"]})

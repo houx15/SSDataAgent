@@ -39,6 +39,16 @@ def test_tie_broken_by_experiment_name_desc():
     assert champ["experiment"] == "exp_z"
 
 
+def test_run_id_and_model_pass_through():
+    rec = {"experiment": "exp_a", "condition": "hotdeck", "dataset": "gss",
+           "by_type_json": '{"type1": 0.5}', "overall_average": 0.5,
+           "overdetermination_gap": None, "run_id": "20260706-231310",
+           "model": "gpt-5.4-2026-03-05"}
+    row = leaderboard.build_rows([rec])[0]
+    assert row["run_id"] == "20260706-231310"
+    assert row["model"] == "gpt-5.4-2026-03-05"
+
+
 def test_malformed_by_type_json_degrades_to_empty_dict():
     rec = {"experiment": "exp_a", "condition": "c", "dataset": "d",
            "by_type_json": "not-json", "overall_average": 0.5,

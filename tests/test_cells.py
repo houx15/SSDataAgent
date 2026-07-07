@@ -30,6 +30,24 @@ def test_fit_and_assign_consistent_across_frames():
     assert all("|" in k for k in a)            # composite cell keys (age_bin|region)
 
 
+def test_assign_handles_string_dtype_missing():
+    # regression: pandas StringDtype keeps missing as NA, which `.astype(str)`
+    # leaves as a float rather than the literal "nan" — so the "|".join in
+    # assign used to raise "expected str instance, float found". Real GSS/NLSY/
+    # AddHealth/CFPS/US frames load categorical backgrounds as StringDtype.
+    s = toy_schema()
+    df = pd.DataFrame({
+        "age": [25.0, 40.0, 55.0, 70.0],
+        "region": pd.array(["N", pd.NA, "S", pd.NA], dtype="string"),
+    })
+    scheme = cells.fit_scheme(df, ["age", "region"], s, n_bins=2)
+    keys = cells.assign(df, scheme)
+    assert len(keys) == 4
+    assert all(isinstance(k, str) and "|" in k for k in keys)
+    # the two NA rows land in the same (age-permitting) missing bucket
+    assert keys.iloc[1].split("|")[1] == keys.iloc[3].split("|")[1]
+
+
 def test_bin_edges_and_discretize():
     edges = cells.bin_edges(pd.Series([0.0, 25.0, 50.0, 75.0, 100.0]), 4)
     idx = cells.discretize(pd.Series([0.0, 100.0]), edges)

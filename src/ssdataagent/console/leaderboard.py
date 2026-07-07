@@ -9,6 +9,8 @@ class LeaderboardRow(TypedDict):
     experiment: str
     condition: str
     dataset: str
+    run_id: str | None
+    model: str | None
     by_type: dict[str, Any]
     overall_average: float | None
     overdetermination_gap: float | None
@@ -27,6 +29,8 @@ def build_rows(records: list[dict]) -> list[LeaderboardRow]:
             experiment=rec["experiment"],
             condition=rec["condition"],
             dataset=rec["dataset"],
+            run_id=rec.get("run_id"),
+            model=rec.get("model"),
             by_type=by_type,
             overall_average=rec.get("overall_average"),
             overdetermination_gap=rec.get("overdetermination_gap"),

@@ -42,7 +42,11 @@ def assign(df, scheme: CellScheme) -> pd.Series:
         if v in scheme.edges:
             parts.append(discretize(df[v], scheme.edges[v]).astype(str))
         else:
-            parts.append(df[v].astype(str).to_numpy())
+            # StringDtype columns keep missing as NA, which `.astype(str)`
+            # leaves as a float — fill it to the literal "nan" first so the
+            # join below always sees strings (object-dtype cols already do this).
+            col = df[v]
+            parts.append(col.where(col.notna(), "nan").map(str).to_numpy())
     keys = ["|".join(t) for t in zip(*parts)] if parts else ["_"] * len(df)
     return pd.Series(keys, index=df.index)
 

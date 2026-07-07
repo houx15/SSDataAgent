@@ -1,5 +1,30 @@
 import React, { useEffect, useState } from "react";
-import { api, LeaderboardRow } from "../api";
+import { api, LeaderboardRow, PNAS_BENCHMARKS } from "../api";
+
+const TH: React.CSSProperties = { padding: "4px 8px", borderBottom: "2px solid #ccc", textAlign: "left" };
+const TD: React.CSSProperties = { padding: "4px 8px" };
+
+function typeHeader(t: string): { text: string; title: string } {
+  const b = PNAS_BENCHMARKS[t];
+  return b ? { text: b.short, title: `${b.short} — ${b.label} (SSDataBench/PNAS benchmark)` }
+           : { text: t, title: t };
+}
+
+export function BenchmarkLegend() {
+  return (
+    <p style={{ fontSize: "0.85em", color: "#555", margin: "0.4em 0 1em" }}>
+      <strong>PNAS benchmarks:</strong>{" "}
+      {Object.values(PNAS_BENCHMARKS).map((b, i) => (
+        <span key={b.short}>
+          {i > 0 ? " · " : ""}
+          <strong>{b.short}</strong> {b.label}
+        </span>
+      ))}
+      . Scores are pass-rates (higher = closer to real data). ★ = champion for its
+      (condition × dataset) cell. Paper comparison is in the <em>Reports</em> view.
+    </p>
+  );
+}
 
 export function LeaderboardTable({ rows }: { rows: LeaderboardRow[] }) {
   const allTypes = Array.from(new Set(rows.flatMap((r) => Object.keys(r.by_type))));
@@ -7,15 +32,18 @@ export function LeaderboardTable({ rows }: { rows: LeaderboardRow[] }) {
     <table style={{ borderCollapse: "collapse", width: "100%" }}>
       <thead>
         <tr>
-          <th style={{ padding: "4px 8px", borderBottom: "2px solid #ccc" }}>Champion</th>
-          <th style={{ padding: "4px 8px", borderBottom: "2px solid #ccc" }}>Experiment</th>
-          <th style={{ padding: "4px 8px", borderBottom: "2px solid #ccc" }}>Condition</th>
-          <th style={{ padding: "4px 8px", borderBottom: "2px solid #ccc" }}>Dataset</th>
-          {allTypes.map((t) => (
-            <th key={t} style={{ padding: "4px 8px", borderBottom: "2px solid #ccc" }}>{t}</th>
-          ))}
-          <th style={{ padding: "4px 8px", borderBottom: "2px solid #ccc" }}>Overall Avg</th>
-          <th style={{ padding: "4px 8px", borderBottom: "2px solid #ccc" }}>OD Gap</th>
+          <th style={TH}>Champion</th>
+          <th style={TH}>Experiment</th>
+          <th style={TH}>Strategy</th>
+          <th style={TH}>Dataset</th>
+          <th style={TH}>Model</th>
+          <th style={TH}>Timepoint</th>
+          {allTypes.map((t) => {
+            const h = typeHeader(t);
+            return <th key={t} style={TH} title={h.title}>{h.text}</th>;
+          })}
+          <th style={TH}>Overall Avg</th>
+          <th style={TH}>OD Gap</th>
         </tr>
       </thead>
       <tbody>
@@ -24,21 +52,23 @@ export function LeaderboardTable({ rows }: { rows: LeaderboardRow[] }) {
             key={i}
             style={{ background: row.is_champion ? "#fffde7" : undefined }}
           >
-            <td style={{ padding: "4px 8px", textAlign: "center" }}>
+            <td style={{ ...TD, textAlign: "center" }}>
               {row.is_champion ? "★" : ""}
             </td>
-            <td style={{ padding: "4px 8px" }}>{row.experiment}</td>
-            <td style={{ padding: "4px 8px" }}>{row.condition}</td>
-            <td style={{ padding: "4px 8px" }}>{row.dataset}</td>
+            <td style={TD}>{row.experiment}</td>
+            <td style={TD}>{row.condition}</td>
+            <td style={TD}>{row.dataset}</td>
+            <td style={TD}>{row.model ?? "—"}</td>
+            <td style={TD}><code>{row.run_id ?? "—"}</code></td>
             {allTypes.map((t) => (
-              <td key={t} style={{ padding: "4px 8px" }}>
+              <td key={t} style={TD}>
                 {row.by_type[t] != null ? (row.by_type[t] as number).toFixed(3) : "—"}
               </td>
             ))}
-            <td style={{ padding: "4px 8px" }}>
+            <td style={TD}>
               {row.overall_average != null ? row.overall_average.toFixed(3) : "—"}
             </td>
-            <td style={{ padding: "4px 8px" }}>
+            <td style={TD}>
               {row.overdetermination_gap != null ? row.overdetermination_gap.toFixed(3) : "—"}
             </td>
           </tr>
@@ -66,6 +96,7 @@ export function Leaderboard() {
   return (
     <div>
       <h2>Leaderboard</h2>
+      <BenchmarkLegend />
       <LeaderboardTable rows={rows} />
     </div>
   );
