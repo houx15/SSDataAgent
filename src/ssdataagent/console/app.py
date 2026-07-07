@@ -13,6 +13,7 @@ from pydantic import BaseModel
 from ssdataagent.config import REPO_ROOT, results_root as default_results_root
 from ssdataagent.console import compare as _compare
 from ssdataagent.console import db, forking, leaderboard, notebook as _notebook, queue as _q, sync
+from ssdataagent.console import strategies as _strategies
 from ssdataagent import reports as _reports
 
 
@@ -74,6 +75,31 @@ def create_app(
                 q += " AND e.model = ?"; params.append(model)
             records = [dict(row) for row in conn.execute(q, params).fetchall()]
             return {"rows": leaderboard.build_rows(records)}
+
+    _paper = REPO_ROOT / "config" / "paper_baselines.json"
+
+    def _all_records() -> list[dict]:
+        sync.sync_index(conn, root)
+        q = ("SELECT r.*, e.model AS model FROM runs r "
+             "JOIN experiments e ON e.name = r.experiment")
+        return [dict(row) for row in conn.execute(q).fetchall()]
+
+    @app.get("/api/strategies")
+    def get_strategies():
+        with app.state.db_lock:
+            records = _all_records()
+        paper = json.loads(_paper.read_text())
+        return {"strategies": _strategies.build_board(records, paper)}
+
+    @app.get("/api/strategies/{family}")
+    def get_strategy_detail(family: str):
+        with app.state.db_lock:
+            records = _all_records()
+        paper = json.loads(_paper.read_text())
+        detail = _strategies.build_detail(family, records, paper)
+        if not detail["rows"]:
+            raise HTTPException(status_code=404, detail=f"no runs for strategy {family!r}")
+        return detail
 
     @app.get("/api/runs/{name}/detail")
     def get_run_detail(name: str):

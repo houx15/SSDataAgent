@@ -15,6 +15,28 @@ export const PNAS_BENCHMARKS: Record<string, { short: string; label: string }> =
   type5: { short: "T5", label: "Event-order × covariate" },
 };
 
+export type TypeCmp = { t: string; ours: number | null; paper: number | null; delta: number | null };
+
+export type StrategyBoardRow = {
+  family: string; blurb: string;
+  best_dataset: string; data_mode: string; condition: string;
+  experiment: string; run_id: string | null; model: string | null;
+  overall_average: number; paper_overall: number | null; delta_overall: number | null;
+  types: TypeCmp[]; n_runs: number;
+};
+
+export type StrategyDetailRow = {
+  dataset: string; condition: string; data_mode: string;
+  model: string | null; run_id: string | null; experiment: string;
+  overall_average: number; paper_overall: number | null; delta_overall: number | null;
+  types: TypeCmp[];
+};
+
+export type StrategyDetail = {
+  family: string; blurb: string; models: string[]; datasets: string[];
+  data_modes: string[]; n_runs: number; rows: StrategyDetailRow[];
+};
+
 async function getJSON<T>(url: string): Promise<T> {
   const r = await fetch(url);
   if (!r.ok) throw new Error(`${url}: ${r.status}`);
@@ -27,6 +49,8 @@ async function postJSON<T>(url: string, body: unknown): Promise<T> {
 }
 
 export const api = {
+  strategies: () => getJSON<{ strategies: StrategyBoardRow[] }>("/api/strategies"),
+  strategyDetail: (family: string) => getJSON<StrategyDetail>(`/api/strategies/${encodeURIComponent(family)}`),
   leaderboard: () => getJSON<{ rows: LeaderboardRow[] }>("/api/leaderboard"),
   runs: () => getJSON<{ experiments: any[] }>("/api/runs"),
   runDetail: (name: string) => getJSON<any>(`/api/runs/${name}/detail`),
