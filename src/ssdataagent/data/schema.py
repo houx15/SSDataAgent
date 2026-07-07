@@ -47,6 +47,10 @@ class DatasetSchema:
     ssdatabench_sim_subdir: str
     evaluation_script: str
     domains: dict[str, str] = field(default_factory=dict)
+    # Optional larger source CSV (only some longitudinal datasets ship one).
+    # Used to draw bigger train/eval samples than the fixed `real_data_path`
+    # so the sparse life-event-timing subset stabilizes the T4/T5 tests.
+    full_source_path: Path | None = None
 
 
 def _registry() -> dict[str, dict]:
@@ -108,4 +112,8 @@ def load_schema(name: str) -> DatasetSchema:
         ssdatabench_sim_subdir=entry["ssdatabench_sim_subdir"],
         evaluation_script=entry["evaluation_script"],
         domains=domains,
+        full_source_path=(
+            _resolve_data_path(entry["full_source_path"])
+            if entry.get("full_source_path") else None
+        ),
     )

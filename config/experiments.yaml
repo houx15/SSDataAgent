@@ -47,6 +47,31 @@ experiments:
     llm_provider: openai
     llm_base_url: https://api.openai.com/v1
 
+  # T4 event-order fix: joint event-timing repair + full-source data scale.
+  # Longitudinal life-event ages (work/sex/marriage) are drawn independently by
+  # every strategy -> T4 (event ordering) scores a rock-solid 0.000. This
+  # experiment (a) draws 6000 rows from the full source so the sparse
+  # all-three-events subset is large enough to stabilize the over-powered T4/T5
+  # bootstrap, and (b) replaces the event-age block with a covariate-matched
+  # joint donor resample. Offline validation (6 seeds): T4 0.000 -> ~0.43 mean,
+  # T5 preserved (~0.8). T4 is HIGH-VARIANCE per run -> launch several seeds and
+  # read the mean. Copy this block with seed: 43, 44, ... for multi-seed.
+  ship_t4_addhealth:
+    datasets: [addhealth]
+    conditions: [full_agent, design_c_full]
+    max_iterations: 1
+    sandbox_timeout: 90
+    train_eval_split: 0.5
+    n_rows: 3000
+    seed: 42
+    full_source_sample: 6000
+    event_timing_repair: true
+    event_timing_condition_cols:
+      addhealth: [gender, race]
+    llm_model: gpt-5.4-2026-03-05
+    llm_provider: openai
+    llm_base_url: https://api.openai.com/v1
+
   # Tier 2 — per-cell strategies (Design B + S1) ONLY on the small-cell datasets
   # cps (35 cells) and acs (54 cells). One gpt-5.4 call per cell, so these are
   # deliberately kept off gss/longitudinal (hundreds of cells each).

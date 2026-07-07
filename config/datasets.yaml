@@ -44,12 +44,14 @@ datasets:
     type: longitudinal
   addhealth:
     real_data_path: real_data/used_dataset/sampled_addhealth.csv
+    full_source_path: real_data/addhealth/addhealth_1994_2018.csv
     ssdatabench_yaml: ssdatabench/real_data/data_configs/AddHealth.yaml
     ssdatabench_sim_subdir: addhealth
     evaluation_script: scripts/evaluation/addhealth.py
     type: longitudinal
   cfps:
     real_data_path: real_data/used_dataset/sampled_cfps.csv
+    full_source_path: real_data/cfps/cfps_2010_2022.csv
     ssdatabench_yaml: ssdatabench/real_data/data_configs/cfps.yaml
     ssdatabench_sim_subdir: cfps
     evaluation_script: scripts/evaluation/cfps.py

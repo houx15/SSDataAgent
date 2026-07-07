@@ -9,6 +9,7 @@ from pathlib import Path
 from ssdataagent.agent.context import Condition
 from ssdataagent.agent.llm_client import build_client
 from ssdataagent.config import REPO_ROOT, load_llm_config, results_root
+from ssdataagent.data.event_timing import conditional_joint_repair, event_timing_variables
 from ssdataagent.data.loader import load_real_data
 from ssdataagent.data.schema import load_schema
 from ssdataagent.data.splitter import split_train_eval
@@ -39,6 +40,19 @@ class ExperimentConfig:
     llm_model: str | None = None
     llm_provider: str | None = None
     llm_base_url: str | None = None
+    # Random seed for the train/eval split and event-timing repair. Vary it
+    # across otherwise-identical experiments to get multi-seed runs (T4/T5 are
+    # high-variance, so those benchmarks should be read as multi-seed means).
+    seed: int = 42
+    # Draw this many rows from the dataset's full source instead of the fixed
+    # paper sample (longitudinal datasets only) — needed for the sparse
+    # life-event subset to stabilize T4/T5. None = keep the paper sample.
+    full_source_sample: int | None = None
+    # Replace the life-event-timing columns with a joint donor resample matched
+    # on covariates (fixes T4 event-order, preserves T5). Only fires for
+    # conditions that expose fit microdata and datasets with a T4 event config.
+    event_timing_repair: bool = False
+    event_timing_condition_cols: dict[str, list[str]] = field(default_factory=dict)
 
 
 def _run_id() -> str:
@@ -133,8 +147,8 @@ def run_experiment(
     results: dict[tuple[str, str], PassRates] = {}
 
     for dataset in cfg.datasets:
-        df = load_real_data(dataset)
-        train, eval_df = split_train_eval(df, ratio=cfg.train_eval_split, seed=42)
+        df = load_real_data(dataset, n_sample=cfg.full_source_sample, seed=cfg.seed)
+        train, eval_df = split_train_eval(df, ratio=cfg.train_eval_split, seed=cfg.seed)
         for cond_name in cfg.conditions:
             spec = get_condition(cond_name)
             cond_dir = cfg.results_root / cfg.name / cond_name / dataset
@@ -167,6 +181,37 @@ def run_experiment(
     return results
 
 
+_DEFAULT_EVENT_COND_COLS = ["gender", "race"]
+
+
+def _maybe_repair_event_timing(generated, *, gate, dataset, cfg):
+    """Optionally replace the life-event-timing columns with a covariate-matched
+    joint donor resample (see ssdataagent.data.event_timing). Returns
+    ``(frame, meta)``; a no-op returns the frame unchanged with empty meta.
+
+    Only fires when the experiment opts in, the condition exposes fit microdata
+    (a real donor pool — FULL/NO_SEMANTIC/UNSEEN), and the dataset has a T4
+    event config. NO_DATA/aggregate/DIRECT have no donor and are left alone.
+    """
+    import numpy as np
+
+    if not cfg.event_timing_repair:
+        return generated, {}
+    donor = gate.fit_microdata()
+    if donor is None:
+        return generated, {}
+    event_vars = event_timing_variables(dataset)
+    if not event_vars:
+        return generated, {}
+    cond_cols = cfg.event_timing_condition_cols.get(dataset, _DEFAULT_EVENT_COND_COLS)
+    repaired = conditional_joint_repair(
+        generated, donor, event_vars,
+        condition_cols=cond_cols, rng=np.random.default_rng(cfg.seed),
+    )
+    return repaired, {"event_timing_repair": {"event_vars": event_vars,
+                                              "condition_cols": cond_cols}}
+
+
 def _run_one_condition(
     *, spec, dataset, run_id, run_dir, workspace, train, eval_df, cfg, client, llm_cfg,
 ) -> PassRates:
@@ -194,6 +239,9 @@ def _run_one_condition(
         )
     strategy = get_strategy(spec.strategy)
     result = strategy.generate(gate, run_dir, cfg)
+    generated, repair_meta = _maybe_repair_event_timing(
+        result.generated, gate=gate, dataset=dataset, cfg=cfg,
+    )
     meta = {
         "experiment": cfg.name,
         "dataset": dataset,
@@ -204,7 +252,8 @@ def _run_one_condition(
         "provider": llm_cfg.provider,
     }
     meta.update(result.meta_extras)
+    meta.update(repair_meta)
     return _write_common(
-        run_dir=run_dir, meta=meta, generated=result.generated,
+        run_dir=run_dir, meta=meta, generated=generated,
         dataset=dataset, run_id=run_id, eval_df=eval_df,
     )
