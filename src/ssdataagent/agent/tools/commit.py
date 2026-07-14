@@ -4,9 +4,15 @@
 The actual sampling happens in the orchestrator after the loop exits — the
 tool just validates the chain and flips `state.committed = True`.
 
-When the chain has multiple event-age columns (longitudinal datasets), the
-commit is gated on `score_event_order` having been called — see EXP-006e
-retro for why this gate exists.
+Gates here are ADVISORY: they warn and record, they never refuse. The chronology
+check used to *block* commit until `score_event_order` had run — but that tool
+crashed on datasets whose event-age columns carry string sentinels ('never
+married'), which made the gate unsatisfiable. On cfps the agent then spent half
+its turn budget on six failed commits, progressively destroying the very event
+columns the gate was meant to protect, and still shipped a T4 score of 0.000. A
+gate that can become unsatisfiable is a trap, and the agent cannot tell a broken
+tool from a broken model. So the forcing function now lives in the *score*, where
+a bad choice is visible, rather than in a refusal, where it is punitive.
 
 `report_progress` is a no-op narrative hook the agent can use to journal
 its decisions; the orchestrator persists progress_log alongside transcript.json.
@@ -58,35 +64,12 @@ def commit_generator(state: RuntimeState) -> dict:
     # this gate (EXP-006f) — that path keeps the run alive at the cost of a
     # T4 penalty, instead of crashing with the gate as the only blocker.
     event_cols = _event_age_columns(chain.generation_order)
-    gate_bypassed = False
-    if len(event_cols) >= 2 and not state.t4_unverified:
+    chronology_unverified = False
+    if len(event_cols) >= 2:
         event_set = set(event_cols)
-        scored_pair = any(
-            len(event_set & set(call)) >= 2
-            for call in state.event_order_calls
+        chronology_unverified = not any(
+            len(event_set & set(call)) >= 2 for call in state.event_order_calls
         )
-        if not scored_pair:
-            return {
-                "error": "missing_event_order_check",
-                "event_age_columns": sorted(event_cols),
-                "details": (
-                    f"This chain has {len(event_cols)} event-age columns "
-                    f"({sorted(event_cols)}); commit requires score_event_order "
-                    "to have been called with at least two of them in chronological "
-                    "order so T4 (event ordering) is verified, not assumed. "
-                    "Call score_event_order(events=[...]) and then retry commit_generator."
-                ),
-            }
-    elif len(event_cols) >= 2 and state.t4_unverified:
-        # Gate bypassed by the orchestrator. Verify the bypass was needed
-        # (the gate would have blocked otherwise) so the warning we surface
-        # accurately describes what happened.
-        event_set = set(event_cols)
-        scored_pair = any(
-            len(event_set & set(call)) >= 2
-            for call in state.event_order_calls
-        )
-        gate_bypassed = not scored_pair
 
     # Auto-fill any unfit cols with empirical so sample() doesn't raise.
     from ssdataagent.agent.tools.fit import MarginalStep
@@ -138,14 +121,12 @@ def commit_generator(state: RuntimeState) -> dict:
         "generation_order": list(chain.generation_order),
         "auto_filled_with_empirical": auto_filled,
     }
-    if gate_bypassed:
-        # Surface the bypass loudly so reporting code + a human reading
-        # tool_calls.json can see this chain shipped without chronology
-        # verification — T4 will be penalized accordingly.
+    if chronology_unverified:
+        state.t4_unverified = True
         result["t4_unverified"] = True
         result["warning"] = (
-            "committed without score_event_order coverage of event-age columns; "
-            "T4 (event ordering) will be penalized in evaluation"
+            "committed without score_event_order coverage of the event-age columns "
+            f"({sorted(event_cols)}); T4 (event ordering) is unverified and may score 0"
         )
     return result
 

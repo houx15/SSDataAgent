@@ -52,6 +52,10 @@ datasets:
   cfps:
     real_data_path: real_data/used_dataset/sampled_cfps.csv
     full_source_path: real_data/cfps/cfps_2010_2022.csv
+    # Unique row key in the full source. The 1000 benchmark rows are a subset of
+    # the 58,474-row source, so excluding these ids yields a training pool that is
+    # provably disjoint from what we're scored against.
+    full_source_key: pid
     ssdatabench_yaml: ssdatabench/real_data/data_configs/cfps.yaml
     ssdatabench_sim_subdir: cfps
     evaluation_script: scripts/evaluation/cfps.py

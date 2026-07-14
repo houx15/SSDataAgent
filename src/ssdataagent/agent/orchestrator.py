@@ -352,27 +352,10 @@ class Orchestrator:
                 transcript.append(TranscriptEntry(
                     "tool", f"[forced commit_generator] -> {forced!r}", "auto_commit",
                 ))
-                # EXP-006f: when the chronology gate is the *only* blocker,
-                # set state.t4_unverified and retry. The chain ships penalized
-                # on T4 instead of the run crashing — and we still get the
-                # tool_calls.json / transcript.json forensic data.
-                if forced.get("error") == "missing_event_order_check":
-                    _heartbeat(
-                        "chronology gate blocked forced commit; retrying with "
-                        "t4_unverified=True (run will be penalized on T4)"
-                    )
-                    state.t4_unverified = True
-                    forced = commit_generator(state)
-                    tool_call_log.append({
-                        "turn": turn + 2,
-                        "tool": "commit_generator (forced, t4_unverified)",
-                        "arguments": {}, "result": forced, "duration_s": 0.0,
-                    })
-                    transcript.append(TranscriptEntry(
-                        "tool",
-                        f"[forced commit_generator t4_unverified=True] -> {forced!r}",
-                        "auto_commit",
-                    ))
+                # The chronology gate is advisory now, so it can no longer be the
+                # thing that blocks a forced commit — the t4_unverified retry that
+                # used to live here is gone with it. Anything still erroring is a
+                # genuinely broken chain.
                 if forced.get("error"):
                     # Genuinely broken chain (empty, unknown column, etc.) —
                     # no escape hatch for these. Raise *inside* the try so the

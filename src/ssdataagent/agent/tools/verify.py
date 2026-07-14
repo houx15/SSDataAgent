@@ -29,6 +29,12 @@ T1_NUMERIC_THRESHOLD = 0.10        # KS statistic ≤ this = pass
 T1_CATEGORICAL_THRESHOLD = 0.10    # TV distance ≤ this = pass
 T2_THRESHOLD = 0.15                # |Δr| or |ΔV| ≤ this = pass
 T4_THRESHOLD = 0.80                # compliance rate ≥ this = pass
+# T3 compares the R² of `col ~ given` between real and sim via a delta-method
+# z-test, and scores the fraction of bootstrap iterations that fail to reject.
+# n=500 is the eval's bootstrap_sample_n. Reproduced here so the agent can see
+# the thing it is actually graded on instead of inferring it.
+T3_BOOTSTRAP_N = 500
+T3_ALPHA = 0.05
 
 
 # ===================== sampling helper =====================
@@ -291,17 +297,159 @@ def score_event_order(state: RuntimeState, events: list[str]) -> dict:
     }
 
 
+# ===================== score_conditional (T3) =====================
+
+
+def _r2(df: pd.DataFrame, col: str, given: list[str]) -> tuple[float | None, int]:
+    """R² of an OLS of `col` on `given`, using the eval's own preparation:
+    coerce the response to numeric (so censoring sentinels like 'never married'
+    become NaN), then drop rows missing the response or any predictor. That
+    dropna is why missingness matters so much — it decides which subpopulation
+    the regression is even fit on."""
+    import statsmodels.formula.api as smf
+
+    d = df[[col] + given].copy()
+    d[col] = pd.to_numeric(d[col], errors="coerce")
+    for g in given:
+        if not pd.api.types.is_numeric_dtype(d[g]):
+            d[g] = d[g].astype(str).replace({"nan": np.nan}).astype("category")
+    d = d.dropna()
+    if len(d) < max(20, 2 * len(given) + 2) or d[col].nunique() < 3:
+        return None, len(d)
+    formula = f"Q('{col}') ~ " + " + ".join(f"Q('{g}')" for g in given)
+    try:
+        return float(smf.ols(formula, data=d).fit().rsquared), len(d)
+    except Exception:
+        return None, len(d)
+
+
+def score_conditional(state: RuntimeState, col: str, given: list[str]) -> dict:
+    """Score `col ~ given` the way SSDataBench's T3 does — by comparing the
+    regression's R², not its coefficients.
+
+    This is the benchmark the chain was flying blind on. A column drawn from a
+    marginal has R² ≈ 0 against a real 0.2-0.5, which fails every bootstrap
+    iteration and scores a flat 0.000. Equally, `n_sim` far exceeding `n_real`
+    means the two regressions are fit on different subpopulations — usually
+    because the sim lost the column's missingness.
+    """
+    from scipy.stats import norm
+
+    if (refusal := _refusal(state)) is not None:
+        return refusal
+    if not isinstance(given, list) or not given:
+        return {"error": "bad_arguments", "details": "given must be a non-empty list"}
+
+    sim, err = _preview_sample(state, n_rows=max(1000, len(state.held_out)))
+    if err is not None:
+        return err
+    for c in [col] + given:
+        if c not in sim.columns:
+            return {"error": "unknown_column", "details": f"{c!r} not in the chain"}
+        if c not in state.held_out.columns:
+            return {"error": "unknown_column", "details": f"{c!r} not in held_out"}
+
+    r2_real, n_real = _r2(state.held_out, col, given)
+    r2_sim, n_sim = _r2(sim, col, given)
+    if r2_real is None:
+        return {
+            "error": "real_model_unfittable",
+            "details": f"cannot fit {col!r} ~ {given} on held_out (n={n_real}); "
+                       "the eval will skip this response too",
+        }
+    if r2_sim is None:
+        return {
+            "col": col, "given": given, "metric": "r2_match",
+            "r2_real": _to_jsonable(r2_real), "r2_sim": None,
+            "n_real": n_real, "n_sim": n_sim, "pass": False,
+            "details": "the simulated rows can't support this regression at all",
+        }
+
+    n = T3_BOOTSTRAP_N
+    se_real = np.sqrt(4 * r2_real * (1 - r2_real) ** 2 / n)
+    se_sim = np.sqrt(4 * r2_sim * (1 - r2_sim) ** 2 / n)
+    se = np.sqrt(se_real ** 2 + se_sim ** 2)
+    z = (r2_real - r2_sim) / se if se > 0 else np.inf
+    p = float(2 * norm.sf(abs(z)))
+
+    # What matters is the FRACTION of rows that survive into the regression, not
+    # the raw counts — held_out and the chain sample are different sizes, so raw
+    # counts would always look mismatched.
+    keep_real = n_real / max(len(state.held_out), 1)
+    keep_sim = n_sim / max(len(sim), 1)
+
+    out = {
+        "col": col, "given": given, "metric": "r2_match",
+        "r2_real": _to_jsonable(r2_real), "r2_sim": _to_jsonable(r2_sim),
+        "abs_delta": _to_jsonable(abs(r2_real - r2_sim)),
+        "p_value": _to_jsonable(p),
+        "pass": bool(p > T3_ALPHA),
+        "n_real": int(n_real), "n_sim": int(n_sim),
+        "scored_fraction_real": _to_jsonable(keep_real),
+        "scored_fraction_sim": _to_jsonable(keep_sim),
+    }
+    if r2_real > 0.02 and r2_sim < 0.25 * r2_real:
+        out["diagnosis"] = (
+            f"sim R²={r2_sim:.3f} vs real {r2_real:.3f} — {col!r} is close to "
+            "independent of its predictors. A marginal step, or an empirical_lookup "
+            "that is falling back to the global pool, would do exactly this."
+        )
+    elif keep_real > 0 and (keep_sim > 1.25 * keep_real or keep_sim < 0.8 * keep_real):
+        out["diagnosis"] = (
+            f"{keep_sim:.0%} of simulated rows enter this regression vs {keep_real:.0%} "
+            f"of real ones — it is being fit on a different subpopulation. Usually "
+            f"{col!r} lost its missingness, so rows that should have dropped out of the "
+            "test are still in it."
+        )
+    return out
+
+
 # ===================== score_overall =====================
 
 
-def score_overall(state: RuntimeState) -> dict:
-    """Run score_marginal on every column in the chain. Returns a summary
-    table. Cheap proxy for "how good is the in-progress chain right now".
+# Cap the predictor set: T3's own configs use a handful of demographic /
+# attainment covariates, and a long `given` thins the regression's rows for no gain.
+_MAX_T3_PREDICTORS = 3
 
-    Note: this only covers per-column marginals (T1). When the chain has
-    multiple event-age columns, we surface a `chronology_hint` so the agent
-    doesn't treat this score as the final criterion — T4 (event ordering)
-    requires `score_event_order`.
+
+def _conditional_targets(state: RuntimeState) -> list[tuple[str, list[str]]]:
+    """(response, predictors) pairs the composite score always evaluates.
+
+    Derived from the DATA, not from the chain: any numeric column whose R² on the
+    leading columns of the generation order is meaningfully above zero has real
+    structure that a good chain owes us. Reading targets off the chain instead
+    would let the agent delete a conditional and thereby delete its own penalty.
+    """
+    order = state.chain.generation_order
+    held = state.held_out
+    predictors = [c for c in order[:6] if c in held.columns and held[c].nunique() > 1]
+    targets: list[tuple[str, list[str]]] = []
+    for col in order:
+        if col not in held.columns:
+            continue
+        num = pd.to_numeric(held[col], errors="coerce")
+        if num.notna().sum() < 30 or num.nunique() < 5:
+            continue  # T3 only regresses numeric responses with spread
+        given = [p for p in predictors if p != col][:_MAX_T3_PREDICTORS]
+        if not given:
+            continue
+        r2, _ = _r2(held, col, given)
+        if r2 is not None and r2 > 0.02:   # there IS structure here to reproduce
+            targets.append((col, given))
+    return targets
+
+
+def score_overall(state: RuntimeState) -> dict:
+    """Composite health check for the in-progress chain: marginals (T1) AND the
+    conditional structure (T3) that the benchmark also grades.
+
+    It used to report marginal pass-rate ALONE, and that was actively harmful.
+    Replacing a conditional step with `fit_marginal` makes a column's marginal
+    perfect *by construction* — so under a marginal-only score, deleting the
+    model is always the winning move. On both acs and cfps the agent did exactly
+    that, wiping out the conditional structure for precisely the T3 response
+    variables and scoring 0.000. It was not being careless; it was maximizing the
+    number we gave it. So the number now includes what it costs.
     """
     if (refusal := _refusal(state)) is not None:
         return refusal
@@ -314,11 +462,41 @@ def score_overall(state: RuntimeState) -> dict:
         rows.append({"col": col, **{k: v for k, v in out.items() if k != "col"}})
         if out.get("pass"):
             n_pass += 1
+    marginal_rate = n_pass / len(rows) if rows else None
+
+    # T3 side. The response set is FIXED — every numeric column that has real
+    # conditional structure — and is NOT read off the current chain. If we only
+    # scored steps that still have parents, then deleting a conditional would
+    # delete its own penalty, and the Goodhart loophole would simply reopen: a
+    # chain of pure marginals would score a perfect conditional rate on the empty
+    # set. A column with structure in the data owes an explanation either way.
+    cond_rows, cond_pass = [], 0
+    for col, given in _conditional_targets(state):
+        c = score_conditional(state, col, given)
+        if c.get("error"):
+            continue
+        cond_rows.append({k: c.get(k) for k in
+                          ("col", "given", "r2_real", "r2_sim", "pass", "diagnosis")
+                          if c.get(k) is not None})
+        cond_pass += bool(c.get("pass"))
+    conditional_rate = cond_pass / len(cond_rows) if cond_rows else None
+
+    parts = [r for r in (marginal_rate, conditional_rate) if r is not None]
     result: dict[str, Any] = {
+        "composite_score": _to_jsonable(sum(parts) / len(parts)) if parts else None,
+        "marginal_pass_rate": _to_jsonable(marginal_rate),
+        "conditional_pass_rate": _to_jsonable(conditional_rate),
         "n_columns": len(rows),
         "n_pass": n_pass,
-        "pass_rate": _to_jsonable(n_pass / len(rows)) if rows else None,
+        "pass_rate": _to_jsonable(marginal_rate),  # kept for backwards compatibility
         "rows": rows,
+        "conditional_rows": cond_rows,
+        "note": (
+            "composite_score averages the marginal (T1) and conditional (T3) pass "
+            "rates. Swapping a conditional step for fit_marginal raises the first "
+            "and destroys the second — the trade is visible here, so make it "
+            "deliberately."
+        ),
     }
     # Hint for longitudinal chains — only when there's actually chronology to check.
     from ssdataagent.agent.tools.commit import _event_age_columns

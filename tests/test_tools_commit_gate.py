@@ -110,17 +110,22 @@ def test_commit_allowed_on_cross_sectional(cross_state):
     assert cross_state.committed is True
 
 
-def test_commit_rejected_when_longitudinal_lacks_event_order(long_state):
-    """Two event-age columns + no score_event_order call = blocked commit.
-    The error must name the gate so the agent self-corrects."""
+def test_commit_warns_but_allows_when_longitudinal_lacks_event_order(long_state):
+    """The chronology check is ADVISORY: two event-age columns and no
+    score_event_order call must still commit, carrying a warning.
+
+    It used to block. On cfps, score_event_order crashed on the 'never married'
+    string sentinel, which made the gate unsatisfiable — the agent then burned
+    half its turn budget on six failed commits, destroying the event columns the
+    gate existed to protect. A gate that can become unsatisfiable is a trap."""
     _fit_long_chain(long_state)
     out = dispatch(long_state, "commit_generator", {})
-    assert out.get("committed") is not True
-    assert out.get("error") == "missing_event_order_check"
-    # The error must list the event-age columns the agent needs to score.
-    detected = set(out.get("event_age_columns", []))
-    assert {"age_at_first_marriage", "age_at_first_child"} <= detected
-    assert long_state.committed is False
+    assert out.get("committed") is True, f"gate must not block: {out}"
+    assert out.get("error") is None
+    assert out.get("t4_unverified") is True
+    assert "score_event_order" in (out.get("warning", "") or "")
+    assert long_state.committed is True
+    assert long_state.t4_unverified is True
 
 
 def test_commit_allowed_when_event_order_called(long_state):
@@ -258,28 +263,19 @@ def test_score_overall_no_hint_when_no_event_age_cols(cross_state):
 # ---------- EXP-006f: forced-commit bypass for max_turns escape hatch ----------
 
 
-def test_commit_bypasses_gate_when_t4_unverified_flag_set(long_state):
-    """When the orchestrator hits max_turns with the chronology gate as the
-    only blocker, it sets `state.t4_unverified = True` and retries commit.
-    The retry must succeed and surface the flag so downstream reporting
-    can mark this run as having an unverified T4."""
+def test_commit_after_event_order_check_carries_no_warning(long_state):
+    """The advisory flag is earned, not automatic: once score_event_order has
+    actually covered the event-age columns, the commit must be clean — no
+    t4_unverified, no warning. Otherwise the warning is noise and the agent
+    learns to ignore it."""
     _fit_long_chain(long_state)
+    score_event_order(long_state, ["age_at_first_marriage", "age_at_first_child"])
 
-    # First commit blocked by gate (control).
-    blocked = dispatch(long_state, "commit_generator", {})
-    assert blocked.get("error") == "missing_event_order_check"
-
-    # Orchestrator escape hatch: force-commit by flagging the state.
-    long_state.t4_unverified = True
     out = dispatch(long_state, "commit_generator", {})
     assert out.get("committed") is True, f"expected committed, got {out}"
-    assert out.get("t4_unverified") is True, (
-        "result must surface t4_unverified so reporting can flag the run"
-    )
-    # The warning string must mention score_event_order so a human reader
-    # of tool_calls.json can see what was skipped.
-    assert "score_event_order" in (out.get("warning", "") or "")
-    assert long_state.committed is True
+    assert out.get("t4_unverified") is None
+    assert out.get("warning") is None
+    assert long_state.t4_unverified is False
 
 
 def test_commit_with_t4_unverified_flag_does_not_warn_on_cross_sectional(cross_state):

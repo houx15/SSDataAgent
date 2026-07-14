@@ -232,13 +232,17 @@ def longitudinal_workspace(tmp_path: Path) -> Path:
     return ws
 
 
-def test_max_turns_chronology_gate_retries_with_t4_unverified(longitudinal_workspace: Path):
-    """The EXP-006e cfps failure mode: agent fits a longitudinal chain but
-    never calls score_event_order. At max_turns the orchestrator force-commits;
-    the gate refuses; the orchestrator sets t4_unverified and retries.
+def test_longitudinal_chain_commits_on_first_try_and_flags_unverified_t4(
+    longitudinal_workspace: Path,
+):
+    """A longitudinal chain that never calls score_event_order must commit on the
+    agent's FIRST attempt, carrying t4_unverified — not be refused.
 
-    The run must complete (not raise) and the artefacts must mark the chain
-    as T4-unverified so reporting can flag the run."""
+    The gate used to block, and the orchestrator needed a force-commit retry to
+    escape it. That retry is gone: on cfps the gate was unsatisfiable (its tool
+    crashed on the 'never married' sentinel), so the agent hit it six times and
+    mutilated its own event columns trying to appease it. The chain must ship,
+    and the T4 penalty must be recorded rather than enforced."""
     ws = longitudinal_workspace
     responses = [
         _make_response(calls=[("set_generation_order", {
@@ -247,44 +251,30 @@ def test_max_turns_chronology_gate_retries_with_t4_unverified(longitudinal_works
         _make_response(calls=[("fit_marginal", {"col": "gender"})]),
         _make_response(calls=[("fit_marginal", {"col": "age_at_first_marriage"})]),
         _make_response(calls=[("fit_marginal", {"col": "age_at_first_child"})]),
-        # Agent tries to commit but never called score_event_order — gate refuses.
+        # Never calls score_event_order — this used to be refused.
         _make_response(calls=[("commit_generator", {})]),
-        # ...then keeps spinning without engaging the gate. max_turns=6 stops it.
-        _make_response(calls=[("list_columns", {})]),
     ]
     client = _stub_client(responses)
     orch = Orchestrator(
         client=client, n_rows=10,
         prompt_variant="rubric_tools", max_turns=6,
     )
-    # Crucially: this MUST NOT raise. Before EXP-006f it did.
     result = orch.run(
         condition=Condition.FULL, dataset_name="long_test",
         workspace=ws, has_data=True, has_descriptions=True,
     )
     assert len(result.generated) == 10
-    # tool_calls.json must show both forced attempts: the gate-blocked one,
-    # then the t4_unverified retry that succeeded.
-    assert (ws / "tool_calls.json").exists()
+
     tool_log = json.loads((ws / "tool_calls.json").read_text())
-    forced_blocked = [
-        e for e in tool_log
-        if e["tool"] == "commit_generator (forced)"
-        and e["result"].get("error") == "missing_event_order_check"
-    ]
-    forced_unverified = [
-        e for e in tool_log
-        if e["tool"] == "commit_generator (forced, t4_unverified)"
-        and e["result"].get("committed") is True
-    ]
-    assert len(forced_blocked) == 1, (
-        f"expected one gate-blocked force-commit; got {[e['tool'] for e in tool_log]}"
+    commits = [e for e in tool_log if e["tool"].startswith("commit_generator")]
+    assert len(commits) == 1, (
+        f"agent's own commit must succeed, with no forced retry; got {[e['tool'] for e in commits]}"
     )
-    assert len(forced_unverified) == 1, (
-        "expected the t4_unverified retry to succeed and be logged"
-    )
-    assert forced_unverified[0]["result"].get("t4_unverified") is True
-    # chain.json + run result must surface the unverified flag for reporting.
+    assert commits[0]["result"].get("committed") is True
+    assert commits[0]["result"].get("t4_unverified") is True
+    assert "score_event_order" in commits[0]["result"].get("warning", "")
+
+    # chain.json + run result must still surface the flag for reporting.
     chain_meta = json.loads((ws / "chain.json").read_text())
     assert chain_meta.get("t4_unverified") is True
     assert result.chain_meta.get("t4_unverified") is True

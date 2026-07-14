@@ -25,6 +25,12 @@ CONDITIONS: dict[str, ConditionSpec] = {
         "direct_generation", Condition.DIRECT, strategy="direct"
     ),
     "hotdeck": ConditionSpec("hotdeck", Condition.FULL, strategy="hotdeck"),
+    "block_donor_full": ConditionSpec(
+        "block_donor_full", Condition.FULL, strategy="block_donor"
+    ),
+    "block_donor_transfer": ConditionSpec(
+        "block_donor_transfer", Condition.TRANSFER, strategy="block_donor"
+    ),
     "cart": ConditionSpec("cart", Condition.FULL, strategy="cart"),
     "copula": ConditionSpec("copula", Condition.FULL, strategy="copula"),
     "design_b_full": ConditionSpec("design_b_full", Condition.FULL, strategy="design_b"),

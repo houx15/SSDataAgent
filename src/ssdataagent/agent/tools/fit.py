@@ -96,6 +96,15 @@ class ConditionalStep(Step):
     # NA model — present only when allow_missing=True
     na_model: Any = None                     # sklearn classifier predicting P(NA | given)
 
+    def to_meta(self) -> dict:
+        # `given` is the whole dependency graph — without it chain.json records
+        # that a column was "conditional" but not on what, and the committed
+        # model can't be audited or replayed from the artifact.
+        return {
+            "col": self.col, "kind": self.kind, "family": self.family,
+            "given": list(self.given), "allow_missing": bool(self.allow_missing),
+        }
+
     def sample(self, rng: np.random.Generator, n_rows: int, partial: pd.DataFrame) -> np.ndarray:
         # Step 1: maybe sample NA mask first.
         na_mask = np.zeros(n_rows, dtype=bool)
@@ -256,27 +265,59 @@ class Chain:
     def add(self, step: Step) -> None:
         self.steps[step.col] = step
 
+    def add_alias(self, col: str, step: Step) -> None:
+        """Register one step under an additional column. Block steps (which emit
+        several columns from a single donor draw) live under every column they
+        produce, so sample() finds them wherever the generation order reaches the
+        block."""
+        self.steps[col] = step
+
     def remove(self, col: str) -> bool:
-        return self.steps.pop(col, None) is not None
+        step = self.steps.get(col)
+        if step is None:
+            return False
+        # Removing any column of a block removes the whole block — a block is
+        # only meaningful as a unit, and leaving orphaned aliases behind would
+        # let sample() emit columns from a step the agent thinks it deleted.
+        for c in list(getattr(step, "block_cols", None) or [col]):
+            self.steps.pop(c, None)
+        return True
 
     def sample(self, rng: np.random.Generator, n_rows: int) -> pd.DataFrame:
         if not self.generation_order:
             raise RuntimeError("Chain.sample called before set_generation_order")
         partial = pd.DataFrame(index=range(n_rows))
+        done: set[str] = set()
         for col in self.generation_order:
+            if col in done:
+                continue
             step = self.steps.get(col)
             if step is None:
                 # Should not happen — orchestrator's auto-commit fills missing
                 # cols with empirical marginals before reaching sample().
                 raise RuntimeError(f"no Step registered for column {col!r}")
-            partial[col] = step.sample(rng, n_rows, partial)
+            block = getattr(step, "block_cols", None)
+            if block:
+                # One donor draw supplies the whole block, so the within-block
+                # joint (chronology, flag/value coherence) survives verbatim.
+                drawn = step.sample_block(rng, n_rows, partial)
+                for c in block:
+                    partial[c] = drawn[c].to_numpy()
+                    done.add(c)
+            else:
+                partial[col] = step.sample(rng, n_rows, partial)
+                done.add(col)
         return partial
 
     def to_meta(self) -> dict:
-        return {
-            "generation_order": list(self.generation_order),
-            "steps": [self.steps[c].to_meta() for c in self.generation_order if c in self.steps],
-        }
+        steps, seen = [], set()
+        for c in self.generation_order:
+            step = self.steps.get(c)
+            if step is None or id(step) in seen:
+                continue
+            seen.add(id(step))
+            steps.append(step.to_meta())
+        return {"generation_order": list(self.generation_order), "steps": steps}
 
 
 # ===================== Tool implementations =====================
@@ -348,8 +389,19 @@ def set_generation_order(state: RuntimeState, cols: list[str]) -> dict:
     return {"set": True, "order": list(cols)}
 
 
-def fit_marginal(state: RuntimeState, col: str, family: str = "empirical") -> dict:
-    """Fit a marginal distribution for `col` and register it in the chain."""
+def fit_marginal(
+    state: RuntimeState, col: str, family: str = "empirical",
+    allow_missing: bool = True,
+) -> dict:
+    """Fit a marginal distribution for `col` and register it in the chain.
+
+    `allow_missing` (default True) draws from the column *including* its NaNs, so
+    the simulated missing rate matches real. It defaults on because the opposite
+    silently destroys structural missingness: SSDataBench coerces-to-numeric then
+    dropna()s in T1/T3/T4, so a column that is 60% missing in real but 0% missing
+    in sim puts an entirely different subpopulation into the scored regression.
+    Pass False only when you deliberately want a complete column.
+    """
     if (refusal := _refusal(state)) is not None:
         return refusal
     if (err := _column_missing(state, col)) is not None:
@@ -366,7 +418,8 @@ def fit_marginal(state: RuntimeState, col: str, family: str = "empirical") -> di
 
     step = MarginalStep(col=col, family=family)
     if family in ("empirical", "categorical_empirical"):
-        step.fit_values = nn.to_numpy()
+        # kde/normal need numeric support, so they always fit on non-NaN values.
+        step.fit_values = (s if allow_missing else nn).to_numpy()
     elif family == "kde":
         if not pd.api.types.is_numeric_dtype(s):
             return {"error": "non_numeric_for_kde", "details": f"kde requires numeric column; {col!r} is {s.dtype}"}
@@ -383,13 +436,22 @@ def fit_marginal(state: RuntimeState, col: str, family: str = "empirical") -> di
         # Auto-extend the order so the agent can fit marginals before
         # calling set_generation_order. They can re-order later.
         state.chain.generation_order.append(col)
-    return {
+    n_missing = int(s.isna().sum())
+    result = {
         "col": col,
         "family": family,
         "n_used": int(len(nn)),
-        "n_missing": int(s.isna().sum()),
+        "n_missing": n_missing,
+        "allow_missing": bool(allow_missing),
         "registered": True,
     }
+    if not allow_missing and n_missing:
+        result["warning"] = (
+            f"{col!r} is {n_missing / len(s):.0%} missing in train but this step will "
+            "emit no NaN. The eval drops missing rows before scoring T1/T3/T4, so the "
+            "simulated rows entering those tests will be a different subpopulation."
+        )
+    return result
 
 
 def fit_conditional(
