@@ -10,6 +10,7 @@ import traceback
 from typing import Callable
 
 from ssdataagent.agent.tools import commit as _commit
+from ssdataagent.agent.tools import donor as _donor
 from ssdataagent.agent.tools import fit as _fit
 from ssdataagent.agent.tools import inspect as _inspect
 from ssdataagent.agent.tools import verify as _verify
@@ -32,10 +33,12 @@ TOOL_REGISTRY: dict[str, Callable[..., dict]] = {
     "fit_marginal": _fit.fit_marginal,
     "fit_conditional": _fit.fit_conditional,
     "fit_copy_real": _fit.fit_copy_real,
+    "fit_block_donor": _donor.fit_block_donor,
     "replace_step": _fit.replace_step,
     # Verify family
     "sample_preview": _verify.sample_preview,
     "score_marginal": _verify.score_marginal,
+    "score_conditional": _verify.score_conditional,
     "score_pair": _verify.score_pair,
     "score_event_order": _verify.score_event_order,
     "score_overall": _verify.score_overall,

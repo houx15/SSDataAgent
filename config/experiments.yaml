@@ -56,6 +56,42 @@ experiments:
   # joint donor resample. Offline validation (6 seeds): T4 0.000 -> ~0.43 mean,
   # T5 preserved (~0.8). T4 is HIGH-VARIANCE per run -> launch several seeds and
   # read the mean. Copy this block with seed: 43, 44, ... for multi-seed.
+  # Block-donor on cfps, scored against the paper's benchmark sample WHOLE.
+  #
+  # Two changes from every earlier experiment, and both matter:
+  #   * disjoint_train_sample — train on 20k rows drawn from the 58k-row full
+  #     source EXCLUDING the 1000 benchmark rows (proven on `pid`), and score
+  #     against all 1000. Previously we halved the benchmark to manufacture
+  #     held-out training rows, which starved the model (400 fitting rows; several
+  #     T3 responses with <50 observations) AND scored us at half the paper's N.
+  #   * n_rows 5000 — the eval bootstraps 500 rows from sim per iteration, so
+  #     handing it more simulated rows cuts Monte-Carlo noise. Worth ~+0.13
+  #     overall on the bench, most of it in T4/T5.
+  #
+  # donor_granularity "mega" — demography, then every remaining column as ONE donor
+  # block conditioned on ALL of demography. The single block is what carries T2:
+  # every non-root pair comes from the same real person, so those associations are
+  # exact. Conditioning on all of demography (not a 3-column subset) is what carries
+  # the pairs that STRADDLE the root/rest boundary — with a short key those leak and
+  # plain hotdeck, which copies whole rows, beats us on T2.
+  #
+  # Multi-seed means over seeds 42-46, scored on the paper's 1000-row reference:
+  #   T1 0.853  T2 0.808  T3 0.762  T4 0.840  T5 0.832   overall 0.819
+  # vs PNAS  (0.14 / 0.62 / 0.43 / 0.05 / 0.75, overall 0.30)
+  # vs hotdeck at the same n (0.811 / 0.807 / 0.688 / 0.680 / 0.840, overall 0.765)
+  # T4/T5 are high-variance — read them as multi-seed means (copy this block with
+  # seed: 43, 44, ...).
+  ship_cfps_donor:
+    datasets: [cfps]
+    conditions: [block_donor_full, hotdeck]
+    max_iterations: 1
+    sandbox_timeout: 90
+    n_rows: 5000
+    seed: 42
+    disjoint_train_sample: 20000
+    donor_granularity: mega
+    donor_min_cell: 25
+
   ship_t4_addhealth:
     datasets: [addhealth]
     conditions: [full_agent, design_c_full]

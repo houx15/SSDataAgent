@@ -10,7 +10,7 @@ from ssdataagent.agent.context import Condition
 from ssdataagent.agent.llm_client import build_client
 from ssdataagent.config import REPO_ROOT, load_llm_config, results_root
 from ssdataagent.data.event_timing import conditional_joint_repair, event_timing_variables
-from ssdataagent.data.loader import load_real_data
+from ssdataagent.data.loader import load_disjoint_train, load_real_data
 from ssdataagent.data.schema import load_schema
 from ssdataagent.data.splitter import split_train_eval
 from ssdataagent.data.transfer import TRANSFER_PAIRS, compute_crosswalk, load_source_wave
@@ -28,8 +28,12 @@ class ExperimentConfig:
     conditions: list[str]
     max_iterations: int
     sandbox_timeout: int
-    train_eval_split: float
     n_rows: int
+    # Fraction of the benchmark sample kept for fitting, the rest becoming the
+    # eval reference. Ignored — and unnecessary — when disjoint_train_sample is
+    # set, since a disjoint pool means we no longer have to cut the reference in
+    # half to obtain held-out training rows.
+    train_eval_split: float = 0.5
     results_root: Path = field(default_factory=results_root)
     unseen_variables: dict[str, list[str]] = field(default_factory=dict)
     # Per-experiment knobs (all optional). Defaults preserve historical
@@ -53,6 +57,16 @@ class ExperimentConfig:
     # conditions that expose fit microdata and datasets with a T4 event config.
     event_timing_repair: bool = False
     event_timing_condition_cols: dict[str, list[str]] = field(default_factory=dict)
+    # Train on this many rows drawn from the full source EXCLUDING the benchmark
+    # rows, and score against the benchmark sample whole. Supersedes
+    # full_source_sample / train_eval_split. Requires the dataset to declare a
+    # `full_source_key` so the exclusion can be proven rather than assumed.
+    disjoint_train_sample: int | None = None
+    # block_donor strategy. "domain" = one block per schema domain (maximal
+    # conditioning, best T3); "mega" = demography then everything else as one block
+    # (maximal joint fidelity, best T2).
+    donor_granularity: str = "domain"
+    donor_min_cell: int = 25
 
 
 def _run_id() -> str:
@@ -147,8 +161,20 @@ def run_experiment(
     results: dict[tuple[str, str], PassRates] = {}
 
     for dataset in cfg.datasets:
-        df = load_real_data(dataset, n_sample=cfg.full_source_sample, seed=cfg.seed)
-        train, eval_df = split_train_eval(df, ratio=cfg.train_eval_split, seed=cfg.seed)
+        if cfg.disjoint_train_sample is not None:
+            # Score against the paper's benchmark sample WHOLE, and train on rows
+            # the benchmark has never seen. Without a full source these two demands
+            # conflict and we have to halve the reference to manufacture training
+            # rows — which both starves the model and scores us at half the paper's
+            # N. load_disjoint_train proves the exclusion on the source's row key,
+            # or refuses.
+            eval_df = load_real_data(dataset)
+            train = load_disjoint_train(
+                dataset, n_sample=cfg.disjoint_train_sample, seed=cfg.seed
+            )
+        else:
+            df = load_real_data(dataset, n_sample=cfg.full_source_sample, seed=cfg.seed)
+            train, eval_df = split_train_eval(df, ratio=cfg.train_eval_split, seed=cfg.seed)
         for cond_name in cfg.conditions:
             spec = get_condition(cond_name)
             cond_dir = cfg.results_root / cfg.name / cond_name / dataset

@@ -47,10 +47,14 @@ class DatasetSchema:
     ssdatabench_sim_subdir: str
     evaluation_script: str
     domains: dict[str, str] = field(default_factory=dict)
-    # Optional larger source CSV (only some longitudinal datasets ship one).
-    # Used to draw bigger train/eval samples than the fixed `real_data_path`
-    # so the sparse life-event-timing subset stabilizes the T4/T5 tests.
+    # Optional larger source CSV (only some datasets ship one). Lets us draw a
+    # training pool that is *disjoint* from the benchmark sample, so the benchmark
+    # can be scored whole (comparable to the paper) instead of being cut in half to
+    # manufacture held-out training rows.
     full_source_path: Path | None = None
+    # The full source's unique row key (e.g. cfps `pid`). Required to prove the
+    # training pool excludes the benchmark rows — see loader.load_disjoint_train.
+    full_source_key: str | None = None
 
 
 def _registry() -> dict[str, dict]:
@@ -116,4 +120,5 @@ def load_schema(name: str) -> DatasetSchema:
             _resolve_data_path(entry["full_source_path"])
             if entry.get("full_source_path") else None
         ),
+        full_source_key=entry.get("full_source_key"),
     )

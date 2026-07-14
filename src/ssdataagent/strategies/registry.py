@@ -7,6 +7,7 @@ from ssdataagent.strategies.baselines import (
     CopulaStrategy,
     HotDeckStrategy,
 )
+from ssdataagent.strategies.block_donor import BlockDonorStrategy
 from ssdataagent.strategies.design_b import DesignBStrategy
 from ssdataagent.strategies.design_a import DesignAStrategy
 from ssdataagent.strategies.design_c import DesignCStrategy
@@ -17,6 +18,7 @@ STRATEGIES: dict[str, type] = {
     "agent": AgentStrategy,
     "direct": DirectGenerationStrategy,
     "hotdeck": HotDeckStrategy,
+    "block_donor": BlockDonorStrategy,
     "cart": CartStrategy,
     "copula": CopulaStrategy,
     "design_b": DesignBStrategy,

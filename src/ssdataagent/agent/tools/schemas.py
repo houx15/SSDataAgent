@@ -129,10 +129,15 @@ FIT_SCHEMAS = [
     ),
     _fn(
         "fit_marginal",
-        "Fit P(col) and register it. Families: 'empirical' (bootstrap from observed values, "
-        "works for any dtype), 'kde' (Gaussian KDE; numeric only), 'normal' (μ/σ; numeric only), "
-        "'categorical_empirical' (alias for empirical, explicit for clarity). Marginals can be "
-        "fit before set_generation_order; the col is auto-appended to the order.",
+        "Fit P(col) and register it — an iid draw that ignores every other column. Families: "
+        "'empirical' (bootstrap from the column, any dtype), 'kde' (numeric only), 'normal' "
+        "(numeric only), 'categorical_empirical' (alias for empirical). `allow_missing` defaults "
+        "to true so the simulated missing rate matches real; setting it false emits a complete "
+        "column, which changes which rows survive the eval's dropna and therefore which "
+        "subpopulation T1/T3/T4 score. NOTE: a marginal reproduces the distribution of `col` "
+        "perfectly but destroys every association it has with other columns, so T2/T3 for this "
+        "column collapse. Prefer fit_block_donor or fit_conditional unless the column really is "
+        "independent.",
         _obj(
             {
                 "col": {"type": "string"},
@@ -141,6 +146,7 @@ FIT_SCHEMAS = [
                     "enum": ["empirical", "categorical_empirical", "kde", "normal"],
                     "default": "empirical",
                 },
+                "allow_missing": {"type": "boolean", "default": True},
             },
             ["col"],
         ),
@@ -174,9 +180,33 @@ FIT_SCHEMAS = [
         _obj({"col": {"type": "string"}}, ["col"]),
     ),
     _fn(
+        "fit_block_donor",
+        "PREFERRED for any group of related columns. Register `cols` as one BLOCK: for each "
+        "simulated row a single real donor row is matched on `given` (binned, with fallback to "
+        "coarser keys when a cell is thin) and that donor's whole block is copied verbatim. "
+        "Because the values are real and copied together: the marginal is exact, NaN and "
+        "censoring sentinels ('never married') are reproduced, and everything inside the block "
+        "stays mutually consistent — chronological order of life events, and flag/value pairs "
+        "like ever_married vs age_at_first_marriage. Put columns in the SAME block when they "
+        "constrain each other; condition on the upstream causes. Unlike empirical_lookup this "
+        "does not need an exact key match, so it keeps conditioning instead of silently falling "
+        "back to the global marginal.",
+        _obj(
+            {
+                "cols": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+                "given": {"type": "array", "items": {"type": "string"},
+                          "description": "already-generated columns to match donors on"},
+                "min_cell": {"type": "integer", "default": 25,
+                             "description": "minimum donors in a cell before conditioning on it"},
+            },
+            ["cols"],
+        ),
+    ),
+    _fn(
         "replace_step",
         "Drop the existing fit for `col` so a new fit_marginal / fit_conditional can replace it. "
-        "Use when verify-tools say a fit isn't good enough.",
+        "Use when verify-tools say a fit isn't good enough. If `col` belongs to a block, the "
+        "whole block is dropped — a block is only meaningful as a unit.",
         _obj({"col": {"type": "string"}}, ["col"]),
     ),
 ]
@@ -219,9 +249,29 @@ VERIFY_SCHEMAS = [
     ),
     _fn(
         "score_overall",
-        "Run score_marginal on every column in the chain. Returns pass count and per-column "
-        "rows. Cheap proxy for 'how good is the in-progress chain right now'.",
+        "Composite health check for the whole chain: the marginal (T1) pass rate AND the "
+        "conditional (T3) pass rate, averaged into `composite_score`. Optimize composite_score, "
+        "not marginal_pass_rate — replacing a conditional step with fit_marginal makes that "
+        "column's marginal perfect by construction while destroying its conditional structure, "
+        "so chasing the marginal rate alone will drive T3 to zero.",
         _obj({}),
+    ),
+    _fn(
+        "score_conditional",
+        "Score P(col | given) the way the benchmark's T3 does: fit an OLS of `col` on `given` "
+        "in both the real held-out data and the current chain's sample, and compare the two R² "
+        "values (T3 grades R², NOT coefficients). Returns r2_real, r2_sim, a p-value, and n_real "
+        "vs n_sim. Two failure signatures to watch for: r2_sim near 0 means `col` is effectively "
+        "independent of its predictors (a marginal step, or an empirical_lookup falling back to "
+        "the global pool); n_sim far larger than n_real means the regression is fit on a "
+        "different subpopulation, usually because `col` lost its missingness.",
+        _obj(
+            {
+                "col": {"type": "string"},
+                "given": {"type": "array", "items": {"type": "string"}, "minItems": 1},
+            },
+            ["col", "given"],
+        ),
     ),
 ]
 
