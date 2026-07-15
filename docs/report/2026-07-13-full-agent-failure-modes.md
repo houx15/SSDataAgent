@@ -2,7 +2,16 @@
 
 **Date:** 2026-07-13
 **Scope:** diagnosis of the tool-using agent (`full_agent`) on `acs` and `cfps`.
-**Status:** diagnosed, not yet fixed. Fix plan at the bottom.
+**Status:** diagnosed and fixed (block-donor). Fix status table at the bottom.
+
+> **Framing note (2026-07-15).** This is the *engineering* companion — why the
+> agent scored badly and how block-donor fixes it. It is not the headline
+> finding. The agent's score was never the interesting quantity: the ceiling it
+> climbs toward (whole-row resampling, 0.806) is itself a trivial, undeployable
+> baseline. For what the benchmark is actually worth — microdata saturation,
+> the no-donor ~0.50 wall, and the disclosure axis it ignores — read
+> `docs/report/2026-07-15-benchmark-saturation-and-disclosure.md`, which
+> supersedes this report's framing while leaving its diagnosis intact.
 
 ---
 
