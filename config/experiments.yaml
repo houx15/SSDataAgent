@@ -1,5 +1,73 @@
 experiments:
   # =========================================================================
+  # EXP-007 — multi-model tool-DISCOVERY test (2026-07-15). Does full_agent,
+  # given fit_block_donor in its tool list but NOT told to use it, discover the
+  # donor approach on its own — and does that generalise across model vendors?
+  # Prompt rubric_tools_v4 is deliberately family-neutral (it lists the three
+  # fit approaches without prescribing one) and describes the commit gate as
+  # advisory (the current runtime). All four route through OpenRouter with the
+  # OPENROUTER_API_KEY. Corrected protocol: train on the 20k disjoint pool,
+  # score against the paper's exact 1000-row cfps reference. Ceiling here is
+  # ~0.806 (resampling), so read these as "did the model reach the ceiling and
+  # HOW", not as a race past it.
+  # =========================================================================
+  exp007_discover_gpt:
+    datasets: [cfps]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    n_rows: 5000
+    seed: 42
+    disjoint_train_sample: 20000
+    prompt_variant: rubric_tools_v4
+    llm_model: openai/gpt-5.1
+    llm_provider: openai
+    llm_base_url: https://openrouter.ai/api/v1
+    llm_api_key_env: OPENROUTER_API_KEY
+
+  exp007_discover_claude:
+    datasets: [cfps]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    n_rows: 5000
+    seed: 42
+    disjoint_train_sample: 20000
+    prompt_variant: rubric_tools_v4
+    llm_model: anthropic/claude-sonnet-4.5
+    llm_provider: openai
+    llm_base_url: https://openrouter.ai/api/v1
+    llm_api_key_env: OPENROUTER_API_KEY
+
+  exp007_discover_llama:
+    datasets: [cfps]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    n_rows: 5000
+    seed: 42
+    disjoint_train_sample: 20000
+    prompt_variant: rubric_tools_v4
+    llm_model: meta-llama/llama-4-scout
+    llm_provider: openai
+    llm_base_url: https://openrouter.ai/api/v1
+    llm_api_key_env: OPENROUTER_API_KEY
+
+  exp007_discover_gemini:
+    datasets: [cfps]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    n_rows: 5000
+    seed: 42
+    disjoint_train_sample: 20000
+    prompt_variant: rubric_tools_v4
+    llm_model: google/gemini-2.5-flash
+    llm_provider: openai
+    llm_base_url: https://openrouter.ai/api/v1
+    llm_api_key_env: OPENROUTER_API_KEY
+
+  # =========================================================================
   # SHIP demonstration (2026-07-06): exercise every refactor strategy on real
   # data and surface it in the web console. Baselines are zero-API-cost and
   # deterministic; Design A/B/C + S1 use LLM elicitation (gpt-5.4, cached).

@@ -408,6 +408,65 @@ _SYSTEM_RUBRIC_TOOLS_V3 = (
 )
 
 
+# ---------- rubric_tools_v4 variant (EXP-007, multi-model discovery) -------
+# v4 exists to fairly ask "does a model DISCOVER the donor approach?", so it
+# deliberately does NOT prescribe a family per target the way v3 does. It
+# presents the three fit approaches as a neutral menu, points at the tool
+# descriptions (which carry the real guidance) and updates two things v3 got
+# wrong for the current runtime:
+#   (1) the commit gate is ADVISORY now (commit.py), never blocking — v3 told
+#       the agent commit would be REFUSED until it called score_event_order,
+#       which is no longer true and sent models into pointless retry loops.
+#   (2) block_donor exists and is often the right tool for a group of mutually
+#       constraining columns; v3's menu predates it.
+_MODELING_MENU_V4 = """\
+
+CHOOSING HOW TO FIT EACH VARIABLE (guidance, not a script — read each tool's
+own description before calling it; they carry the details).
+
+You have three ways to fit a piece of the chain. Pick per the goal below,
+not by rote:
+
+  - `fit_marginal(col)` — an iid draw of one column that ignores every other
+    column. Correct ONLY for genuinely independent root variables. It makes
+    that column's marginal exact but destroys every association it has, so
+    T2/T3 for it collapse. Do not reach for it just because it raises the
+    per-column marginal score.
+
+  - `fit_conditional(col, given=[...])` — a parametric or lookup model of
+    P(col | given). Captures the association with `given`, at the cost of
+    whatever the family assumes (a regression smears the marginal with noise;
+    a lookup falls back to the global marginal when a key is unseen).
+
+  - `fit_block_donor(cols=[...], given=[...])` — register a GROUP of related
+    columns as one block copied verbatim from a covariate-matched real donor.
+    The values are real (marginals exact), missingness and censoring
+    sentinels survive, and everything inside the block stays mutually
+    consistent (chronological order of life events; flag/value pairs).
+
+The rubric below scores marginals (T1), pairwise structure (T2), regression
+structure (T3), and life-event ordering (T4/T5) all at once. Choose the tool
+that preserves ALL of them for the columns at hand, and prefer keeping
+mutually-constraining columns together over modelling them one at a time.
+"""
+
+_CHRONOLOGY_NOTE_V4 = """\
+
+LIFE-EVENT ORDERING (T4/T5). For longitudinal data (multiple age_* event
+columns), the ORDER events arrive in is scored. `score_event_order(events=
+[...])` is a DIAGNOSTIC you can call any time to check the order rate — it is
+advisory and never blocks `commit_generator`. Whatever tool you use, the two
+things that make ordering come out right are: reproduce the missingness (only
+rows where all events are numeric are scored, so a wrong occurrence rate
+scores a different subpopulation), and keep the event ages coupled so a
+single individual's events cannot arrive out of order.
+"""
+
+_SYSTEM_RUBRIC_TOOLS_V4 = (
+    _SYSTEM_RUBRIC_TOOLS + _MODELING_MENU_V4 + _CHRONOLOGY_NOTE_V4 + _RUBRIC_BLOCK
+)
+
+
 def _stage_no_op(*args, **kwargs) -> str:
     """Placeholder stage prompt for tool-using variants — the orchestrator
     never calls these for rubric_tools, but the dataclass requires the
@@ -474,6 +533,15 @@ PROMPT_VARIANTS: dict[str, PromptVariant] = {
     "rubric_tools_v3": PromptVariant(
         name="rubric_tools_v3",
         system=_SYSTEM_RUBRIC_TOOLS_V3,
+        exploration=_stage_no_op,
+        modeling=_stage_no_op,
+        validation=_stage_no_op,
+        generation=_stage_no_op,
+        is_tool_using=True,
+    ),
+    "rubric_tools_v4": PromptVariant(
+        name="rubric_tools_v4",
+        system=_SYSTEM_RUBRIC_TOOLS_V4,
         exploration=_stage_no_op,
         modeling=_stage_no_op,
         validation=_stage_no_op,
