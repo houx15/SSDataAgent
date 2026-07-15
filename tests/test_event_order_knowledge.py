@@ -12,9 +12,35 @@ import pandas as pd
 from ssdataagent.data.event_order_knowledge import (
     StratumEventSpec,
     fixture_specs,
+    sample_event_block,
 )
 
 CFPS_EVENTS = ["age_finished_education", "age_at_first_marriage", "age_at_first_child"]
+
+
+def _synthetic_pool(n=3000, seed=0):
+    """A stand-in disjoint pool: the 3 cfps event ages with realistic occurrence
+    rates + sentinels, plus the two demographic covariates the strata key on."""
+    rng = np.random.default_rng(seed)
+    edu = rng.normal(18, 3, n).round()
+    marr = rng.normal(25, 4, n).round()
+    child = rng.normal(28, 4, n).round()
+    marr = np.where(rng.random(n) < 0.85, marr, None)          # 15% never married
+    child = np.where(rng.random(n) < 0.82, child, None)        # 18% never had child
+    edu = np.where(rng.random(n) < 0.98, edu, None)
+    return pd.DataFrame({
+        "gender": rng.choice(["Male", "Female"], n),
+        "highest_education": rng.choice(
+            ["primary school or below", "middle school", "high school",
+             "college and above"], n),
+        "age_finished_education": [x if x is not None else None for x in edu],
+        "age_at_first_marriage": [x if x is not None else "never married" for x in marr],
+        "age_at_first_child": [x if x is not None else "never had child" for x in child],
+    })
+
+
+def _numeric(s):
+    return pd.to_numeric(s, errors="coerce")
 
 
 def test_fixture_specs_wellformed():
@@ -28,3 +54,30 @@ def test_fixture_specs_wellformed():
         # every ordering label is a permutation of the cfps event columns
         for label in spec.ordering:
             assert sorted(label.split("<")) == sorted(CFPS_EVENTS), f"bad label {label}"
+
+
+def test_sampler_order_by_construction_and_occurrence():
+    pool = _synthetic_pool()
+    specs = fixture_specs("cfps")
+    demo = pool[["gender", "highest_education"]].sample(
+        n=4000, replace=True, random_state=1).reset_index(drop=True)
+    rng = np.random.default_rng(7)
+    block = sample_event_block(demo, specs, pool, CFPS_EVENTS, rng)
+
+    # occurrence rate per event reproduces the pool's aggregate rate
+    for c in CFPS_EVENTS:
+        pool_rate = _numeric(pool[c]).notna().mean()
+        got_rate = _numeric(block[c]).notna().mean()
+        assert abs(got_rate - pool_rate) < 0.05, f"{c}: {got_rate:.3f} vs {pool_rate:.3f}"
+
+    # among people for whom all 3 events occurred, ages are strictly increasing
+    # along the drawn order -> the realized-order distribution matches the spec:
+    # ~93% land in the canonical edu<marriage<child order, none tie.
+    ages = pd.DataFrame({c: _numeric(block[c]) for c in CFPS_EVENTS})
+    full = ages.dropna()
+    assert len(full) > 1500, "expected many fully-occurring rows"
+    e, m, c = CFPS_EVENTS
+    distinct = ((full[e] != full[m]) & (full[m] != full[c]) & (full[e] != full[c]))
+    assert distinct.all(), "constructed ages must be strictly distinct (positive gaps)"
+    canonical = ((full[e] < full[m]) & (full[m] < full[c])).mean()
+    assert abs(canonical - 0.93) < 0.05, f"canonical-order fraction {canonical:.3f} != ~0.93"

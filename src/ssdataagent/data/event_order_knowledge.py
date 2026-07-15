@@ -20,7 +20,12 @@ from __future__ import annotations
 
 from dataclasses import dataclass, field
 
+import numpy as np
+import pandas as pd
+
 from ssdataagent.data.event_timing import event_timing_variables
+
+_DEFAULT_GAP = (2.0, 2.0)
 
 # Canonical life-course order per dataset (earliest -> latest), used to build the
 # fixture's ordering distribution. The real generator gets this from the LLM.
@@ -105,3 +110,87 @@ def fixture_specs(dataset: str) -> dict[tuple, StratumEventSpec]:
                 requires={},
             )
     return specs
+
+
+def _sentinel_map(pool: pd.DataFrame, event_vars: list[str]) -> dict[str, object]:
+    """The non-occurrence code for each event column: the pool's most common
+    non-numeric value (``never married``, …), or NaN if the column has none."""
+    out: dict[str, object] = {}
+    for c in event_vars:
+        s = pool[c]
+        nonnum = s[pd.to_numeric(s, errors="coerce").isna() & s.notna()].astype(str)
+        out[c] = nonnum.value_counts().index[0] if len(nonnum) else np.nan
+    return out
+
+
+def _occurrence_rates(pool: pd.DataFrame, event_vars: list[str]) -> dict[str, float]:
+    return {c: float(pd.to_numeric(pool[c], errors="coerce").notna().mean())
+            for c in event_vars}
+
+
+def _anchor_pools(pool: pd.DataFrame, event_vars: list[str]) -> dict[str, np.ndarray]:
+    return {c: pd.to_numeric(pool[c], errors="coerce").dropna().to_numpy(dtype=float)
+            for c in event_vars}
+
+
+def sample_event_block(
+    demographics: pd.DataFrame,
+    specs: dict[tuple, StratumEventSpec],
+    pool: pd.DataFrame,
+    event_vars: list[str],
+    rng: np.random.Generator,
+) -> pd.DataFrame:
+    """Sample the event-age columns for each person in ``demographics``.
+
+    For each person: pick the stratum spec, draw an ordering from it, draw which
+    events occur (rate from the pool aggregate, gated by ``requires``), then lay
+    the occurring events out as ``anchor + positive integer gaps`` in the drawn
+    order. Order therefore holds *by construction* — the mechanism T4 rewards —
+    and the realized-order distribution reproduces the spec's. Non-occurring
+    events emit the column's sentinel (or NaN). Returns one column per event_var.
+    """
+    event_vars = [c for c in event_vars if c in pool.columns]
+    sentinel = _sentinel_map(pool, event_vars)
+    occ_rate = _occurrence_rates(pool, event_vars)
+    anchor = _anchor_pools(pool, event_vars)
+    n = len(demographics)
+    cols = {c: np.empty(n, dtype=object) for c in event_vars}
+
+    genders = demographics["gender"].astype(str).to_numpy()
+    if "highest_education" in demographics.columns:
+        edus = demographics["highest_education"].map(education_bucket).to_numpy()
+    else:
+        edus = np.array(["high"] * n)
+    any_spec = next(iter(specs.values()))
+
+    for i in range(n):
+        spec = specs.get((genders[i], edus[i]), any_spec)
+        labels = list(spec.ordering.keys())
+        probs = np.array(list(spec.ordering.values()), dtype=float)
+        probs = probs / probs.sum()
+        order = labels[rng.choice(len(labels), p=probs)].split("<")
+
+        occurs = {c: rng.random() < occ_rate.get(c, spec.occurrence.get(c, 1.0))
+                  for c in event_vars}
+        for evt, prereq in spec.requires.items():
+            if evt in occurs and not occurs.get(prereq, False):
+                occurs[evt] = False
+
+        for c in event_vars:
+            if not occurs.get(c):
+                cols[c][i] = sentinel.get(c, np.nan)
+
+        occurring = [c for c in order if c in event_vars and occurs.get(c)]
+        if not occurring:
+            continue
+        first = occurring[0]
+        age = int(rng.choice(anchor[first])) if len(anchor[first]) else 18
+        cols[first][i] = age
+        prev, prev_age = first, age
+        for c in occurring[1:]:
+            mean, sd = spec.gaps.get(f"{prev}->{c}", _DEFAULT_GAP)
+            prev_age += max(1, int(round(rng.normal(mean, sd))))
+            cols[c][i] = prev_age
+            prev = c
+
+    return pd.DataFrame(cols, index=demographics.index)
