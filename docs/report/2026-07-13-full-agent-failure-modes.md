@@ -325,6 +325,15 @@ modeler — or the agent — should be making deliberately.
 
 ## Results (cfps, scored on the paper's exact 1000-row reference)
 
+> **Correction (2026-07-15).** An earlier version of this section claimed
+> block-donor beat a resampling baseline 0.819 vs 0.765 and cleared the ceiling on
+> four of five benchmarks. That was **seed noise read as signal**: those were
+> 5-seed means, and T4 alone carries a per-seed standard deviation near 0.15, so
+> the error bars were wider than the effect. Re-run over **12 paired seeds**,
+> block-donor does **not** beat copying real rows — it is marginally worse — and
+> the whole regime is **saturated**. The corrected numbers and the reasoning are
+> below. The diagnosis of the four agent bugs (above) is unaffected and stands.
+
 Two protocol changes, both required:
 
 * **No more halving the benchmark.** `load_disjoint_train` draws training rows from
@@ -333,55 +342,87 @@ Two protocol changes, both required:
   model (400 fitting rows; `self_control` had ~45 observations) *and* scored us at
   half the paper's N.
 * **More simulated rows.** The eval bootstraps 500 rows from sim per iteration, so
-  handing it 5000 instead of 1000 cuts Monte-Carlo noise. Worth ~+0.13 overall,
-  most of it in T4/T5.
+  handing it 5000 instead of 1000 cuts Monte-Carlo noise.
 
-Multi-seed means (seeds 42–46), production code path, scored on the paper's exact
-1000-row `sampled_cfps.csv`:
+### Two different "ceilings" — this is the crux
+
+The benchmark scores two *samples* for statistical distinguishability. That makes
+"how high can anyone score" a real, measurable quantity, and there are two versions
+of it that the earlier draft conflated:
+
+* **sim = reference (0.913).** Score the benchmark's 1000 rows against *themselves*.
+  This measures only the eval's own unseeded bootstrap noise. It is unreachable by
+  anything that isn't literally the answer key, so it is not an achievable target.
+* **fresh real people vs the benchmark (0.806).** Draw 5000 *other* real CFPS
+  people (from the disjoint pool) and score them against the benchmark. These are
+  real humans — nothing can be more "correct" — so **0.806 is the achievable
+  ceiling for any method that copies from this pool.** The 0.10 gap up to 0.913 is
+  the irreducible sampling difference between any two draws of the same population;
+  closing it means matching the benchmark's specific sampling noise, which requires
+  reading the benchmark = leakage.
+
+The achievable ceiling, 0.806, is the number that matters. It *is* the resampling
+baseline's own score — because resampling **is** "draw fresh real people".
+
+### Head-to-head, 12 paired seeds, vs the paper's 1000-row reference
+
+Mean ± standard error over seeds 1–12, production code path:
 
 | | T1 | T2 | T3 | T4 | T5 | overall |
 |---|---|---|---|---|---|---|
 | PNAS (best of 15 LLMs) | 0.14 | 0.62 | 0.43 | 0.05 | 0.75 | 0.30 |
-| our shipped agent | 0.411 | 0.512 | 0.244 | **0.000** | 0.650 | 0.363 |
-| hotdeck (same n) | 0.811 | 0.807 | 0.688 | 0.680 | 0.840 | 0.765 |
-| **block-donor (mega, n=5000)** | **0.853** | **0.808** | **0.762** | **0.840** | **0.832** | **0.819** |
-| **× PNAS** | **6.1×** | **1.30×** | **1.77×** | **16.8×** | 1.11× | **2.73×** |
-| hard ceiling (sim = ref) | 0.958 | 0.949 | 0.748 | 0.960 | 0.950 | 0.913 |
+| our shipped agent | 0.411 | 0.512 | 0.244 | 0.000 | 0.650 | 0.363 |
+| **whole-row resample** (= achievable ceiling) | **0.873** | 0.813 | **0.708** | 0.825 | 0.809 | **0.806** ±.008 |
+| block-donor (mega) | 0.829 | 0.813 | 0.698 | 0.758 | **0.821** | 0.784 ±.014 |
+| block-donor (domain) | 0.816 | 0.774 | 0.701 | **0.867** | 0.809 | 0.793 ±.007 |
+| ceiling (sim = ref, not achievable) | 0.958 | 0.949 | 0.748 | 0.960 | 0.950 | 0.913 |
 
-Four of five benchmarks clear 1.3× PNAS. **T5's 1.3× target (0.975) is physically
-unreachable**: scoring the reference *against itself* — a perfect generator, zero
-error — averages **0.950** on T5 and never exceeded 0.960 across five runs. The
-eval's own unseeded bootstrap sits below the target. No generator can hit it.
+Paired `block-donor(mega) − resample`: overall **−0.022** (t = −1.38, not
+significant); **no benchmark shows a significant win** for block-donor. It is a
+statistical tie with resampling, landing very slightly below it.
 
-Two structural facts worth keeping:
+**Why block-donor cannot win here, in principle.** Whole-row resampling is an
+*unbiased* draw from the donor pool's distribution. Block-donor *approximates* that
+same distribution and pays an independence penalty at the block seams. Fidelity is
+exactly what T1–T5 measure, so resampling is an **upper bound** for any
+copy-from-pool method — block-donor can at best tie it, never beat it. The
+0.819-vs-0.765 "win" was an artifact.
 
-* **T2 wants big blocks; T3 wants deep conditioning.** Splitting demography from the
-  rest costs T2, because pairs straddling the boundary survive only through the
-  matching key — with a 3-column key they leak, and plain hotdeck (which copies whole
-  rows, so every pair is exact) *beats us*. Conditioning the block on ALL of
-  demography closed it (T2 0.781 → 0.808) and lifted T3 too (0.726 → 0.762).
-* **Hotdeck is a formidable baseline and should be reported as one.** Given 20k rows
-  of same-population microdata, whole-row resampling reaches overall 0.827 at
-  n=20000. Block-donor beats it at equal n (0.819 vs 0.765) and dominates it on the
-  benchmarks that need *structure* (T3 0.762 vs 0.688; T4 0.840 vs 0.680) — but the
-  honest headline is that resampling real people is very hard to beat when you have
-  them. Block-donor's real advantages are that it is a model: it works under
-  TRANSFER, its blocks are inspectable, and the agent can compose it.
+### The real finding: the microdata regime is saturated
 
-### T4 is winnable after all — correcting an earlier conclusion
+When you hold real microdata, **"reuse it" scores 0.806 — 2.7× the best published
+LLM (0.30) — and nothing can beat it.** We are at 0.79, within 0.016 of the
+achievable ceiling. The maximum score any modeling work can add here is that
+0.016, and it is bounded above by literal real people. **Optimizing cfps-with-
+microdata further is optimizing into a wall the benchmark itself imposes.**
 
-An earlier note concluded T4 was "degenerate / unwinnable at N=1000 by anyone". That
-was **wrong for cfps**. We now score **0.840** against the paper's exact 1000-row
-reference. The three things that were missing:
+This reframes what block-donor is for. Its advantages are the ones this
+fidelity-only benchmark cannot see:
 
-1. reproduce the **missingness** (the sim was admitting 555 rows into T4 where reality
+* **Privacy / disclosure.** Resampling republishes actual respondents (100%
+  re-identification); block-donor stitches each synthetic person from several real
+  donors, so no synthetic person is any real person. The benchmark never measures
+  this, which is why it rewards a method that could not be deployed.
+* **Transfer.** Donors can come from another wave or population — you take their
+  *conditional structure* without importing their marginals. Resampling cannot.
+* **The no-donor regime.** Where there are no donors at all (AGGREGATE / NO_DATA),
+  resampling is impossible by construction and an LLM's prior is the only signal.
+  That is the regime the PNAS premise is actually about, and the only one with real
+  headroom left.
+
+### T4 is winnable at N=1000 — this part still holds
+
+The shipped agent's `T4 = 0.000` was our bugs, not the benchmark being degenerate.
+Both resample (0.825) and block-donor-domain (0.867) score T4 well against the exact
+1000-row reference. The three things that were missing from the agent:
+
+1. reproduce the **missingness** (the agent admitted 555 rows into T4 where reality
    admits 200 — a 2.8× inflated, wholly different population),
-2. draw the event ages **jointly** from one donor (40% of our simulated life courses
-   had the child before the wedding; reality: 2%),
-3. hand the eval **more simulated rows** (it bootstraps 500 per iteration, so more
-   rows cut Monte-Carlo noise).
+2. draw the event ages **jointly** from one donor (40% of the agent's simulated life
+   courses had the child before the wedding; reality: 2%),
+3. hand the eval **more simulated rows**.
 
-The earlier probe held all three fixed and concluded the *test* was broken. It wasn't.
+An earlier probe held all three fixed and blamed the *test*. The test was fine.
 
 ---
 
@@ -403,9 +444,13 @@ gate warns and records but can never refuse a commit, so a broken or failing che
 can never trap the agent again. The forcing function moves into the *score*, where
 the cost of a bad choice is visible rather than punitive.
 
-### Still open: AGGREGATE mode
+### Still open: the no-donor regime — where the actual problem now lives
 
-Block-donor needs microdata — it has no meaning without donors. `score_conditional`
-likewise cannot exist without a real R² to compare against. In AGGREGATE / NO_DATA
-mode the agent must supply conditional structure from knowledge alone. That is a
-genuinely different problem and needs its own design pass.
+The 12-seed result moves this from "future work" to "the main event". With microdata,
+the benchmark is saturated (§Results): resampling scores 0.806 and is unbeatable, so
+there is nothing left to model. Block-donor needs microdata — it has no meaning
+without donors. `score_conditional` likewise cannot exist without a real R² to compare
+against. In AGGREGATE / NO_DATA mode the agent must supply conditional structure from
+knowledge alone, resampling is impossible by construction, and an LLM's prior is the
+only available signal. **That is the regime with real headroom, and it needs its own
+design pass.**

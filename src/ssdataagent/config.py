@@ -77,8 +77,10 @@ def load_llm_config(
 ) -> LLMConfig:
     """Load LLM configuration with precedence overrides > env > yaml > defaults.
 
-    The API key is *only* read from env (LLM_API_KEY); never from yaml or
-    overrides — keeps keys out of every config file.
+    The API key *value* is only ever read from the environment; only the NAME of
+    the variable to read is configurable. That keeps secrets out of every config
+    file while letting one batch cycle through providers that authenticate with
+    different keys (e.g. OpenRouter's key alongside a first-party one).
 
     Args:
         yaml_path: yaml file to read, defaults to ``config/llm.yaml``.
@@ -86,9 +88,11 @@ def load_llm_config(
             skip loading any .env (useful in tests). Default is the repo root
             ``.env``.
         overrides: per-experiment dict with optional keys
-            {provider, base_url, model}. Lets one process run experiments back
-            to back against different models without rewriting the env or
-            forking processes — useful for the batch runner.
+            {provider, base_url, model, api_key_env}. Lets one process run
+            experiments back to back against different models without rewriting
+            the env or forking processes — useful for the batch runner.
+            ``api_key_env`` names the env var holding that provider's key and
+            defaults to ``LLM_API_KEY``.
     """
     if env_path is _SENTINEL:
         env_path = REPO_ROOT / ".env"
@@ -104,13 +108,16 @@ def load_llm_config(
     provider = ov.get("provider") or os.environ.get("LLM_PROVIDER", data.get("provider", "openai"))
     base_url = ov.get("base_url") or os.environ.get("LLM_BASE_URL", data.get("base_url", ""))
     model = ov.get("model") or os.environ.get("LLM_MODEL", data.get("model", ""))
-    api_key = os.environ.get("LLM_API_KEY", "")
+    key_env = ov.get("api_key_env") or data.get("api_key_env") or "LLM_API_KEY"
+    api_key = os.environ.get(key_env, "")
     temperature = float(data.get("temperature", 1.0))
     max_tokens = int(data.get("max_tokens", 4096))
 
     if not api_key:
+        # Never silently fall back to LLM_API_KEY: sending a first-party key to a
+        # third-party base_url would leak it to that provider.
         raise RuntimeError(
-            "LLM_API_KEY not found in environment. Set it in .env or export it."
+            f"{key_env} not found in environment. Set it in .env or export it."
         )
     if provider not in ("openai", "anthropic"):
         raise RuntimeError(f"Unknown LLM_PROVIDER: {provider!r}")

@@ -44,6 +44,10 @@ class ExperimentConfig:
     llm_model: str | None = None
     llm_provider: str | None = None
     llm_base_url: str | None = None
+    # Names the env var holding this provider's key (default LLM_API_KEY). Set to
+    # OPENROUTER_API_KEY to route an experiment through OpenRouter without giving
+    # it a first-party key.
+    llm_api_key_env: str | None = None
     # Random seed for the train/eval split and event-timing repair. Vary it
     # across otherwise-identical experiments to get multi-seed runs (T4/T5 are
     # high-variance, so those benchmarks should be read as multi-seed means).
@@ -156,6 +160,8 @@ def run_experiment(
         overrides["provider"] = cfg.llm_provider
     if cfg.llm_base_url:
         overrides["base_url"] = cfg.llm_base_url
+    if cfg.llm_api_key_env:
+        overrides["api_key_env"] = cfg.llm_api_key_env
     llm_cfg = load_llm_config(overrides=overrides or None)
     client = build_client(llm_cfg)
     results: dict[tuple[str, str], PassRates] = {}
