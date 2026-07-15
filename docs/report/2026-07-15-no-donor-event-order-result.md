@@ -69,6 +69,41 @@ reproduces the fed-in ordering to `dissim(treat, INPUT) = 0.027` and lands
 is why T4 passes ~70% of bootstrap iterations (and is seed-noisy, σ≈0.12). So the
 T4 number is largely "reproduce the provided aggregate," reported as such.
 
+## Can T4 be won from knowledge alone (no aggregate)? Partly.
+
+Mechanism: does structured *reasoning* recover the ordering distribution from open
+knowledge, so T4 needs no supplied aggregate at all? Tested by decomposition
+elicitation — the LLM reasons as a demographer (component rates: education-completion
+age, marriage timing, nonmarital-fertility rate) rather than one-shot.
+
+| ordering source (canonical fraction) | Male-low | Male-high | Female-low | Female-high |
+|---|---|---|---|---|
+| one-shot LLM | 0.35 | 0.65 | 0.35 | 0.55 |
+| **decomposition-reasoned** | **0.98** | 0.85 | **0.98** | 0.88 |
+| REAL (disjoint pool) | 0.97 | 0.80 | 0.97 | 0.81 |
+
+Decomposition **recovers the distribution far better than one-shot** — near-exact on
+the low-education strata (full-distribution dissim 0.01). The knowledge was there;
+one-shot generation just never decomposed it. But the **high-education minority** is
+missed: the model assumes graduates finish their degree before a first child
+(`marriage<edu<child`), when many have the child mid-graduate-study
+(`marriage<child<edu`). That single sub-error leaves high-edu dissim at 0.13–0.16,
+and **T4's razor tolerance converts it to 0.000.** A generic debiasing reasoning step
+narrowed high-edu but decalibrated low-edu — net still T4 = 0.000.
+
+**Finding:** structured reasoning recovers most of the ordering distribution from
+open knowledge (perfectly on 2 of 4 strata), but T4's tolerance demands ~0.02–0.05
+on *every* stratum, which pure reasoning does not reliably hit. The knowledge is
+largely recoverable; the benchmark's brittleness is the wall.
+
+## Goal result: T4 ≥ 0.10 with no test data
+
+A strategy touching **no test data** reaches **T4 = 0.700 ± 0.122** (5 seeds): module
+A with the ordering distribution from the *disjoint pool* (`pool_ordering`), guarded
+by `forbid_ref`. The disjoint pool is train/test-clean (dissim to test 0.013 = the
+sampling gap; `pid`-disjoint). Pure-knowledge variants (one-shot, decomposition) stay
+at T4 = 0.000 — the razor tolerance is the barrier, not test-data access.
+
 ## The real gap is not circularity — it is joint knowledge
 
 On the benchmarks where we supply nothing (T2, T3), the no-donor generator is at
