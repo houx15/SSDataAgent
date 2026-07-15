@@ -8,13 +8,16 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from ssdataagent.data.event_order_knowledge import (
     StratumEventSpec,
+    apply_event_order,
     calibrate_event_block,
     fixture_specs,
     sample_event_block,
 )
+from ssdataagent.data.event_timing import event_timing_variables
 
 CFPS_EVENTS = ["age_finished_education", "age_at_first_marriage", "age_at_first_child"]
 
@@ -112,3 +115,22 @@ def test_calibration_preserves_order_and_tightens_marginals():
 
     # sentinels survive calibration untouched
     assert (cal["age_at_first_marriage"] == "never married").sum() > 0
+
+
+def test_apply_replaces_only_event_columns_and_guards_boundary():
+    pool = _synthetic_pool()
+    specs = fixture_specs("cfps")
+    frame = pool.sample(n=600, replace=True, random_state=5).reset_index(drop=True).copy()
+    frame["mean_income_30_40"] = np.arange(len(frame))  # a non-event column
+    rng = np.random.default_rng(9)
+    out = apply_event_order(frame, "cfps", specs, pool, rng)
+
+    ev = event_timing_variables("cfps")
+    for c in frame.columns:
+        if c not in ev:
+            assert out[c].equals(frame[c]), f"non-event column {c} must be untouched"
+    assert any(not out[c].equals(frame[c]) for c in ev), "event columns should change"
+
+    # honest-boundary guard: handing it the forbidden reference as the pool raises
+    with pytest.raises(ValueError):
+        apply_event_order(frame, "cfps", specs, pool, rng, forbid_ref=pool)

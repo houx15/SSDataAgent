@@ -24,6 +24,7 @@ import numpy as np
 import pandas as pd
 
 from ssdataagent.data.event_timing import event_timing_variables
+from ssdataagent.evaluation.disclosure import _row_hashes
 
 _DEFAULT_GAP = (2.0, 2.0)
 
@@ -240,3 +241,44 @@ def calibrate_event_block(
         for j in occ:
             out[event_vars[j]][i] = float(src[i, j])
     return pd.DataFrame(out, index=block.index)
+
+
+def _assert_disjoint(pool: pd.DataFrame, ref: pd.DataFrame, threshold: float = 0.5) -> None:
+    """Honest-boundary guard: refuse to draw aggregates from a pool that is (mostly)
+    the test reference. Compares row hashes on the shared columns."""
+    common = [c for c in pool.columns if c in ref.columns]
+    if not common:
+        return
+    ref_hashes = set(_row_hashes(ref, common))
+    overlap = float(_row_hashes(pool, common).isin(ref_hashes).mean())
+    if overlap > threshold:
+        raise ValueError(
+            f"pool overlaps the forbidden reference by {overlap:.0%} — the no-donor "
+            "event-order module must not read the test data"
+        )
+
+
+def apply_event_order(
+    frame: pd.DataFrame,
+    dataset: str,
+    specs: dict[tuple, StratumEventSpec],
+    pool: pd.DataFrame,
+    rng: np.random.Generator,
+    *,
+    forbid_ref: pd.DataFrame | None = None,
+) -> pd.DataFrame:
+    """Return a copy of ``frame`` with its T4 event-timing columns replaced by the
+    knowledge-sampled, pool-calibrated event block. Only the columns
+    ``event_timing_variables(dataset)`` change. When ``forbid_ref`` is given, raises
+    if ``pool`` overlaps it (the honest-boundary guard)."""
+    if forbid_ref is not None:
+        _assert_disjoint(pool, forbid_ref)
+    event_vars = [c for c in event_timing_variables(dataset) if c in frame.columns]
+    if not event_vars:
+        return frame.copy()
+    block = sample_event_block(frame, specs, pool, event_vars, rng)
+    block = calibrate_event_block(block, pool, event_vars)
+    out = frame.copy()
+    for c in event_vars:
+        out[c] = block[c].to_numpy()
+    return out
