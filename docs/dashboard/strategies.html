@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Two strategies — SSDataBench (cfps)</title>
+<style>
+  :root {
+    --bg: #f6f4ef; --panel: #fffefb; --ink: #22201c; --soft: #6b665d;
+    --line: #e3ddd2; --line-2: #d3ccbe;
+    --accent: #0d6e63; --accent-ink: #0a544c; --accent-wash: #dceae7;
+    --pub: #b9b1a4; --ceil: #c9a24a; --bad: #b4472e; --good: #2f7d54;
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+    --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+    --mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #171613; --panel: #201e1a; --ink: #ece7dd; --soft: #a49d90;
+      --line: #322e28; --line-2: #423d34;
+      --accent: #4bbfae; --accent-ink: #7ed6c8; --accent-wash: #133331;
+      --pub: #726b5f; --ceil: #d4b163; --bad: #e0745a; --good: #6bc492;
+    }
+  }
+  :root[data-theme="light"] {
+    --bg: #f6f4ef; --panel: #fffefb; --ink: #22201c; --soft: #6b665d;
+    --line: #e3ddd2; --line-2: #d3ccbe;
+    --accent: #0d6e63; --accent-ink: #0a544c; --accent-wash: #dceae7;
+    --pub: #b9b1a4; --ceil: #c9a24a; --bad: #b4472e; --good: #2f7d54;
+  }
+  :root[data-theme="dark"] {
+    --bg: #171613; --panel: #201e1a; --ink: #ece7dd; --soft: #a49d90;
+    --line: #322e28; --line-2: #423d34;
+    --accent: #4bbfae; --accent-ink: #7ed6c8; --accent-wash: #133331;
+    --pub: #726b5f; --ceil: #d4b163; --bad: #e0745a; --good: #6bc492;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: var(--sans); line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  .wrap { max-width: 60rem; margin: 0 auto; padding: 2.4rem 1.4rem 5rem; }
+  .num { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+
+  header.masthead { border-bottom: 1px solid var(--line-2); padding-bottom: 1.6rem; }
+  .eyebrow { font: 600 0.72rem/1 var(--sans); letter-spacing: 0.14em;
+    text-transform: uppercase; color: var(--accent-ink); }
+  h1 { font-family: var(--serif); font-weight: 600; font-size: clamp(1.7rem, 4vw, 2.5rem);
+    line-height: 1.12; margin: 0.6rem 0 0; text-wrap: balance; letter-spacing: -0.01em; }
+  .lede { color: var(--soft); font-size: 1.02rem; max-width: 46rem; margin: 0.8rem 0 0; }
+
+  .meta { margin-top: 1.5rem; display: grid; grid-template-columns: repeat(auto-fit, minmax(13rem, 1fr));
+    gap: 0.7rem; }
+  .meta .card { background: var(--panel); border: 1px solid var(--line);
+    border-left: 3px solid var(--accent); border-radius: 5px; padding: 0.7rem 0.85rem; }
+  .meta .k { font-size: 0.72rem; color: var(--soft); letter-spacing: 0.03em; }
+  .meta .v { font-family: var(--serif); font-size: 1.05rem; margin-top: 0.15rem; }
+
+  nav.tabs { display: flex; gap: 0.4rem; margin: 2rem 0 0; border-bottom: 1px solid var(--line-2); }
+  .tab {
+    appearance: none; border: 1px solid var(--line-2); border-bottom: none;
+    background: transparent; color: var(--soft); cursor: pointer;
+    font: 600 0.92rem/1 var(--sans); padding: 0.7rem 1.05rem;
+    border-radius: 7px 7px 0 0; position: relative; top: 1px;
+  }
+  .tab .sub { display: block; font-weight: 500; font-size: 0.72rem; color: var(--soft);
+    margin-top: 0.2rem; letter-spacing: 0.02em; }
+  .tab[aria-selected="true"] {
+    background: var(--panel); color: var(--ink); border-color: var(--line-2);
+    box-shadow: 0 -2px 0 var(--accent) inset;
+  }
+  .tab[aria-selected="true"] .sub { color: var(--accent-ink); }
+  .tab:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .panel { display: none; background: var(--panel); border: 1px solid var(--line-2);
+    border-top: none; border-radius: 0 0 9px 9px; padding: 1.8rem; }
+  .panel[data-active] { display: block; }
+
+  .headline { display: flex; flex-wrap: wrap; align-items: baseline; gap: 0.6rem 1.4rem;
+    padding-bottom: 1.2rem; border-bottom: 1px dashed var(--line-2); margin-bottom: 1.4rem; }
+  .headline .big { font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 2.9rem; font-weight: 600; line-height: 1; color: var(--accent-ink); }
+  .headline .cap { color: var(--soft); font-size: 0.9rem; }
+  .headline .cap b { color: var(--ink); font-weight: 600; }
+
+  h2.sec { font-family: var(--serif); font-weight: 600; font-size: 1.15rem;
+    margin: 1.8rem 0 0.9rem; }
+  h2.sec:first-of-type { margin-top: 0; }
+  p.note { color: var(--soft); font-size: 0.92rem; margin: 0.2rem 0 1.1rem; max-width: 44rem; }
+
+  /* score bars */
+  .bars { display: grid; gap: 0.55rem; }
+  .row { display: grid; grid-template-columns: 3.1rem 1fr 3rem; align-items: center; gap: 0.7rem; }
+  .row .lab { font-size: 0.82rem; color: var(--soft); font-weight: 600; }
+  .track { position: relative; height: 1.15rem; background: var(--bg);
+    border: 1px solid var(--line); border-radius: 4px; overflow: hidden; }
+  .fill { position: absolute; inset: 0 auto 0 0; background: var(--accent); opacity: 0.9; }
+  .tick { position: absolute; top: -3px; bottom: -3px; width: 2px; }
+  .tick.pub { background: var(--pub); }
+  .tick.ceil { background: var(--ceil); }
+  .row .val { font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 0.85rem; text-align: right; }
+  .legend { display: flex; flex-wrap: wrap; gap: 1rem; margin: 0.9rem 0 0; font-size: 0.78rem;
+    color: var(--soft); }
+  .legend span { display: inline-flex; align-items: center; gap: 0.35rem; }
+  .swatch { width: 0.8rem; height: 0.8rem; border-radius: 2px; display: inline-block; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; margin-top: 0.4rem; }
+  th, td { text-align: right; padding: 0.42rem 0.55rem; border-bottom: 1px solid var(--line); }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { font-size: 0.72rem; letter-spacing: 0.04em; text-transform: uppercase;
+    color: var(--soft); font-weight: 600; }
+  td.n { font-family: var(--mono); font-variant-numeric: tabular-nums; }
+  tr.win td { color: var(--ink); }
+  .pill { display: inline-block; font: 600 0.7rem/1 var(--sans); padding: 0.2rem 0.45rem;
+    border-radius: 999px; }
+  .pill.ok { background: var(--accent-wash); color: var(--accent-ink); }
+  .pill.no { background: color-mix(in srgb, var(--bad) 16%, transparent); color: var(--bad); }
+
+  .callout { margin-top: 1.6rem; border: 1px solid var(--line-2); border-radius: 8px;
+    overflow: hidden; }
+  .callout .head { padding: 0.7rem 1rem; font-weight: 600; font-family: var(--serif);
+    background: var(--accent-wash); color: var(--accent-ink); }
+  .callout .body { padding: 1rem; display: grid; gap: 0.7rem; }
+  .vs { display: grid; grid-template-columns: 1fr 1fr; gap: 0.7rem; }
+  .vs .box { border: 1px solid var(--line); border-radius: 6px; padding: 0.8rem; background: var(--bg); }
+  .vs .box .t { font-size: 0.78rem; color: var(--soft); }
+  .vs .box .m { font-family: var(--mono); font-variant-numeric: tabular-nums;
+    font-size: 1.7rem; font-weight: 600; margin-top: 0.2rem; }
+  .vs .box.risk .m { color: var(--bad); }
+  .vs .box.safe .m { color: var(--good); }
+
+  .table-wrap { overflow-x: auto; }
+  footer { margin-top: 2.4rem; color: var(--soft); font-size: 0.8rem;
+    border-top: 1px solid var(--line); padding-top: 1rem; }
+  .toggle { position: fixed; top: 0.8rem; right: 0.8rem; background: var(--panel);
+    border: 1px solid var(--line-2); color: var(--soft); border-radius: 999px;
+    font: 600 0.75rem/1 var(--sans); padding: 0.4rem 0.7rem; cursor: pointer; }
+</style>
+</head>
+<body>
+<button class="toggle" id="themeBtn" aria-label="Toggle theme">◑ theme</button>
+<div class="wrap">
+
+  <header class="masthead">
+    <span class="eyebrow">SSDataBench · China Family Panel Studies · synthetic microdata</span>
+    <h1>Two strategies for generating survey respondents</h1>
+    <p class="lede">The same benchmark asks two very different questions depending on whether
+      you hold real microdata. Both of our strategies beat every published language model
+      (overall <span class="num">0.30</span>) — but for opposite reasons, and only one of them
+      is deployable.</p>
+    <div class="meta">
+      <div class="card"><div class="k">Reference</div><div class="v">paper's 1,000-row cfps sample</div></div>
+      <div class="card"><div class="k">Training</div><div class="v num">20,000 rows, disjoint on pid</div></div>
+      <div class="card"><div class="k">Published best (15 LLMs)</div><div class="v num">0.30</div></div>
+      <div class="card"><div class="k">Achievable ceiling</div><div class="v num">0.806</div></div>
+    </div>
+  </header>
+
+  <nav class="tabs" role="tablist">
+    <button class="tab" role="tab" id="t-donor" aria-selected="true" aria-controls="p-donor">
+      Donor-based<span class="sub">microdata available</span></button>
+    <button class="tab" role="tab" id="t-nodonor" aria-selected="false" aria-controls="p-nodonor">
+      No-donor<span class="sub">aggregate stats + LLM prior</span></button>
+  </nav>
+
+  <!-- ============ TAB 1: DONOR-BASED ============ -->
+  <section class="panel" id="p-donor" role="tabpanel" aria-labelledby="t-donor" data-active>
+    <div class="headline">
+      <span class="big num">0.793</span>
+      <span class="cap"><b>Block-donor</b>, 12-seed mean (domain granularity). Copy whole coherent
+        blocks from covariate-matched real donors — every value real, missingness and
+        life-event order preserved by construction. Ties the <b>0.806</b> resampling ceiling;
+        <b>2.6×</b> the published best.</span>
+    </div>
+
+    <h2 class="sec">Per-benchmark, vs published and the achievable ceiling</h2>
+    <div class="bars" id="bars-donor"></div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--accent)"></i> block-donor</span>
+      <span><i class="swatch" style="background:var(--pub)"></i> published best</span>
+      <span><i class="swatch" style="background:var(--ceil)"></i> ceiling (fresh real people)</span>
+    </div>
+
+    <h2 class="sec">Does an LLM agent discover this strategy on its own?</h2>
+    <p class="note">Given the donor tool but not told to use it, 3 of 4 models reached for it.
+      With the event-timing coupling fixed, the strongest models reach the ceiling; weaker
+      models can't, because a post-hoc event fix inherits whatever their demographics got wrong.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Model (via OpenRouter)</th><th>discovered</th><th>overall</th><th>T4</th></tr></thead>
+      <tbody>
+        <tr class="win"><td>Claude Sonnet 4.5</td><td><span class="pill ok">yes · 10 blocks</span></td><td class="n">0.789</td><td class="n">0.810</td></tr>
+        <tr class="win"><td>GPT-5.1</td><td><span class="pill ok">yes · 5 blocks</span></td><td class="n">0.772</td><td class="n">0.800</td></tr>
+        <tr><td>Gemini 2.5 Flash</td><td><span class="pill ok">partial · 2 blocks</span></td><td class="n">0.572</td><td class="n">0.000</td></tr>
+        <tr><td>Llama 4 Scout</td><td><span class="pill no">barely · 1 block</span></td><td class="n">0.470</td><td class="n">0.000</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Overall shown with the event-timing repair applied. Gemini/Llama stay at
+      T4&nbsp;=&nbsp;0.000 even after the repair — their skewed demographics feed a skewed
+      event draw that fails T4's razor-thin tolerance.</p>
+
+    <div class="callout">
+      <div class="head">The advantage the benchmark can't see: disclosure risk</div>
+      <div class="body">
+        <p class="note" style="margin:0">SSDataBench scores only fidelity, by which whole-row
+          resampling also scores ~0.80 — but it republishes real respondents verbatim. Block-donor
+          reaches the same fidelity while recombining, so no synthetic person is any real one.</p>
+        <div class="vs">
+          <div class="box risk"><div class="t">whole-row resample — respondents republished</div><div class="m num">100%</div><div class="t">99.7% uniquely re-identifiable</div></div>
+          <div class="box safe"><div class="t">block-donor — respondents republished</div><div class="m num">0.1%</div><div class="t">= the coincidence floor</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ TAB 2: NO-DONOR ============ -->
+  <section class="panel" id="p-nodonor" role="tabpanel" aria-labelledby="t-nodonor">
+    <div class="headline">
+      <span class="big num">0.497</span>
+      <span class="cap"><b>Conditioned generator</b>: sample demographic seeds from the published
+        marginals, let the LLM complete each person, then calibrate every column back to the exact
+        marginal. No microdata. <b>1.7×</b> the published best — but at a hard wall.</span>
+    </div>
+
+    <h2 class="sec">Per-benchmark, vs published and the microdata ceiling</h2>
+    <div class="bars" id="bars-nodonor"></div>
+    <div class="legend">
+      <span><i class="swatch" style="background:var(--accent)"></i> conditioned + calibration</span>
+      <span><i class="swatch" style="background:var(--pub)"></i> published best</span>
+      <span><i class="swatch" style="background:var(--ceil)"></i> ceiling (real people)</span>
+    </div>
+
+    <h2 class="sec">The ~0.50 wall — and why it's a wall, not a weak method</h2>
+    <p class="note">Every no-donor method lands at the same place. Most tellingly, an
+      <b>oracle</b> fed the <em>true</em> correlations reaches the same 0.50 as the best LLM —
+      so ~0.50 is the information limit for anything with marginals but no microdata. The gap up
+      to 0.806 is higher-order joint structure only real rows carry.</p>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Method (no microdata)</th><th>overall</th><th>vs floor</th></tr></thead>
+      <tbody>
+        <tr><td>marginal floor — draw independently, no LLM</td><td class="n">0.477</td><td class="n">—</td></tr>
+        <tr><td>pairwise chain (LLM priors)</td><td class="n">0.434</td><td class="n">−0.043</td></tr>
+        <tr><td>pairwise chain (oracle — true correlations)</td><td class="n">0.496</td><td class="n">+0.019</td></tr>
+        <tr><td>whole-person + calibration</td><td class="n">0.483</td><td class="n">+0.006</td></tr>
+        <tr class="win"><td>conditioned + calibration <span class="pill ok">best</span></td><td class="n">0.497</td><td class="n">+0.020</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">The one real lift is <b>T3</b> (regression structure): the LLM's
+      income-given-education reasoning survives calibration, moving T3 from the floor's 0.300 to
+      0.343. T4 stays 0.000 — no donors to draw a coherent event tuple from.</p>
+
+    <div class="callout">
+      <div class="head">Why the marginal floor already beats every published LLM</div>
+      <div class="body">
+        <div class="vs">
+          <div class="box safe"><div class="t">marginals only, drawn independently</div><div class="m num">0.477</div><div class="t">no model at all</div></div>
+          <div class="box risk"><div class="t">published best of 15 LLMs</div><div class="m num">0.300</div><div class="t">T1 just 0.14 — can't reproduce marginals</div></div>
+        </div>
+        <p class="note" style="margin:0">Published LLMs sit below the trivial floor because they
+          fail the marginals. Handing over the aggregate stats — zero intelligence — is the biggest
+          no-donor win; the LLM's job is only the joint structure on top, and there it hits ~0.50.</p>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    Scored with SSDataBench's own type1–type5 evaluations against the paper's exact 1,000-row cfps
+    reference. Training microdata drawn from the 58,474-row source, proven disjoint on <span class="num">pid</span>.
+    Donor-based figures are 12-seed means; no-donor figures are 3-seed means. Ceiling = fresh real
+    people (not in the benchmark) scored against it — measured, not assumed.
+    Companion to <span class="num">docs/report/2026-07-13-full-agent-failure-modes.md</span>.
+  </footer>
+</div>
+
+<script>
+  // ----- data -----
+  var BENCH = ["T1","T2","T3","T4","T5"];
+  var PUB = {T1:0.14,T2:0.62,T3:0.43,T4:0.05,T5:0.75};
+  var CEIL = {T1:0.873,T2:0.813,T3:0.708,T4:0.825,T5:0.809};   // resample per-benchmark
+  var DONOR = {T1:0.816,T2:0.774,T3:0.701,T4:0.867,T5:0.809};  // block-donor domain, 12-seed
+  var NODONOR = {T1:0.807,T2:0.534,T3:0.343,T4:0.000,T5:0.802};// conditioned + calibration
+  var LABELS = {T1:"T1",T2:"T2",T3:"T3",T4:"T4",T5:"T5"};
+
+  function bars(el, data) {
+    var html = "";
+    BENCH.forEach(function(b){
+      var v = data[b], pub = PUB[b], ceil = CEIL[b];
+      html += '<div class="row">'
+        + '<span class="lab">'+LABELS[b]+'</span>'
+        + '<span class="track">'
+        +   '<span class="fill" style="width:'+(v*100).toFixed(1)+'%"></span>'
+        +   '<span class="tick pub" style="left:'+(pub*100).toFixed(1)+'%" title="published '+pub.toFixed(2)+'"></span>'
+        +   '<span class="tick ceil" style="left:'+(ceil*100).toFixed(1)+'%" title="ceiling '+ceil.toFixed(2)+'"></span>'
+        + '</span>'
+        + '<span class="val">'+v.toFixed(3)+'</span>'
+        + '</div>';
+    });
+    el.innerHTML = html;
+  }
+  bars(document.getElementById("bars-donor"), DONOR);
+  bars(document.getElementById("bars-nodonor"), NODONOR);
+
+  // ----- tabs -----
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('.tab'));
+  tabs.forEach(function(tab){
+    tab.addEventListener('click', function(){
+      tabs.forEach(function(t){
+        var on = t === tab;
+        t.setAttribute('aria-selected', on ? 'true' : 'false');
+        var panel = document.getElementById(t.getAttribute('aria-controls'));
+        if (on) panel.setAttribute('data-active',''); else panel.removeAttribute('data-active');
+      });
+    });
+  });
+
+  // ----- theme toggle -----
+  document.getElementById('themeBtn').addEventListener('click', function(){
+    var root = document.documentElement;
+    var cur = root.getAttribute('data-theme');
+    if (!cur) cur = matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+    root.setAttribute('data-theme', cur === 'dark' ? 'light' : 'dark');
+  });
+</script>
+</body>
+</html>
