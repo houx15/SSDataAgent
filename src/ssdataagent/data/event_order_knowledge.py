@@ -18,7 +18,10 @@ Ordering labels are ``"<"``-joined event *column names*, e.g.
 """
 from __future__ import annotations
 
+import json
+import re
 from dataclasses import dataclass, field
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -282,3 +285,91 @@ def apply_event_order(
     for c in event_vars:
         out[c] = block[c].to_numpy()
     return out
+
+
+# --- LLM elicitation (the joint comes from here; nothing else reads the pool joint) ---
+
+def _extract_json(text: str) -> dict:
+    """Pull the JSON object out of an LLM reply (tolerates prose / code fences)."""
+    m = re.search(r"\{.*\}", text.strip(), re.DOTALL)
+    if m:
+        try:
+            return json.loads(m.group(0))
+        except json.JSONDecodeError:
+            pass
+    return json.loads(text)
+
+
+def parse_stratum_response(text: str) -> StratumEventSpec:
+    """Parse one stratum's LLM reply into a `StratumEventSpec`, defensively:
+    ordering renormalised to sum 1, gap means floored strictly positive, occurrence
+    clipped to [0, 1]. Zero-weight orderings are dropped."""
+    obj = _extract_json(text)
+    ordering = {str(k): float(v) for k, v in (obj.get("ordering") or {}).items()
+                if float(v) > 0}
+    total = sum(ordering.values()) or 1.0
+    ordering = {k: v / total for k, v in ordering.items()}
+    gaps: dict[str, tuple[float, float]] = {}
+    for k, v in (obj.get("gaps") or {}).items():
+        if isinstance(v, (list, tuple)) and len(v) >= 1:
+            mean = max(0.5, float(v[0]))
+            sd = float(v[1]) if len(v) > 1 else 1.0
+            gaps[str(k)] = (mean, max(0.1, sd))
+    occ = {str(k): min(1.0, max(0.0, float(v)))
+           for k, v in (obj.get("occurrence") or {}).items()}
+    req = {str(k): str(v) for k, v in (obj.get("requires") or {}).items()}
+    return StratumEventSpec(ordering=ordering, gaps=gaps, occurrence=occ, requires=req)
+
+
+def _elicit_prompt(stratum: tuple, events: list[str], canonical: list[str],
+                   descriptions: dict[str, str] | None) -> str:
+    desc = ""
+    if descriptions:
+        desc = "\n".join(f"- {e}: {descriptions[e]}" for e in events if e in descriptions)
+    return f"""You are a demographer. Describe the life-course event timing for this
+group of people, FROM YOUR KNOWLEDGE (no data is provided):
+
+  stratum: {dict(zip(('gender', 'education'), stratum))}
+  events (columns): {events}
+  {desc}
+
+Return ONE JSON object with keys:
+- "ordering": map each plausible age ordering (a "<"-joined sequence of the event
+  columns, e.g. "{'<'.join(canonical)}") to its probability for this group.
+  Include the realistic minority orders (e.g. a first child before marriage).
+- "gaps": map "earlier->later" adjacent event pairs to [mean_years, sd_years].
+- "occurrence": map each event to the probability it ever occurs for this group.
+- "requires": map an event to a prerequisite event, or {{}} if none.
+
+Output only the JSON."""
+
+
+def elicit_stratum_specs(
+    dataset: str,
+    strata: list[tuple],
+    client,
+    model: str,
+    *,
+    descriptions: dict[str, str] | None = None,
+    cache_path: str | None = None,
+) -> dict[tuple, StratumEventSpec]:
+    """Elicit one `StratumEventSpec` per stratum via the LLM (one chat call each),
+    caching raw replies to ``cache_path`` so re-scoring needs no LLM calls."""
+    if cache_path and Path(cache_path).exists():
+        raw = json.loads(Path(cache_path).read_text())
+        return {tuple(k.split("|")): parse_stratum_response(v) for k, v in raw.items()}
+
+    events = event_timing_variables(dataset)
+    canonical = _CANONICAL_ORDER.get(dataset, events)
+    raw, specs = {}, {}
+    for stratum in strata:
+        prompt = _elicit_prompt(stratum, events, canonical, descriptions)
+        resp = client.chat.completions.create(
+            model=model, messages=[{"role": "user", "content": prompt}],
+            max_tokens=1500, temperature=0.3)
+        text = resp.choices[0].message.content or ""
+        raw["|".join(map(str, stratum))] = text
+        specs[tuple(stratum)] = parse_stratum_response(text)
+    if cache_path:
+        Path(cache_path).write_text(json.dumps(raw, ensure_ascii=False, indent=2))
+    return specs

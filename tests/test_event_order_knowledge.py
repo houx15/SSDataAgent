@@ -15,6 +15,7 @@ from ssdataagent.data.event_order_knowledge import (
     apply_event_order,
     calibrate_event_block,
     fixture_specs,
+    parse_stratum_response,
     sample_event_block,
 )
 from ssdataagent.data.event_timing import event_timing_variables
@@ -134,3 +135,25 @@ def test_apply_replaces_only_event_columns_and_guards_boundary():
     # honest-boundary guard: handing it the forbidden reference as the pool raises
     with pytest.raises(ValueError):
         apply_event_order(frame, "cfps", specs, pool, rng, forbid_ref=pool)
+
+
+def test_parse_stratum_response_renormalises_and_floors():
+    text = """The stratum spec is:
+    ```json
+    {"ordering": {
+        "age_finished_education<age_at_first_marriage<age_at_first_child": 9,
+        "age_finished_education<age_at_first_child<age_at_first_marriage": 1},
+     "gaps": {"age_finished_education->age_at_first_marriage": [4, 3],
+              "age_at_first_marriage->age_at_first_child": [0, 2]},
+     "occurrence": {"age_at_first_marriage": 0.85, "age_at_first_child": 1.4},
+     "requires": {}}
+    ```"""
+    spec = parse_stratum_response(text)
+    # raw weights 9:1 renormalise to 0.9:0.1
+    assert abs(sum(spec.ordering.values()) - 1.0) < 1e-6
+    assert abs(spec.ordering[
+        "age_finished_education<age_at_first_marriage<age_at_first_child"] - 0.9) < 1e-9
+    # gap mean floored strictly positive even when the model says 0
+    assert all(m > 0 for (m, _sd) in spec.gaps.values())
+    # occurrence clipped into [0, 1]
+    assert spec.occurrence["age_at_first_child"] == 1.0
