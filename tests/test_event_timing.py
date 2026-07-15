@@ -46,6 +46,34 @@ def test_conditional_matches_on_covariate():
     assert (out.loc[out["g"] == "B", EV].to_numpy() == 20).all()
 
 
+def test_continuous_covariate_is_binned_not_matched_exactly():
+    """A continuous covariate (here birth_year) almost never matches on its exact
+    value. Without binning every row collapses to the unconditional fallback and
+    the covariate association is lost; quantile-binning must preserve it.
+
+    Donors: the young cohort's events are all 20, the old cohort's all 40, and
+    every birth_year is DISTINCT so an exact-match key would find no cell."""
+    rng = np.random.default_rng(0)
+    # two cohorts far apart with a wide empty gap (1960-1999) so any bin edge in
+    # the gap separates them cleanly; every birth_year is distinct
+    old_years = list(range(1940, 1960))    # 20 distinct, events = 40
+    young_years = list(range(2000, 2020))  # 20 distinct, events = 20
+    donor = pd.DataFrame({
+        "birth_year": old_years + young_years,
+        "w": [40] * 20 + [20] * 20, "s": [40] * 20 + [20] * 20, "m": [40] * 20 + [20] * 20,
+    })
+    # generated rows carry birth years never seen verbatim in the donor
+    gen = pd.DataFrame({"birth_year": [2010] * 20 + [1945] * 20,
+                        "w": [0] * 40, "s": [0] * 40, "m": [0] * 40})
+    out = conditional_joint_repair(gen, donor, EV, condition_cols=["birth_year"],
+                                   rng=rng, min_cell=15, n_bins=2)
+    young = out["birth_year"] == 2010
+    old = out["birth_year"] == 1945
+    # binning must route each cohort to its own donor pool despite no exact match
+    assert out.loc[young, "w"].mean() < 30, "young cohort should draw the ~20 donors"
+    assert out.loc[old, "w"].mean() > 30, "old cohort should draw the ~40 donors"
+
+
 def test_falls_back_when_cell_too_small():
     # generated row's covariate 'C' has no donors -> unconditional fallback
     donor = pd.DataFrame({"g": ["A"] * 40, "w": [5] * 40, "s": [6] * 40, "m": [7] * 40})

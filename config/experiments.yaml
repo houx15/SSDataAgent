@@ -67,6 +67,30 @@ experiments:
     llm_base_url: https://openrouter.ai/api/v1
     llm_api_key_env: OPENROUTER_API_KEY
 
+  # EXP-007b — same as the Claude discovery run, but with the event-timing repair
+  # ON. The agents all scattered the 3 life-event ages across separate donor
+  # blocks -> T4=0.000 dragged every overall down ~0.16. conditional_joint_repair
+  # replaces those columns post-hoc with a joint draw from ONE covariate-matched
+  # donor (binned on gender/education/birth_year), so chronology holds by
+  # construction. Offline on the prior Claude output this lifted T4 0.000->0.90
+  # and overall 0.65->0.80 (= the block_donor strategy / resampling ceiling).
+  exp007b_discover_claude_repair:
+    datasets: [cfps]
+    conditions: [full_agent]
+    max_iterations: 1
+    sandbox_timeout: 90
+    n_rows: 5000
+    seed: 42
+    disjoint_train_sample: 20000
+    prompt_variant: rubric_tools_v4
+    llm_model: anthropic/claude-sonnet-4.5
+    llm_provider: openai
+    llm_base_url: https://openrouter.ai/api/v1
+    llm_api_key_env: OPENROUTER_API_KEY
+    event_timing_repair: true
+    event_timing_condition_cols:
+      cfps: [gender, highest_education, birth_year]
+
   # =========================================================================
   # SHIP demonstration (2026-07-06): exercise every refactor strategy on real
   # data and surface it in the web console. Baselines are zero-API-cost and
