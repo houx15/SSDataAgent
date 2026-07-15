@@ -11,6 +11,7 @@ import pandas as pd
 
 from ssdataagent.data.event_order_knowledge import (
     StratumEventSpec,
+    calibrate_event_block,
     fixture_specs,
     sample_event_block,
 )
@@ -81,3 +82,33 @@ def test_sampler_order_by_construction_and_occurrence():
     assert distinct.all(), "constructed ages must be strictly distinct (positive gaps)"
     canonical = ((full[e] < full[m]) & (full[m] < full[c])).mean()
     assert abs(canonical - 0.93) < 0.05, f"canonical-order fraction {canonical:.3f} != ~0.93"
+
+
+def _canonical_fraction(df):
+    e, m, c = CFPS_EVENTS
+    a = pd.DataFrame({k: _numeric(df[k]) for k in CFPS_EVENTS}).dropna()
+    return ((a[e] < a[m]) & (a[m] < a[c])).mean()
+
+
+def test_calibration_preserves_order_and_tightens_marginals():
+    pool = _synthetic_pool()
+    specs = fixture_specs("cfps")
+    demo = pool[["gender", "highest_education"]].sample(
+        n=4000, replace=True, random_state=2).reset_index(drop=True)
+    rng = np.random.default_rng(3)
+    block = sample_event_block(demo, specs, pool, CFPS_EVENTS, rng)
+    cal = calibrate_event_block(block, pool, CFPS_EVENTS)
+
+    # order is preserved: the realized-order distribution barely moves
+    assert abs(_canonical_fraction(cal) - _canonical_fraction(block)) < 0.03
+
+    # the marriage marginal (constructed as anchor+gap, so biased young) is pulled
+    # toward the pool's aggregate marriage-age marginal
+    pool_marr = _numeric(pool["age_at_first_marriage"]).mean()
+    before = abs(_numeric(block["age_at_first_marriage"]).mean() - pool_marr)
+    after = abs(_numeric(cal["age_at_first_marriage"]).mean() - pool_marr)
+    assert after < before, f"calibration should tighten marriage marginal: {after} !< {before}"
+    assert after < 1.5, f"calibrated marriage mean off by {after:.2f} yr"
+
+    # sentinels survive calibration untouched
+    assert (cal["age_at_first_marriage"] == "never married").sum() > 0

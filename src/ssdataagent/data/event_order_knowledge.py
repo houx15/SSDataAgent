@@ -194,3 +194,49 @@ def sample_event_block(
             prev = c
 
     return pd.DataFrame(cols, index=demographics.index)
+
+
+def calibrate_event_block(
+    block: pd.DataFrame,
+    pool: pd.DataFrame,
+    event_vars: list[str],
+) -> pd.DataFrame:
+    """Pull each event's *occurring* age marginal onto the pool's aggregate marginal
+    without reordering anyone.
+
+    The sampler anchors on the first event's pool marginal, so later events (built
+    as anchor + gaps) drift off their own marginals. We rank-map each event column
+    to its pool marginal (a pure aggregate stat), then, for the rare person whose
+    within-event order would flip under that map, revert *that person's* ages to the
+    constructed values. Order is therefore preserved exactly; marginals match the
+    pool for everyone the map leaves ordered. Sentinels / NaN are untouched.
+    """
+    event_vars = [c for c in event_vars if c in block.columns and c in pool.columns]
+    orig = {c: pd.to_numeric(block[c], errors="coerce").to_numpy(dtype=float)
+            for c in event_vars}
+    cal = {}
+    for c in event_vars:
+        v = orig[c].copy()
+        mask = ~np.isnan(v)
+        pv = np.sort(pd.to_numeric(pool[c], errors="coerce").dropna().to_numpy(float))
+        if mask.sum() and len(pv):
+            u = pd.Series(v[mask]).rank(pct=True, method="first").to_numpy()
+            v[mask] = pv[np.clip((u * len(pv)).astype(int), 0, len(pv) - 1)]
+        cal[c] = v
+
+    O = np.column_stack([orig[c] for c in event_vars])
+    C = np.column_stack([cal[c] for c in event_vars])
+    out = {c: block[c].to_numpy(dtype=object, copy=True) for c in event_vars}
+    for i in range(len(block)):
+        occ = [j for j in range(len(event_vars)) if not np.isnan(O[i, j])]
+        if not occ:
+            continue
+        src = C
+        if len(occ) >= 2:
+            ov = [O[i, j] for j in occ]
+            cv = [C[i, j] for j in occ]
+            if tuple(np.argsort(ov)) != tuple(np.argsort(cv)):
+                src = O  # calibration would flip this person's order -> revert
+        for j in occ:
+            out[event_vars[j]][i] = float(src[i, j])
+    return pd.DataFrame(out, index=block.index)
