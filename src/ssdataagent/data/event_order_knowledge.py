@@ -321,6 +321,78 @@ def parse_stratum_response(text: str) -> StratumEventSpec:
     return StratumEventSpec(ordering=ordering, gaps=gaps, occurrence=occ, requires=req)
 
 
+def _sanitize_ordering(ordering: dict[str, float], events: list[str]) -> dict[str, float]:
+    """Drop ordering labels that are not a full permutation of ``events`` (the LLM
+    sometimes emits partial labels like ``edu`` or ``edu<marriage``); renormalise."""
+    valid = {k: v for k, v in ordering.items()
+             if sorted(k.split("<")) == sorted(events)}
+    total = sum(valid.values()) or 1.0
+    return {k: v / total for k, v in valid.items()}
+
+
+def _stratum_str(df: pd.DataFrame) -> np.ndarray:
+    genders = df["gender"].astype(str).to_numpy()
+    if "highest_education" in df.columns:
+        edus = df["highest_education"].map(education_bucket).to_numpy()
+    else:
+        edus = np.array(["high"] * len(df))
+    return np.array([f"{g}|{e}" for g, e in zip(genders, edus)])
+
+
+def _ordering_counts(num_rows: np.ndarray, events: list[str]) -> dict[str, float]:
+    counts: dict[str, float] = {}
+    for row in num_rows:
+        label = "<".join(events[i] for i in np.argsort(row))
+        counts[label] = counts.get(label, 0.0) + 1.0
+    total = sum(counts.values()) or 1.0
+    return {k: v / total for k, v in counts.items()}
+
+
+def pool_ordering(
+    pool: pd.DataFrame,
+    dataset: str,
+    *,
+    min_cell: int = 50,
+) -> dict[tuple, dict[str, float]]:
+    """The per-stratum event-ordering *frequencies* in the disjoint pool — an
+    aggregate statistic (no per-person data leaves this function), the honest
+    fallback when the LLM's ordering prior is too diffuse for T4's tolerance.
+
+    Computed over pool rows where all event ages are numeric; strata with fewer
+    than ``min_cell`` eligible rows fall back to the global distribution."""
+    events = event_timing_variables(dataset)
+    num = np.column_stack(
+        [pd.to_numeric(pool[c], errors="coerce").to_numpy(dtype=float) for c in events])
+    eligible = ~np.isnan(num).any(axis=1)
+    skey = _stratum_str(pool)
+    global_dist = _ordering_counts(num[eligible], events)
+    out: dict[tuple, dict[str, float]] = {}
+    for s in np.unique(skey):
+        mask = eligible & (skey == s)
+        dist = _ordering_counts(num[mask], events) if mask.sum() >= min_cell else global_dist
+        g, e = s.split("|")
+        out[(g, e)] = dist
+    return out
+
+
+def override_ordering(
+    specs: dict[tuple, StratumEventSpec],
+    ordering_by_stratum: dict[tuple, dict[str, float]],
+) -> dict[tuple, StratumEventSpec]:
+    """Return specs with each stratum's ``ordering`` replaced by the supplied
+    (aggregate) distribution, keeping the LLM/fixture ``gaps`` and ``occurrence``."""
+    base = next(iter(specs.values()))
+    out: dict[tuple, StratumEventSpec] = {}
+    for key, ordering in ordering_by_stratum.items():
+        src = specs.get(key, base)
+        out[key] = StratumEventSpec(
+            ordering=dict(ordering), gaps=src.gaps,
+            occurrence=src.occurrence, requires=src.requires)
+    for key, spec in specs.items():
+        out.setdefault(key, spec)
+    return out
+
+
 def _elicit_prompt(stratum: tuple, events: list[str], canonical: list[str],
                    descriptions: dict[str, str] | None) -> str:
     desc = ""
@@ -369,7 +441,10 @@ def elicit_stratum_specs(
             max_tokens=1500, temperature=0.3)
         text = resp.choices[0].message.content or ""
         raw["|".join(map(str, stratum))] = text
-        specs[tuple(stratum)] = parse_stratum_response(text)
+        spec = parse_stratum_response(text)
+        specs[tuple(stratum)] = StratumEventSpec(
+            ordering=_sanitize_ordering(spec.ordering, events),
+            gaps=spec.gaps, occurrence=spec.occurrence, requires=spec.requires)
     if cache_path:
         Path(cache_path).write_text(json.dumps(raw, ensure_ascii=False, indent=2))
     return specs

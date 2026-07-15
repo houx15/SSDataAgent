@@ -15,7 +15,9 @@ from ssdataagent.data.event_order_knowledge import (
     apply_event_order,
     calibrate_event_block,
     fixture_specs,
+    override_ordering,
     parse_stratum_response,
+    pool_ordering,
     sample_event_block,
 )
 from ssdataagent.data.event_timing import event_timing_variables
@@ -157,3 +159,21 @@ def test_parse_stratum_response_renormalises_and_floors():
     assert all(m > 0 for (m, _sd) in spec.gaps.values())
     # occurrence clipped into [0, 1]
     assert spec.occurrence["age_at_first_child"] == 1.0
+
+
+def test_pool_ordering_is_aggregate_and_override_keeps_gaps():
+    pool = _synthetic_pool(6000)
+    od = pool_ordering(pool, "cfps", min_cell=30)
+    canon = "age_finished_education<age_at_first_marriage<age_at_first_child"
+    for key, dist in od.items():
+        assert abs(sum(dist.values()) - 1.0) < 1e-6, f"{key} ordering !~ 1"
+        assert dist.get(canon, 0) > 0.5, f"{key} canonical not dominant: {dist.get(canon)}"
+        for label in dist:  # only full-permutation labels
+            assert sorted(label.split("<")) == sorted(CFPS_EVENTS)
+
+    # override replaces ordering with the aggregate but keeps the spec's gaps/occ
+    base = fixture_specs("cfps")
+    merged = override_ordering(base, od)
+    for key in od:
+        assert merged[key].ordering == od[key]
+        assert merged[key].gaps == base[key].gaps
