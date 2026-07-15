@@ -62,6 +62,28 @@ class OpenAICompatibleClient:
             timeout=_REQUEST_TIMEOUT_S,
         )
 
+    @staticmethod
+    def _first_message(resp):
+        """Return resp.choices[0].message, or raise with the provider's own error.
+
+        OpenRouter proxies many providers and, when the upstream one errors,
+        returns HTTP 200 with `choices: null` and an `error` object rather than a
+        non-2xx status. `resp.choices[0]` then raises a bare
+        'NoneType object is not subscriptable' that hides the real cause. Surface
+        the provider message instead so a model that rejects the request (bad
+        tool schema, context overflow, provider outage) is diagnosable.
+        """
+        choices = getattr(resp, "choices", None)
+        if not choices:
+            err = getattr(resp, "error", None)
+            detail = ""
+            if err is not None:
+                detail = err.get("message", str(err)) if isinstance(err, dict) else str(err)
+            raise RuntimeError(
+                f"LLM response carried no choices (provider error: {detail or 'none given'})"
+            )
+        return choices[0].message
+
     def _token_kwarg(self) -> str:
         # OpenAI's GPT-5 / o-series chat-completions endpoint rejects the
         # legacy `max_tokens` and requires `max_completion_tokens`. DeepSeek's
@@ -104,7 +126,7 @@ class OpenAICompatibleClient:
                 temperature=self.cfg.temperature,
                 **{self._token_kwarg(): self.cfg.max_tokens},
             )
-            msg = resp.choices[0].message
+            msg = self._first_message(resp)
             content = msg.content or ""
             if not content:
                 content = getattr(msg, "reasoning_content", "") or ""
@@ -132,7 +154,7 @@ class OpenAICompatibleClient:
                 temperature=self.cfg.temperature,
                 **{self._token_kwarg(): self.cfg.max_tokens},
             )
-            return resp.choices[0].message
+            return self._first_message(resp)
 
         msg = self._retry_loop(call)
         return _parse_openai_tool_message(msg)
