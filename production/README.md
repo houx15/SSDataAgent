@@ -50,6 +50,13 @@ Anything not meeting all three stays in `docs/report/` (findings) or scratchpad
 
 | candidate | regime | overall | why not promoted yet |
 |---|---|---|---|
-| no-donor conditioned generator | no-donor | ~0.49 | lives in scratchpad (`nodonor_conditioned.py`); needs to move into the registry with a test (roadmap task 0) |
+| no-donor conditioned generator | no-donor | ~0.49 | generator pipeline lives in scratchpad (`nodonor_conditioned.py`); needs to move into the registry with a test (roadmap task 0) |
+| + event-order module (A) | no-donor + aggregate ordering | **0.64** ±.03 (T4 0.70) | module is in the registry + tested (`data/event_order_knowledge.py`); the generator it wraps is still scratchpad. Report the **bracket** (0.49 knowledge-only / 0.64 +aggregate-ordering / 0.79 microdata), never 0.64 bare — T4 is aggregate-ordering access, train/test-clean but not a knowledge result. See `docs/report/2026-07-15-no-donor-event-order-result.md`. |
+
+**Honest note on A:** knowledge alone leaves T4 at 0.000 (the LLM's ordering prior
+is too diffuse); the aggregate ordering distribution from the *disjoint* pool
+unlocks it (same footing as T1 calibration). On the benchmarks we supply nothing
+for (T2 0.53, T3 0.32) the generator is *below* published PNAS — genuine joint
+knowledge is the real gap, targeted by roadmap possibility B.
 
 See `docs/report/2026-07-15-no-donor-roadmap.md` for the no-donor build order.
