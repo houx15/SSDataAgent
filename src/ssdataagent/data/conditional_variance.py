@@ -146,10 +146,21 @@ def _map_to_marginal(
     u: np.ndarray,
     is_num: bool,
     rng: np.random.Generator,
+    *,
+    source_missing: np.ndarray | None = None,
 ) -> np.ndarray:
     """Map a uniform latent ``u`` onto ``pool_col``'s marginal (numeric: sorted-value
     inverse CDF; categorical: cumulative value_counts), reinjecting the column's
-    missingness rate. This is the T1-locking calibration step."""
+    missingness rate. This is the T1-locking calibration step.
+
+    Missingness is *structure*, not noise: the respondent with no children is the one
+    whose age-at-first-child is blank, so which rows are missing is predictable from
+    the rest of the row. ``source_missing`` is the sampled respondent's own missingness
+    for this column; we start from it and only top up / trim at random to land on the
+    pool's rate (the supplied aggregate that locks T1). Passing None keeps the old
+    behaviour -- scatter at random -- which severs that link and flattens the covariate
+    structure of every missing-heavy column (measured on cfps/cps:
+    ``age_first_childbirth`` covariate-R^2 0.51 -> 0.03, costing ~0.26-0.31 on T3)."""
     miss = float(pool_col.isna().mean())
     n = len(u)
     if is_num:
@@ -159,10 +170,23 @@ def _map_to_marginal(
         vc = pool_col.dropna().astype(str).value_counts(normalize=True)
         cats, edges = vc.index.to_numpy(), np.cumsum(vc.to_numpy())
         emitted = cats[np.searchsorted(edges, u, side="right").clip(0, len(cats) - 1)].astype(object)
-    if miss > 0:
-        k = int(round(miss * n))
-        if k:
-            emitted[rng.choice(n, k, replace=False)] = np.nan
+    if miss <= 0:
+        return emitted
+    want = int(round(miss * n))
+    if source_missing is None:
+        if want:
+            emitted[rng.choice(n, want, replace=False)] = np.nan
+        return emitted
+    mask = np.asarray(source_missing, dtype=bool).copy()
+    have = int(mask.sum())
+    if have > want:  # source is missing more often than the pool -- revive the surplus
+        drop = rng.choice(np.flatnonzero(mask), have - want, replace=False)
+        mask[drop] = False
+    elif have < want:  # source is missing less often -- top up from the observed rows
+        free = np.flatnonzero(~mask)
+        add = rng.choice(free, min(want - have, len(free)), replace=False)
+        mask[add] = True
+    emitted[mask] = np.nan
     return emitted
 
 
@@ -214,7 +238,8 @@ def sample_variance_repaired(
                 keep = rng.random(n_rows) < a
                 idx = np.where(keep, base_idx, rng.integers(0, m, n_rows))
         u_r = np.clip(u_full[idx], _EPS, 1 - _EPS)
-        out[c] = _map_to_marginal(pool[c], u_r, is_num[c], rng)
+        src_missing = (raw[c].isna().to_numpy()[idx] if c in raw.columns else None)
+        out[c] = _map_to_marginal(pool[c], u_r, is_num[c], rng, source_missing=src_missing)
     return pd.DataFrame(out)
 
 

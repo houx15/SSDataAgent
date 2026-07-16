@@ -89,6 +89,39 @@ def test_repair_deflates_covariate_r2_and_locks_marginal():
     assert abs(repaired["income"].std() - pool["income"].std()) < 0.5 * pool["income"].std()
 
 
+def test_missingness_is_person_linked_and_hits_pool_rate():
+    """Which rows are missing must track the sampled respondent's OWN missingness --
+    a person with no children is the one whose age-at-first-child is blank. The
+    original code scattered missingness at random, severing that link and destroying
+    the covariate structure of every missing-heavy column (measured on real data:
+    age_first_childbirth covariate-R^2 0.51 -> 0.03). The pool's missing *rate* is a
+    supplied aggregate and must still be reproduced (that is what locks T1)."""
+    rng = np.random.default_rng(0)
+    n = 4000
+    # `raw`: income is missing exactly for the low-education half -- a perfectly
+    # person-linked (covariate-predictable) missingness pattern.
+    edu = np.where(rng.random(3000) < 0.5, "low", "high")
+    raw = pd.DataFrame({
+        "highest_education": edu,
+        "gender": rng.choice(["M", "F"], 3000),
+        "income": np.where(edu == "low", np.nan, rng.normal(10.0, 2.0, 3000)),
+    })
+    # pool marginal carries the same 50% missing rate
+    pool = raw.copy()
+
+    out = sample_variance_repaired(
+        raw, pool, ["highest_education", "gender", "income"], PREDICTORS,
+        n, np.random.default_rng(7), alpha={"income": 1.0})
+
+    rate = out["income"].isna().mean()
+    assert abs(rate - 0.5) < 0.05, f"pool missing rate not reproduced: {rate:.3f}"
+
+    # the link: among emitted rows, missingness must concentrate on 'low' education.
+    miss_by_edu = out.groupby("highest_education")["income"].apply(lambda s: s.isna().mean())
+    assert miss_by_edu["low"] > 0.9, f"low-edu rows should be ~all missing: {miss_by_edu.to_dict()}"
+    assert miss_by_edu["high"] < 0.1, f"high-edu rows should be ~none missing: {miss_by_edu.to_dict()}"
+
+
 def test_elicit_r2_targets_reads_cache(tmp_path):
     cache = tmp_path / "r2.txt"
     cache.write_text('reasoning about effect sizes...\n{"income": 0.3, "mood": 0.05}')
