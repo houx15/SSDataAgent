@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+import pytest
 
 from ssdataagent.data.conditional_variance import (
     covariate_r2,
@@ -128,3 +129,55 @@ def test_elicit_r2_targets_reads_cache(tmp_path):
     out = elicit_r2_targets(["income", "mood"], PREDICTORS, client=None, model="x",
                             cache_path=str(cache))
     assert out == {"income": 0.3, "mood": 0.05}
+
+
+# ---------------------------------------------------------------- benchmark fidelity
+# `alpha = sqrt(target / own)` is only meaningful if `own` is the SAME statistic T3
+# scores. T3 (`ssdatabench/.../type3.py`) fits a statsmodels formula in which a
+# predictor declared `type: numeric` enters CONTINUOUS, and applies `log1p` (not
+# `log`) to a `log_transform: True` response. These pin both against statsmodels
+# itself. cps is the first dataset with a numeric predictor (`age`); cfps's are all
+# categorical, which is why this went unnoticed.
+
+def _mixed_population(n=1500, seed=0):
+    """Age enters income CONTINUOUSLY (a linear term, as T3 fits it). ~8% of people
+    have no earnings at all -- the zero floor real income data has, and the rows plain
+    `log` would silently drop."""
+    rng = np.random.default_rng(seed)
+    age = rng.integers(18, 80, n).astype(float)
+    edu = rng.choice(["low", "high"], n)
+    income = 500.0 * age + 4000.0 * (edu == "high") + rng.normal(0, 3000, n)
+    income = np.clip(income, 0, None)
+    income[rng.random(n) < 0.08] = 0.0          # non-earners
+    return pd.DataFrame({"age": age, "education": edu, "income": income})
+
+
+def test_numeric_predictor_enters_continuous_not_dummied():
+    smf = pytest.importorskip("statsmodels.formula.api")
+    df = _mixed_population()
+    want = smf.ols("income ~ age + C(education)", data=df).fit().rsquared
+    got = covariate_r2(df, "income", ["age", "education"],
+                       numeric_predictors=frozenset({"age"}))
+    assert got == pytest.approx(want, abs=1e-6)
+
+
+def test_dummying_a_numeric_predictor_inflates_r2():
+    """Why it matters: dummied age overfits, so R2_own comes out too high, so
+    alpha = sqrt(target/own) comes out too small and the outcome is over-repaired."""
+    df = _mixed_population()
+    honest = covariate_r2(df, "income", ["age", "education"],
+                          numeric_predictors=frozenset({"age"}))
+    dummied = covariate_r2(df, "income", ["age", "education"])
+    assert dummied > honest + 0.01
+
+
+def test_log_transform_matches_benchmark_log1p_and_keeps_zeros():
+    smf = pytest.importorskip("statsmodels.formula.api")
+    df = _mixed_population()
+    assert (df["income"] == 0).sum() > 0, "fixture must exercise the zero-income floor"
+    d = df.assign(y=np.log1p(pd.to_numeric(df["income"])))
+    want = smf.ols("y ~ age + C(education)", data=d).fit().rsquared
+    got = covariate_r2(df, "income", ["age", "education"],
+                       numeric_predictors=frozenset({"age"}),
+                       log_vars=frozenset({"income"}))
+    assert got == pytest.approx(want, abs=1e-6)

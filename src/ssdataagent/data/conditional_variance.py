@@ -43,10 +43,26 @@ _EPS = 1e-6
 
 # --------------------------------------------------------------- covariate R^2 (T3)
 
-def _dummy_design(frame: pd.DataFrame, predictors: list[str]) -> tuple[pd.DataFrame, np.ndarray]:
-    """Dummy-encoded predictor matrix and a row mask for complete predictor rows."""
+def _dummy_design(
+    frame: pd.DataFrame,
+    predictors: list[str],
+    numeric_predictors: frozenset[str] = frozenset(),
+) -> tuple[pd.DataFrame, np.ndarray]:
+    """Predictor matrix and a row mask for complete predictor rows.
+
+    A predictor in ``numeric_predictors`` enters as ONE continuous column; every other
+    predictor is dummy-encoded. This mirrors the T3 benchmark, which fits a statsmodels
+    formula where a predictor declared ``type: numeric`` is a continuous term. Dummying
+    a continuous predictor instead (cps ``age`` -> ~90 indicator columns) overfits and
+    inflates R^2, which would feed a too-small ``alpha`` into the repair.
+    """
     parts, ok = [], np.ones(len(frame), dtype=bool)
     for p in predictors:
+        if p in numeric_predictors:
+            v = pd.to_numeric(frame[p], errors="coerce")
+            ok &= v.notna().to_numpy()
+            parts.append(v.rename(p).to_frame())
+            continue
         s = frame[p].astype("string")
         ok &= s.notna().to_numpy()
         parts.append(pd.get_dummies(s, prefix=p, dummy_na=False))
@@ -59,17 +75,26 @@ def covariate_r2(
     response: str,
     predictors: list[str],
     *,
+    numeric_predictors: frozenset[str] = frozenset(),
     log_vars: frozenset[str] = frozenset(),
     min_rows: int = 20,
 ) -> float | None:
-    """R^2 of an OLS of ``response`` on the dummy-encoded ``predictors`` — the exact
-    statistic the T3 benchmark compares. Returns None if too few complete rows."""
+    """R^2 of an OLS of ``response`` on ``predictors`` — the exact statistic the T3
+    benchmark compares. Returns None if too few complete rows.
+
+    Fidelity to the benchmark is the whole point: ``alpha = sqrt(target / own)`` only
+    means anything if ``own`` is measured the way T3 measures it. Hence
+    ``numeric_predictors`` (continuous, not dummied) and ``log1p`` for ``log_vars``
+    (T3's ``_clean_series`` uses ``np.log1p``, which KEEPS zero-valued rows; plain
+    ``log`` would silently drop them -- 36 of cfps's 244 observed incomes, 5.7% of
+    cps's).
+    """
     if response not in frame.columns:
         return None
     y = pd.to_numeric(frame[response], errors="coerce")
     if response in log_vars:
-        y = np.log(y.where(y > 0))
-    design, ok = _dummy_design(frame, predictors)
+        y = np.log1p(y.where(y >= 0))
+    design, ok = _dummy_design(frame, predictors, numeric_predictors)
     ok &= y.notna().to_numpy()
     if int(ok.sum()) < min_rows or design.shape[1] == 0:
         return None
@@ -95,12 +120,17 @@ def variance_repair_alphas(
     predictors: list[str],
     targets: dict[str, float | None],
     *,
+    numeric_predictors: frozenset[str] = frozenset(),
     log_vars: frozenset[str] = frozenset(),
 ) -> dict[str, float]:
     """Per-outcome ``alpha``: ``R2_own`` measured on ``raw`` (our own generation,
     never the test), deflated toward each outcome's ``targets`` value."""
     return {
-        c: repair_alpha(covariate_r2(raw, c, predictors, log_vars=log_vars), t)
+        c: repair_alpha(
+            covariate_r2(raw, c, predictors, numeric_predictors=numeric_predictors,
+                         log_vars=log_vars),
+            t,
+        )
         for c, t in targets.items()
     }
 
