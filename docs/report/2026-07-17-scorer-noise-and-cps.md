@@ -118,6 +118,33 @@ paper's 1000-row benchmark sample.
 Regimes are not comparable. The bracket's *structure* survives the precision upgrade
 intact — adjacent rungs differ by +0.175, +0.096, +0.138, all far above the noise floor.
 
+### cfps, re-measured at B=200 (all five types)
+
+Included because cfps carries the project's headline and its numbers were measured at the
+shipped B like everything else. 5 seeds, n=5000, pool 57,474 person-disjoint.
+
+| config | T1 | T2 | T3 | T4 | T5 | overall | regime |
+|---|---|---|---|---|---|---|---|
+| independence (floor) | 0.835 | 0.530 | 0.306 | 0.000 | 0.622 | **0.458** ±.004 | no-donor |
+| copula-old (buggy) | 0.833 | 0.627 | 0.373 | 0.000 | 0.716 | 0.510 ±.012 | microdata |
+| copula-fixed | 0.751 | 0.729 | 0.667 | 0.000 | 0.736 | 0.576 ±.006 | microdata |
+| **rowresample (ceiling)** | 0.842 | 0.813 | 0.706 | **0.795** ±.052 | 0.738 | **0.779** ±.011 | microdata |
+
+Three things the precision changes:
+
+- **The no-donor floor is 0.458 ± 0.004**, not 0.477 (historical) or 0.492 (measured
+  earlier today at shipped B). Those two agreed with each other to 0.015 and we read that
+  as an independent consistency check on a freshly rewritten script. It was two noisy
+  draws from the same distribution. **The check was real but the value was wrong**; the
+  script is vindicated, the number is superseded.
+- **cfps T4 = 0.795 ± 0.052**, and the σ collapse is the point: 0.130 → 0.052. T4's
+  "known σ ≈ 0.13", which we had recorded as a property of the benchmark, was mostly
+  scorer noise. Winnability against addhealth's 0.000 stands, now tightly.
+- **T5 moved most** (independence 0.762 → 0.622; ceiling 0.839 → 0.738). Its shipped
+  config uses `bootstrap_sample_n: 10000` against a 1000-row reference, and it is the
+  benchmark whose shipped-B estimate was furthest off. Any past T5 claim should be
+  re-checked before use.
+
 ### What holds
 
 - **Mean-collapse replicates on cps and the repair works.** T3 0.031 → 0.208 (Δ 0.177,

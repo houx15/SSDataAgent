@@ -108,11 +108,22 @@ script. And **cfps T4 is genuinely winnable**: real microdata resampling scores
 **0.780 ± 0.130**, against addhealth's 0.000 ceiling. T4-winnability is a property of
 the dataset, not of the method.
 
-> The 2-seed version of this table previously reported T4 = **0.950** and overall
-> **0.831**. At 5 seeds T4 is **0.780 ± 0.130** — the 0.950 was the top of a wide
-> seed distribution (T4's per-seed σ ≈ 0.13 is a known property of this benchmark),
-> not a stable figure. The winnable-vs-unwinnable contrast against addhealth is
-> unaffected; the magnitude was overstated.
+> **Superseded 2026-07-17 (same day).** This table was measured at the shipped
+> `bootstrap_B` with an unseeded bootstrap. Re-measured at B=200 (5 seeds):
+>
+> | config | T1 | T2 | T3 | T4 | T5 | overall |
+> |---|---|---|---|---|---|---|
+> | independence (floor) | 0.835 | 0.530 | 0.306 | 0.000 | 0.622 | **0.458** ±.004 |
+> | copula-old | 0.833 | 0.627 | 0.373 | 0.000 | 0.716 | 0.510 ±.012 |
+> | copula-fixed | 0.751 | 0.729 | 0.667 | 0.000 | 0.736 | 0.576 ±.006 |
+> | **rowresample (ceiling)** | 0.842 | 0.813 | 0.706 | **0.795** ±.052 | 0.738 | **0.779** ±.011 |
+>
+> The floor is **0.458 ± 0.004**. The "0.492 matches the historical 0.477" agreement
+> above was **two noisy draws from the same distribution**, not a check that either value
+> was right — the script it vindicated is fine, the number is not. cfps T4 is
+> **0.795 ± 0.052**: winnability stands, and T4's "known σ ≈ 0.13" was mostly scorer
+> noise (σ now 0.052). T5 moved most (0.762 → 0.622 at the floor) and any past T5 claim
+> should be re-checked. See `docs/report/2026-07-17-scorer-noise-and-cps.md`.
 
 ## The three bugs
 
