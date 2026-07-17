@@ -415,10 +415,15 @@ test whether the last mile is recoverable non-circularly.
   `sample_event_block`, `calibrate_event_block`, `apply_event_order`, `pool_ordering`,
   `override_ordering`, `elicit_stratum_specs`), tested in
   `tests/test_event_order_knowledge.py` (6 tests).
-- **Measurement (scratchpad):** `nodonor_eventorder_{agg,final,circ}.py` (aggregate
-  bracket + circularity), `nodonor_decomp_{elicit,score}.py` and `nodonor_decomp2_score.py`
-  (decomposition reasoning), `nodonor_copula_fix.py` + `nodonor_partial_copula.py`
-  (the T2/T3 diagnosis and fix), `nodonor_joint_probe.py` (over-determination probe).
+- **Measurement:** the scratchpad scripts once named here
+  (`nodonor_eventorder_{agg,final,circ}.py`, `nodonor_decomp_{elicit,score}.py`,
+  `nodonor_decomp2_score.py`, `nodonor_copula_fix.py`, `nodonor_partial_copula.py`,
+  `nodonor_joint_probe.py`) were **destroyed by a `/tmp` wipe on 2026-07-16** and no
+  longer exist. Durable replacement for the reference bracket:
+  `.venv/bin/python scripts/nodonor_bracket.py cfps` (no LLM). Independently confirmed
+  2026-07-17: the no-donor floor reproduces at **0.477** and cfps T4 IS winnable — real
+  microdata resampling scores **T4 = 0.950**. See
+  `docs/report/2026-07-17-cross-dataset-corrections.md`.
 - **Protocol:** aggregates from the disjoint pool (`pid`-disjoint, guarded by
   `forbid_ref`); scored on the paper's 1000-row `sampled_cfps.csv`; 5 seeds; 5000
   simulated rows to cut the eval's bootstrap noise.

@@ -158,9 +158,22 @@ the whole test battery rather than one benchmark at a time.
 
 ## Reproducibility
 
+> **Updated 2026-07-17.** The scratchpad scripts this section used to name
+> (`nodonor_meancollapse_probe.py`, `nodonor_varrepair.py`,
+> `nodonor_varrepair_elicit.py`, `nodonor_consolidate.py`, `varrepair_elicit.json`)
+> were **destroyed by a `/tmp` wipe** and no longer exist. Durable replacements:
+>
+> - Reference bracket (no LLM): `.venv/bin/python scripts/nodonor_bracket.py cfps`
+> - Generation cache: `results/nodonor_cache/` (gitignored but durable)
+> - See `docs/report/2026-07-17-cross-dataset-corrections.md` for corrected numbers.
+>
+> Two caveats on the figures above, both established 2026-07-17. First, they were
+> produced with the **random-missingness copula** later fixed in `77c02e9`; a refit on
+> a fresh generation reproduces them within seed noise (T2 0.630, T3 0.462), so the
+> result stands, and the fix does not change it (0.648 → 0.642, n.s.). Second, the
+> comparison of this no-donor method against pool-joint "transfer" baselines elsewhere
+> is **regime-crossing and was withdrawn** — this method uses marginals only.
+
 Module `src/ssdataagent/data/conditional_variance.py`; tests
-`tests/test_conditional_variance.py`. Measurement scripts (scratchpad):
-`nodonor_meancollapse_probe.py` (the diagnosis), `nodonor_varrepair.py` +
-`nodonor_varrepair_elicit.py` (the bracket), `nodonor_consolidate.py` (the combined
-pipeline). Elicited priors cached in `varrepair_elicit.json`. Aggregates and marginals
-from the disjoint pool; the event-order module's `forbid_ref` guards the boundary.
+`tests/test_conditional_variance.py`. Aggregates and marginals from the disjoint pool;
+the event-order module's `forbid_ref` guards the boundary.

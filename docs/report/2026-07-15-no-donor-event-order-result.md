@@ -131,6 +131,12 @@ beyond published aggregates.
 ## Reproducibility
 
 Module: `src/ssdataagent/data/event_order_knowledge.py` (tested,
-`tests/test_event_order_knowledge.py`). Measurement:
-`scratchpad/nodonor_eventorder_{agg,final,circ}.py`. Aggregates from the disjoint
-pool; `apply_event_order(..., forbid_ref=ref)` guards the boundary.
+`tests/test_event_order_knowledge.py`). Aggregates from the disjoint pool;
+`apply_event_order(..., forbid_ref=ref)` guards the boundary.
+
+> **Updated 2026-07-17.** The measurement scripts named here
+> (`scratchpad/nodonor_eventorder_{agg,final,circ}.py`) were **destroyed by a `/tmp`
+> wipe** and no longer exist. Durable replacement for the reference bracket:
+> `.venv/bin/python scripts/nodonor_bracket.py cfps` (no LLM). Do not apply this module
+> to **addhealth**: its T4 is unwinnable (real microdata scores 0.000) and the module
+> hurts T5 there. See `docs/report/2026-07-17-cross-dataset-corrections.md`.
