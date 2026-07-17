@@ -5,6 +5,15 @@
 **Replication:** `scripts/nodonor_bracket.py` (no LLM, no API key).
 **Code landed:** `77c02e9` (person-linked missingness in `conditional_variance.py`).
 
+> **Precision caveat, added later the same day.** Every number here was measured with the
+> benchmark's **unseeded** bootstrap at its shipped `bootstrap_B` (1 for T1, 10 for the
+> rest). That scorer carries σ≈0.043 on overall and σ≈0.100 on T1 *on fixed input* — so
+> nothing below a ~0.054 overall gap is resolvable at 5 seeds, and no run here is
+> reproducible. The **large** findings in this report (the three bugs, the bracket's
+> shape, mean-collapse, addhealth T4) clear that bar comfortably. Two fine comparisons do
+> not and are struck through below. Full characterisation, corrected B=200 values, and
+> the seeding fix: `docs/report/2026-07-17-scorer-noise-and-cps.md`.
+
 ## Summary
 
 We took the cfps no-donor method to other datasets to see whether it generalized. It
@@ -47,6 +56,16 @@ So, precisely: the trivial **independence floor (0.433) beats the best single pu
 system (~0.40)** — entirely on T1, which published LLMs fail (~0.10) — but it does *not*
 beat the 0.46 cross-model envelope, and on the joint benchmarks (T2 0.351, T3 0.033) it
 is far below every published LLM. Marginals are free; the joint is not.
+
+> **Retracted 2026-07-17 (same day).** The floor-beats-published claim is **withdrawn**.
+> Every number in this table was measured at the scorer's shipped `bootstrap_B` (1 for
+> T1, 10 elsewhere) with an **unseeded** bootstrap, which carries σ≈0.043 on overall and
+> σ≈0.100 on T1 — so a 5-seed mean cannot resolve an overall gap below ~0.054. The
+> floor's 0.433 vs published ~0.40 is a gap of 0.033: **unresolvable**. Re-measured at
+> B=200 the floor is **0.407** — a dead heat. The *shape* of this table survives (adjacent
+> rungs differ by 0.10–0.18, far above the floor); the fine comparisons do not. Corrected
+> values and the full noise characterisation:
+> `docs/report/2026-07-17-scorer-noise-and-cps.md`.
 
 ### cfps (pool = pid-disjoint, 57,474 rows)
 
@@ -173,12 +192,13 @@ the right instrument, because R² is literally what T3 scores.
   correctly did not help there, and hurt T5 (0.746 → 0.526). **Do not apply module A to
   addhealth.** T4-winnability is a dataset property: cfps's real-microdata ceiling is
   **0.780 ± 0.130** (5 seeds).
-- **Every dataset beats the best single published system on overall**, driven
-  overwhelmingly by T1 — the free aggregate win the per-person LLM literature omits.
-  State it that way, not as "beats published": on the *joint* benchmarks our cheap
-  baselines are often *worse* than published LLMs (cps floor T2 0.351 / T3 0.033 vs
-  their ~0.71 / ~0.57), and a per-type best-of-15-LLMs envelope beats our floor too.
-  The aggregate win is real but it is a T1 win.
+- ~~**Every dataset beats the best single published system on overall**~~ — **withdrawn
+  2026-07-17.** At B=200 the cps floor is 0.407 against published ~0.40: a dead heat, not
+  a win, and the original 0.433 was scorer noise. What survives is the *direction*: our
+  cheap baselines win on T1 (which published LLMs fail at ~0.10) and lose on the joint
+  benchmarks (cps floor T2 0.353 / T3 0.004 vs their ~0.71 / ~0.57). The aggregate
+  "win" was always a T1 win; it is now not reliably a win at all.
+  See `docs/report/2026-07-17-scorer-noise-and-cps.md`.
 
 ## Honest limits
 
