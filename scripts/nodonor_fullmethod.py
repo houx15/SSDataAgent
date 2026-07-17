@@ -186,15 +186,26 @@ Output {len(recs)} JSONL lines, one completion per input person, in order. No pr
     return rows
 
 
+def _load_raw(path: Path, cols: list[str]) -> pd.DataFrame:
+    raw = pd.read_csv(path, low_memory=False)
+    for c in cols:
+        if c not in raw.columns:
+            raw[c] = np.nan
+    return raw[cols]
+
+
 def generate(ds, pool, cols, spec, n_people, batch, regenerate) -> pd.DataFrame:
+    """Always returns the frame as READ BACK FROM THE CACHE, never the in-memory one
+    just built. The CSV round-trip is lossy -- sentinel strings sit beside numbers in
+    the same column ('No Child' / 22) and None becomes NaN -- so the in-memory frame and
+    the reloaded frame score differently (measured on cps: raw T3 0.047 vs 0.007).
+    Returning whichever one happened to be at hand would make the headline depend on
+    whether the cache was warm. Round-trip on both paths so a first run and a re-score
+    see byte-identical input."""
     out_path = CACHE / f"{ds}_cond_raw.csv"
     if out_path.exists() and not regenerate:
         print(f"generate: cached -> {out_path}")
-        raw = pd.read_csv(out_path, low_memory=False)
-        for c in cols:
-            if c not in raw.columns:
-                raw[c] = np.nan
-        return raw[cols]
+        return _load_raw(out_path, cols)
 
     from dotenv import load_dotenv
     from openai import OpenAI
@@ -223,7 +234,7 @@ def generate(ds, pool, cols, spec, n_people, batch, regenerate) -> pd.DataFrame:
     CACHE.mkdir(parents=True, exist_ok=True)
     raw.to_csv(out_path, index=False)
     print(f"generate: {len(raw)} people in {time.time()-t0:.0f}s -> {out_path}")
-    return raw
+    return _load_raw(out_path, cols)   # round-trip: see the docstring
 
 
 def elicit(ds, cols, spec, regenerate) -> dict:
@@ -252,6 +263,12 @@ def main() -> None:
     ap.add_argument("--people", type=int, default=480, help="LLM-generated respondents")
     ap.add_argument("--batch", type=int, default=20)
     ap.add_argument("--regenerate", action="store_true", help="ignore cached stages")
+    ap.add_argument("--bootstrap-B", type=int, default=200,
+                    help="scorer Monte Carlo replicates. The shipped configs use B=1 "
+                         "(T1) / B=10, which makes a single score swing by ~0.10 on T1. "
+                         "B is a replicate count, not the estimand, so raising it "
+                         "measures the SAME statistic more precisely. Pass 0 to use the "
+                         "shipped config (published-comparable noise).")
     a = ap.parse_args()
 
     ds, spec = a.dataset, SPECS[a.dataset]
@@ -309,7 +326,8 @@ def main() -> None:
             sim = cv.sample_variance_repaired(raw, pool, cols, spec.predictors, a.n,
                                               np.random.default_rng(s), alpha=alpha,
                                               default_alpha=dflt)
-            rows.append(score(sim, ds, ref, spec.types))
+            rows.append(score(sim, ds, ref, spec.types, seed=1000 + s,
+                              bootstrap_B=a.bootstrap_B or None))
         d = pd.DataFrame(rows)
         print(f"{name:<28}"
               + "".join(f"{d[c].mean():>8.3f}" if d[c].notna().any() else f"{'--':>8}"

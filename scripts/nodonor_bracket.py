@@ -29,6 +29,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import io
+import itertools
 import sys
 import tempfile
 from pathlib import Path
@@ -173,7 +174,63 @@ def _prep(df: pd.DataFrame) -> pd.DataFrame:
     return out
 
 
-def score(sim: pd.DataFrame, ds: str, ref: pd.DataFrame, types: tuple[int, ...]) -> dict:
+@contextlib.contextmanager
+def _seeded_rng(seed: int | None):
+    """Make the benchmark's bootstrap reproducible.
+
+    Every type module does ``rng = np.random.default_rng()`` with NO seed, so two scoring
+    runs of the SAME frame return different numbers (measured on cps: overall 0.498 /
+    0.453 / 0.446 / 0.313 on identical input). Patching the factory for the duration of
+    the call makes a run repeatable; it does not reduce the noise, it only pins it.
+    """
+    if seed is None:
+        yield
+        return
+    orig = np.random.default_rng
+    counter = itertools.count()
+
+    def factory(s=None, *a, **k):
+        return orig(s, *a, **k) if s is not None else orig(seed * 100_003 + next(counter))
+
+    np.random.default_rng = factory
+    try:
+        yield
+    finally:
+        np.random.default_rng = orig
+
+
+def _cfg_with_B(cfg: Path, td: Path, t: int, bootstrap_B: int | None) -> str:
+    """Return a config path, optionally overriding ``bootstrap_B``.
+
+    ``insignificant_rate`` is ``not_sig / B`` -- the FRACTION of B bootstrap iterations
+    in which the test came out insignificant. B is a Monte Carlo replicate count, not
+    part of the estimand, so raising it estimates the SAME quantity more precisely. The
+    shipped configs set B=1 for T1 (one 500-row draw decides each variable: sigma~0.10,
+    quantized to k/n_vars) and B=10 elsewhere; the library's own default is B=1000, so
+    the small values look like a speed hack rather than a definition.
+
+    Published numbers were produced at the shipped B and therefore carry that noise. Any
+    run that raises B must say so -- it is a better estimate of the same statistic, but
+    its error bars are not comparable to a published run's.
+    """
+    if bootstrap_B is None:
+        return str(cfg)
+    import yaml
+    spec = yaml.safe_load(cfg.read_text())
+    spec["bootstrap_B"] = int(bootstrap_B)
+    out = td / f"type{t}_B{bootstrap_B}.yaml"
+    out.write_text(yaml.safe_dump(spec))
+    return str(out)
+
+
+def score(sim: pd.DataFrame, ds: str, ref: pd.DataFrame, types: tuple[int, ...],
+          *, seed: int | None = None, bootstrap_B: int | None = None) -> dict:
+    """Score ``sim`` against ``ref``.
+
+    ``seed`` pins the benchmark's unseeded bootstrap so a run is reproducible.
+    ``bootstrap_B`` overrides the config's Monte Carlo replicate count (see
+    ``_cfg_with_B``); leave it None to reproduce a published-comparable run.
+    """
     schema = load_schema(ds)
     from ssdatabench.evaluation.code_by_type import type1, type2, type3, type4, type5
     runners = {1: type1.run_type1_eval, 2: type2.run_type2_eval, 3: type3.run_type3_eval,
@@ -190,8 +247,10 @@ def score(sim: pd.DataFrame, ds: str, ref: pd.DataFrame, types: tuple[int, ...])
                 continue
             odir, buf = td / f"out{t}", io.StringIO()
             try:
-                with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf):
-                    runners[t](str(cfg), real_csv=str(real_csv), sim_csv=str(sim_csv),
+                with contextlib.redirect_stdout(buf), contextlib.redirect_stderr(buf), \
+                        _seeded_rng(None if seed is None else seed + t):
+                    runners[t](_cfg_with_B(cfg, td, t, bootstrap_B),
+                               real_csv=str(real_csv), sim_csv=str(sim_csv),
                                out_dir=str(odir), verbose=False)
             except Exception as e:
                 out[f"T{t}"] = None
