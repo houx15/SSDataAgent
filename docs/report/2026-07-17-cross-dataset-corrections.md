@@ -72,22 +72,28 @@ The two no-donor rows are a fresh 480-person generation + fresh elicitation (the
 originals were destroyed); they reproduce the previously reported 0.874 / 0.649 / 0.446
 within seed noise, so the earlier headline stands.
 
-**All five types** (2 seeds only — indicative, not a headline;
-`scripts/nodonor_bracket.py cfps --seeds 5` for the real thing):
+**All five types** (5 seeds, n=5000, ref=1000, pool=57474 person-disjoint;
+reproduce with `.venv/bin/python scripts/nodonor_bracket.py cfps --seeds 5`):
 
 | config | T1 | T2 | T3 | T4 | T5 | overall |
 |---|---|---|---|---|---|---|
-| independence (floor) | 0.789 | 0.525 | 0.310 | 0.000 | 0.762 | **0.477** |
-| copula-old (buggy) | 0.763 | 0.621 | 0.320 | 0.000 | 0.830 | 0.507 |
-| copula-fixed | 0.737 | 0.732 | 0.690 | 0.000 | 0.833 | 0.598 |
-| **rowresample (ceiling)** | 0.868 | 0.809 | 0.725 | **0.950** | 0.802 | **0.831** |
+| independence (floor) | 0.863 | 0.533 | 0.302 | 0.000 | 0.762 | **0.492** ±.015 |
+| copula-old (buggy) | 0.789 | 0.628 | 0.346 | 0.000 | 0.802 | 0.513 ±.018 |
+| copula-fixed | 0.737 | 0.730 | 0.668 | 0.000 | 0.831 | 0.593 ±.008 |
+| **rowresample (ceiling)** | 0.884 | 0.815 | 0.724 | **0.780** ±.130 | 0.839 | **0.808** ±.030 |
 | published PNAS | 0.14 | 0.62 | 0.43 | 0.05 | 0.75 | 0.30 |
 
-Two things worth keeping. The no-donor floor reproduces at **0.477**, matching the
-figure recorded when it was first measured — an independent consistency check on the
-new script. And **cfps T4 is genuinely winnable**: real microdata resampling scores
-**0.950**, against addhealth's 0.000 ceiling. T4-winnability is a property of the
-dataset, not of the method.
+Two things worth keeping. The no-donor floor lands at **0.492 ± 0.015**, consistent
+with the 0.477 recorded when it was first measured — an independent check on the new
+script. And **cfps T4 is genuinely winnable**: real microdata resampling scores
+**0.780 ± 0.130**, against addhealth's 0.000 ceiling. T4-winnability is a property of
+the dataset, not of the method.
+
+> The 2-seed version of this table previously reported T4 = **0.950** and overall
+> **0.831**. At 5 seeds T4 is **0.780 ± 0.130** — the 0.950 was the top of a wide
+> seed distribution (T4's per-seed σ ≈ 0.13 is a known property of this benchmark),
+> not a stable figure. The winnable-vs-unwinnable contrast against addhealth is
+> unaffected; the magnitude was overstated.
 
 ## The three bugs
 
@@ -166,7 +172,7 @@ the right instrument, because R² is literally what T3 scores.
   truth itself fails (published addhealth T4 range: 0.00–0.02). The event-order module
   correctly did not help there, and hurt T5 (0.746 → 0.526). **Do not apply module A to
   addhealth.** T4-winnability is a dataset property: cfps's real-microdata ceiling is
-  **0.950**.
+  **0.780 ± 0.130** (5 seeds).
 - **Every dataset beats the best single published system on overall**, driven
   overwhelmingly by T1 — the free aggregate win the per-person LLM literature omits.
   State it that way, not as "beats published": on the *joint* benchmarks our cheap

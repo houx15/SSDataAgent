@@ -421,8 +421,8 @@ test whether the last mile is recoverable non-circularly.
   `nodonor_joint_probe.py`) were **destroyed by a `/tmp` wipe on 2026-07-16** and no
   longer exist. Durable replacement for the reference bracket:
   `.venv/bin/python scripts/nodonor_bracket.py cfps` (no LLM). Independently confirmed
-  2026-07-17: the no-donor floor reproduces at **0.477** and cfps T4 IS winnable — real
-  microdata resampling scores **T4 = 0.950**. See
+  2026-07-17: the no-donor floor reproduces at **0.492 ± 0.015** and cfps T4 IS
+  winnable — real microdata resampling scores **T4 = 0.780 ± 0.130** (5 seeds). See
   `docs/report/2026-07-17-cross-dataset-corrections.md`.
 - **Protocol:** aggregates from the disjoint pool (`pid`-disjoint, guarded by
   `forbid_ref`); scored on the paper's 1000-row `sampled_cfps.csv`; 5 seeds; 5000
