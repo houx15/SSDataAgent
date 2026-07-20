@@ -83,20 +83,40 @@ SPECS = {
         log_vars=frozenset({"income"}),
         types=(1, 2, 3),
         population="the 1980 US Current Population Survey (March ASEC)",
-        rules="""- This is the WHOLE population, children included. A 7-year-old is
-  'Less than high school', not in the labor force, has no occupation, no income, and
-  'No Child' for age at first childbirth. Do not give children adult profiles.
+        # CRITICAL semantic correction (see docs/report/2026-07-20-cps-fertility-semantics.md):
+        # `child_number` / `age_first_childbirth` are NOT lifetime fertility. This is the CPS
+        # household roster -- OWN children UNDER 18 currently LIVING WITH the respondent. The
+        # data proves it: mean child_number 0.66 (lifetime 1980 fertility was ~2.5-3), and 60+
+        # respondents average 0.16 because grown children have moved out. Describing it as
+        # "children ever born" made the LLM generate lifetime fertility -- monotonically rising
+        # with age -- inverting the true age relationship (real Spearman(age, first-birth) =
+        # +0.62; the LLM produced -0.26) and tanking T3. This is a DEFINITION correction from
+        # public metadata, NOT the pool's conditional distribution, so T3 stays non-circular.
+        rules="""- This is the WHOLE resident population, children included. A 7-year-old is
+  'Less than high school', not in the labor force, no occupation, no income.
 - Education is bounded by age: nobody under 18 is 'College and above'.
-- age_first_childbirth is the literal string 'No Child' for anyone childless (which is
-  most people), otherwise a number >= 12 and < the person's own age.
-- child_number 0 must agree with 'No Child'; a nonzero child_number needs a real age.
+- FERTILITY IS HOUSEHOLD-RESIDENT, NOT LIFETIME. child_number counts this person's OWN
+  children UNDER 18 who currently LIVE WITH THEM; age_first_childbirth is the age at which
+  their FIRST still-resident child was born. Adult children have moved out and no longer
+  count. Consequences you must honour:
+    * Most people have child_number 0 and 'No Child' -- including the elderly, whose
+      children grew up and left. A 65-year-old almost always shows 0 resident children even
+      though they were a parent. Do NOT let child_number climb with age; it PEAKS around
+      ages 30-45 and falls back to ~0 by the late 50s.
+    * Among people who DO have a resident child, the older they are, the LATER that child was
+      born (their early children have already left home) -- so age_first_childbirth RISES
+      with the respondent's age, from ~22 in their 30s to ~33 in their 60s. It is always
+      >= 12 and < the person's own age.
+    * child_number 0 <=> 'No Child'; a nonzero child_number needs a real first-birth age.
 - income is annual 1980 dollars (a few thousand is typical); null for someone with no
   earnings such as a child. occupation is null when not in the labor force.
-- Marital status, fertility, education and income should cohere as one real person.""",
+- Marital status, education and income should cohere as one real person.""",
         glosses={
             "marital_status": "marital status (Married / Single / Separated-Divorced-Widowed)",
-            "child_number": "number of children ever born",
-            "age_first_childbirth": "age at first childbirth ('No Child' if none)",
+            "child_number": "number of own children UNDER 18 currently living in the "
+                            "household (NOT lifetime births; adult children have moved out)",
+            "age_first_childbirth": "age when the first still-resident child was born "
+                                    "('No Child' if none live with the respondent)",
             "education": "educational attainment (3 levels)",
             "laborforce": "in the labor force or not",
             "occupation": "broad occupation category",
@@ -156,7 +176,7 @@ def _jsonable(rec: dict) -> dict:
                 float(v) if isinstance(v, np.floating) else v) for k, v in rec.items()}
 
 
-def complete_batch(client, seeds_df, downstream, blob, spec) -> list[dict]:
+def complete_batch(client, seeds_df, downstream, blob, spec, *, retries=5) -> list[dict]:
     recs = [_jsonable(r) for r in seeds_df.to_dict(orient="records")]
     prompt = f"""You are completing survey respondents from {spec.population}. Below are
 {len(recs)} people, each given by their demographics. For EACH, infer the rest of their
@@ -173,17 +193,32 @@ POPULATION MARGINALS (downstream vars): {blob}
 INPUT PEOPLE (complete each, same order): {json.dumps(recs, ensure_ascii=False)}
 
 Output {len(recs)} JSONL lines, one completion per input person, in order. No prose."""
-    r = client.chat.completions.create(model=MODEL, max_tokens=8000, temperature=0.8,
-                                       messages=[{"role": "user", "content": prompt}])
-    rows = []
-    for line in (r.choices[0].message.content or "").splitlines():
-        line = line.strip().strip("`")
-        if line.startswith("{") and line.endswith("}"):
-            try:
-                rows.append(json.loads(line))
-            except json.JSONDecodeError:
-                pass
-    return rows
+    # The user's network drops intermittently; a single ConnectTimeout used to kill the
+    # whole run and discard every completed batch. Retry each batch with backoff so a
+    # transient blip costs one batch's wait, not the run. Backoff is fixed (2**k), not
+    # jittered: Math.random() is unavailable here and determinism aids debugging.
+    last = None
+    for k in range(retries):
+        try:
+            r = client.chat.completions.create(
+                model=MODEL, max_tokens=8000, temperature=0.8, timeout=90,
+                messages=[{"role": "user", "content": prompt}])
+            rows = []
+            for line in (r.choices[0].message.content or "").splitlines():
+                line = line.strip().strip("`")
+                if line.startswith("{") and line.endswith("}"):
+                    try:
+                        rows.append(json.loads(line))
+                    except json.JSONDecodeError:
+                        pass
+            return rows
+        except Exception as e:  # noqa: BLE001 -- network/timeout/rate-limit all retriable
+            last = e
+            if k < retries - 1:
+                print(f"    batch retry {k+1}/{retries-1} after {type(e).__name__}",
+                      flush=True)
+                time.sleep(2 ** k)
+    raise RuntimeError(f"batch failed after {retries} attempts: {last}")
 
 
 def _load_raw(path: Path, cols: list[str]) -> pd.DataFrame:
