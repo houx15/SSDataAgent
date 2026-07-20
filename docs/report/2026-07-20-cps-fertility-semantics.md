@@ -109,6 +109,40 @@ of the remaining T2 gap is expected to be the input-regime asymmetry (we draw
 age/gender/race from marginals while published systems are handed the real test
 demographics; see [[project_published_comparison_regimes]]), still unmeasured.
 
+## Generalizing the fix: data-understanding as a separate, automated layer
+
+A fair objection to all of the above: the correction was *hand-authored*. If every dataset
+needs a human to spot its semantic traps, the strategy is not general — it is a general
+engine wrapped in per-dataset expert effort. The resolution is to split the work the way
+real social-science practice does: a **general strategy** (mean-collapse → variance repair
+→ marginal calibration; one dataset-agnostic codebase) plus a **data-understanding layer**
+that reads only the benchmark's documentation and the disjoint pool — never the test — and
+emits the definitions, sentinels, and identities the strategy consumes. Building a correct
+data dictionary before modelling is normal and expected; it is not tuning.
+
+The load-bearing question is whether that layer can be *automated* rather than
+hand-authored. `scripts/data_audit.py` is the proof it can. Test-blind (pool +
+documentation only), it flags where a variable's data contradicts its label. Its core check
+is definitional: a label asserting a **cumulative lifetime quantity** ("children ever born")
+is monotone non-decreasing in age *by construction*, so if the pool's mean *falls* with age
+the label is impossible and the variable is a stock/resident measure. Run on all datasets it
+produced 13 findings, all genuine, zero false positives:
+
+- **cps** — recovered all three corrections this report made by hand: the `child_number`
+  cumulative-monotonicity trap (mean peaks 2.01 at 35–45, falls to 0.16 by the oldest), the
+  `age_first_childbirth` `No Child` sentinel, and the `age + birth_year = 1980` identity.
+- **cfps** — all six event-timing sentinels (`never married` … `still alive`) and the
+  income log-scale.
+- **addhealth** — three event sentinels (divorce, marriage, first-sex).
+- gss/acs — skipped (no disjoint pool; a known access limit).
+
+The monotonicity check — the one catching a genuine *semantic* trap rather than routine
+sentinel plumbing — fires exactly once across all datasets, on the real cps trap. So the
+human insight that cost a day here is now a systematic preprocessing step, and the strategy
+above it is general: the same engine, given a correct (auto-audited) data profile per
+dataset. What remains hand-work is authoring the *corrected definition text* once a trap is
+flagged; detecting the trap is automated.
+
 ## Reproducibility
 
 Generation cached at `results/nodonor_cache/cps_cond_raw.csv` (v2, corrected semantics);
