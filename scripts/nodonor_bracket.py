@@ -48,8 +48,15 @@ CONFIG_DIR = REPO / "ssdatabench" / "evaluation" / "config"
 # Datasets whose full source ships a unique row key -> a PROVABLY disjoint pool.
 # cps has none: see `carve_pool` for the weaker guarantee we can offer there.
 KEYED = {"cfps": "pid", "addhealth": "AID"}
-# Same-year full sources not declared in config/datasets.yaml.
-FULL_SOURCE = {"cps": "real_data/cps/cps-asec1980.csv"}
+# Same-year full sources not declared in config/datasets.yaml. Each is the FULL survey
+# wave the benchmark's 1000-row reference was sampled FROM, so a row-disjoint carve yields
+# a genuine held-out pool. gss uses the 2018 wave (the same-year source): it carries
+# `wealth` and `mental_health`, the columns the older gss1994 transfer wave lacked, which
+# was the standing blocker. acs has NO such source here -- `acs_clean.csv` is the same 1000
+# rows as the reference, not a larger population, so acs stays blocked pending real ACS
+# microdata (public via IPUMS).
+FULL_SOURCE = {"cps": "real_data/cps/cps-asec1980.csv",
+               "gss": "real_data/gss/gss2018.csv"}
 # Cross-sectional datasets have no T4/T5 (their event_variables are commented out).
 TYPES = {"cps": (1, 2, 3), "gss": (1, 2, 3), "acs": (1, 2, 3)}
 
@@ -283,6 +290,12 @@ def main() -> None:
     ap.add_argument("dataset", help="cfps | cps | addhealth")
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--n", type=int, default=5000, help="simulated rows per config")
+    ap.add_argument("--bootstrap-B", type=int, default=200,
+                    help="scorer Monte Carlo replicates. Shipped configs use B=1 (T1) / "
+                         "B=10, so a single score swings ~0.10 on T1. B is a replicate "
+                         "count, not the estimand -- raising it measures the SAME "
+                         "statistic more precisely. Pass 0 for the shipped config "
+                         "(published-comparable noise).")
     a = ap.parse_args()
 
     ref = _drop_unnamed(pd.read_csv(load_schema(a.dataset).real_data_path, low_memory=False))
@@ -295,7 +308,8 @@ def main() -> None:
     types = TYPES.get(a.dataset, (1, 2, 3, 4, 5))
 
     print(f"{a.dataset}: ref={len(ref)} pool={len(pool)} [{guarantee}] "
-          f"cols={len(cols)} seeds={a.seeds} n={a.n}")
+          f"cols={len(cols)} seeds={a.seeds} n={a.n} "
+          f"bootstrap_B={a.bootstrap_B or 'shipped'}")
     if guarantee == "row-disjoint":
         print("  NOTE: no person key -- identical-profile rows remain in the pool; "
               "this pool is weaker than a person-disjoint one.")
@@ -303,7 +317,8 @@ def main() -> None:
     print("\n" + f"{'config':<16}" + "".join(f"{c:>8}" for c in tcols) + f"{'overall':>9}")
     print("-" * (16 + 8 * len(tcols) + 9))
     for mode in ("independence", "copula-old", "copula-fixed", "rowresample"):
-        d = pd.DataFrame([score(build(pool, cols, a.n, s, mode), a.dataset, ref, types)
+        d = pd.DataFrame([score(build(pool, cols, a.n, s, mode), a.dataset, ref, types,
+                                seed=1000 + s, bootstrap_B=a.bootstrap_B or None)
                           for s in range(1, a.seeds + 1)])
         cells = "".join(f"{d[c].mean():>8.3f}" if d[c].notna().any() else f"{'--':>8}"
                         for c in tcols)
