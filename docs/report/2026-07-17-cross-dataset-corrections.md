@@ -217,10 +217,15 @@ the right instrument, because R² is literally what T3 scores.
   ~36,058 *profile-identical* rows (different people, same 12 recorded attributes). This
   is weaker than cfps's `pid` carve; `scripts/nodonor_bracket.py` labels it
   `row-disjoint` vs `person-disjoint`. cps microdata numbers carry that caveat.
-- **gss is blocked in the no-donor regime.** Its evals need `wealth` (T1/T2) and
-  `mental_health` (T3); the `gss1994` transfer wave lacks them. The same-year
-  `gss2018.csv` has them but only 2,348 rows.
-- **acs** has no disjoint source registered at all.
+- ~~**gss is blocked in the no-donor regime.**~~ **Resolved 2026-07-20.** The blocker was
+  the *gss1994* transfer wave, which lacks `wealth`/`mental_health`. The same-year
+  **`gss2018.csv`** (2,348 rows) — the wave the reference was sampled from — carries all 33
+  reference columns with data, giving a 1,348-row row-disjoint pool. Wired in `b818210`;
+  numbers in `docs/report/2026-07-20-gss-unblocked-acs-blocked.md`.
+- **acs is blocked, confirmed not assumed.** `acs_clean.csv` is the *same* 1,000-person
+  sample as the reference (identical means/SDs, no additional people), not a population to
+  carve from. Needs real ACS microdata (public via IPUMS) to unblock — a data wall, not a
+  wiring gap.
 - **Open:** the cps *no-donor LLM* result (0.413) still needs re-running against the
   1980 pool — its marginals came from the stale 1970 wave.
 
