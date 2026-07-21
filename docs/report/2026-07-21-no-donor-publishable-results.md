@@ -68,22 +68,43 @@ B = 200** so numbers are reproducible and gaps below the noise floor are not quo
 
 ## Results
 
-Published figures are the SSDataBench / PNAS Fig. 2 readouts: the **best single LLM of
-15** per dataset (a tougher comparator than the 15-model average of ~0.21–0.30). Our
-numbers are the no-donor method; **floor** is the marginals-only independence draw (itself
-a no-donor method), which brackets the result from below.
+Broken out **per benchmark type**, because each type measures a different thing and we
+win on some and lose on others. **PNAS** is the SSDataBench study's per-type best across
+its 15 LLMs (the strongest published result on each test); **ours** is the no-donor
+method. Bold marks where we match or beat PNAS.
 
-| dataset | types | published best-of-15 LLMs | **our no-donor** | T4 | T5 | our no-donor floor |
-|---|---|---:|---:|---:|---:|---:|
-| **cfps** | T1–T5 | 0.30 (GPT-3.5-Turbo) | **0.640** ±.032 | 0.700 ±.122 | 0.79 | 0.458 ±.004 |
-| **cps** | T1–T3 | 0.40 (GPT-4o) | **0.591** | – | – | 0.407 |
-| **gss** | T1–T3 | 0.39 (GPT-4) | **0.546** ±.005 (floor) | – | – | 0.546 |
-| addhealth | T1–T5 | 0.27 (Llama-3.1) | — (see limits) | – | – | — |
+| dataset | type | PNAS (best of 15 LLMs) | ours |
+|---|---|---:|---:|
+| **cfps** | T1 | 0.14 | **0.86** |
+| | T2 | 0.62 | 0.53 |
+| | T3 | 0.43 | 0.32 |
+| | T4 | 0.05 | **0.70** ±.12 |
+| | T5 | 0.75 | **0.79** |
+| | **overall** | 0.30 | **0.640** ±.03 |
+| **cps** | T1 | 0.10 | **0.79** |
+| | T2 | 0.71 | 0.62 |
+| | T3 | 0.57 | 0.37 |
+| | **overall** | 0.40 | **0.591** |
+| **gss** | T1 | 0.13 | **0.81** |
+| | T2 | 0.71 | 0.69 |
+| | T3 | 0.55 | 0.14 |
+| | **overall** | 0.39 | **0.55** |
 
-The **T4 / T5** columns are cfps's per-type no-donor sub-scores — the event-order
-module's contribution, unlocking T4 from 0.000. cps and gss are cross-sectional (every
-variable `type: static`, no `event_variables` in their configs), so T4/T5 do not exist
-for them; addhealth's T4 is unwinnable (real microdata scores 0.000, see limits).
+**Which model.** *Ours* is the no-donor method with LLM generation by
+**claude-sonnet-4.5** for **cfps** and **cps**. **gss** *ours* is the marginals-only
+**floor**, which is **LLM-free** — no model; its T3 (0.14) has no joint at all, so the
+full LLM method (not yet run) would only raise T2/T3. On the PNAS side, a *different*
+model tops each cell: the per-type row is an **envelope no single system achieves** —
+the best single published system's overall was GPT-3.5-Turbo 0.30 (cfps), GPT-4o 0.40
+(cps), GPT-4 0.39 (gss), all still below our overall.
+
+**Reading it.** We win **overall** on all three and dominate **T1** (marginals are free;
+published LLMs collapse there at 0.10–0.14). We trail on the genuine-joint tests
+**T2/T3**, where per-person microdata still helps the published envelope — that is the
+honest frontier. cfps **T4** (0.05 → 0.70) is the event-order module's headline. cps and
+gss are cross-sectional (every variable `type: static`, no `event_variables`), so they
+have no T4/T5. **addhealth** is omitted: its T4 is unwinnable (real microdata scores
+0.000) and it has no clean full-method overall — see limits.
 
 - **cfps** — the headline. The full method (all five types, event-order module on)
   reaches **0.640**, more than double the published 0.30, with T4 lifted from 0.000 to
