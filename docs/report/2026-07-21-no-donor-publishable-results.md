@@ -73,12 +73,17 @@ Published figures are the SSDataBench / PNAS Fig. 2 readouts: the **best single 
 numbers are the no-donor method; **floor** is the marginals-only independence draw (itself
 a no-donor method), which brackets the result from below.
 
-| dataset | types | published best-of-15 LLMs | **our no-donor** | our no-donor floor |
-|---|---|---:|---:|---:|
-| **cfps** | T1–T5 | 0.30 (GPT-3.5-Turbo) | **0.640** ±.032 | 0.458 ±.004 |
-| **cps** | T1–T3 | 0.40 (GPT-4o) | **0.591** | 0.407 |
-| **gss** | T1–T3 | 0.39 (GPT-4) | **0.546** ±.005 (floor) | 0.546 |
-| addhealth | T1–T5 | 0.27 (Llama-3.1) | — (see limits) | — |
+| dataset | types | published best-of-15 LLMs | **our no-donor** | T4 | T5 | our no-donor floor |
+|---|---|---:|---:|---:|---:|---:|
+| **cfps** | T1–T5 | 0.30 (GPT-3.5-Turbo) | **0.640** ±.032 | 0.700 ±.122 | 0.79 | 0.458 ±.004 |
+| **cps** | T1–T3 | 0.40 (GPT-4o) | **0.591** | – | – | 0.407 |
+| **gss** | T1–T3 | 0.39 (GPT-4) | **0.546** ±.005 (floor) | – | – | 0.546 |
+| addhealth | T1–T5 | 0.27 (Llama-3.1) | — (see limits) | – | – | — |
+
+The **T4 / T5** columns are cfps's per-type no-donor sub-scores — the event-order
+module's contribution, unlocking T4 from 0.000. cps and gss are cross-sectional (every
+variable `type: static`, no `event_variables` in their configs), so T4/T5 do not exist
+for them; addhealth's T4 is unwinnable (real microdata scores 0.000, see limits).
 
 - **cfps** — the headline. The full method (all five types, event-order module on)
   reaches **0.640**, more than double the published 0.30, with T4 lifted from 0.000 to
