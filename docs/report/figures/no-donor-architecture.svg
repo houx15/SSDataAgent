@@ -1,0 +1,106 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="620" viewBox="0 0 980 620" font-family="-apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+  <defs>
+    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#5b6b7c"/>
+    </marker>
+    <marker id="arrowG" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#3a8a54"/>
+    </marker>
+  </defs>
+
+  <rect x="2" y="2" width="976" height="616" rx="16" fill="#ffffff" stroke="#e3e7ec"/>
+
+  <!-- Title -->
+  <text x="34" y="46" font-size="25" font-weight="700" fill="#1c2430">The no-donor synthetic-population method</text>
+  <text x="34" y="72" font-size="14" fill="#5a6472">Build a population from marginals, public aggregates, and LLM priors &#8212; never the test sample, never the pool&#8217;s per-person joint.</text>
+
+  <!-- ============ Column A: inputs ============ -->
+  <text x="34" y="112" font-size="13" font-weight="700" letter-spacing="0.6" fill="#4a7fb5">TEST-BLIND INPUTS</text>
+
+  <rect x="34" y="124" width="256" height="60" rx="9" fill="#eef4fb" stroke="#4a7fb5"/>
+  <text x="48" y="149" font-size="14" font-weight="600" fill="#1c2430">Codebook &amp; documentation</text>
+  <text x="48" y="169" font-size="12" fill="#5a6472">variable definitions, public metadata</text>
+
+  <rect x="34" y="196" width="256" height="80" rx="9" fill="#eef4fb" stroke="#4a7fb5"/>
+  <text x="48" y="221" font-size="14" font-weight="600" fill="#1c2430">Disjoint pool &#8594; aggregates</text>
+  <text x="48" y="241" font-size="12" fill="#5a6472">empirical marginals +</text>
+  <text x="48" y="258" font-size="12" fill="#5a6472">event-ordering tabulations only</text>
+
+  <rect x="34" y="288" width="256" height="60" rx="9" fill="#eef4fb" stroke="#4a7fb5"/>
+  <text x="48" y="313" font-size="14" font-weight="600" fill="#1c2430">LLM elicited priors</text>
+  <text x="48" y="333" font-size="12" fill="#5a6472">conditional structure P(Y | X)</text>
+
+  <!-- ============ Column B: method pipeline ============ -->
+  <rect x="336" y="98" width="300" height="322" rx="12" fill="#f7f9fc" stroke="#c2ccd6"/>
+  <text x="352" y="122" font-size="13" font-weight="700" letter-spacing="0.6" fill="#5a6472">METHOD PIPELINE</text>
+
+  <!-- stage 1 -->
+  <rect x="352" y="134" width="268" height="46" rx="8" fill="#ffffff" stroke="#6b7c8f"/>
+  <text x="366" y="153" font-size="13" font-weight="600" fill="#1c2430">1 &#183; Data-understanding audit</text>
+  <text x="366" y="171" font-size="11.5" fill="#5a6472">semantics &#183; sentinels &#183; identities</text>
+
+  <!-- stage 2 -->
+  <rect x="352" y="190" width="268" height="46" rx="8" fill="#ffffff" stroke="#6b7c8f"/>
+  <text x="366" y="209" font-size="13" font-weight="600" fill="#1c2430">2 &#183; Marginal sampler</text>
+  <text x="366" y="227" font-size="11.5" fill="#5a6472">empirical univariate draws</text>
+  <rect x="556" y="197" width="52" height="20" rx="10" fill="#e7f2ec" stroke="#3a8a54"/>
+  <text x="582" y="211" font-size="11" font-weight="700" fill="#2e7d5b" text-anchor="middle">T1</text>
+
+  <!-- stage 3 -->
+  <rect x="352" y="246" width="268" height="46" rx="8" fill="#ffffff" stroke="#6b7c8f"/>
+  <text x="366" y="265" font-size="13" font-weight="600" fill="#1c2430">3 &#183; Conditional generation</text>
+  <text x="366" y="283" font-size="11.5" fill="#5a6472">draws P(Y | X) from elicited prior</text>
+  <rect x="542" y="253" width="66" height="20" rx="10" fill="#e7f2ec" stroke="#3a8a54"/>
+  <text x="575" y="267" font-size="11" font-weight="700" fill="#2e7d5b" text-anchor="middle">T2 &#183; T3</text>
+
+  <!-- stage 4 -->
+  <rect x="352" y="302" width="268" height="46" rx="8" fill="#ffffff" stroke="#6b7c8f"/>
+  <text x="366" y="321" font-size="13" font-weight="600" fill="#1c2430">4 &#183; Variance repair</text>
+  <text x="366" y="339" font-size="11.5" fill="#5a6472">R&#178;-match, fixes mean-collapse</text>
+  <rect x="556" y="309" width="52" height="20" rx="10" fill="#e7f2ec" stroke="#3a8a54"/>
+  <text x="582" y="323" font-size="11" font-weight="700" fill="#2e7d5b" text-anchor="middle">T3</text>
+
+  <!-- stage 5 -->
+  <rect x="352" y="358" width="268" height="46" rx="8" fill="#ffffff" stroke="#6b7c8f"/>
+  <text x="366" y="377" font-size="13" font-weight="600" fill="#1c2430">5 &#183; Event-order module</text>
+  <text x="366" y="395" font-size="11.5" fill="#5a6472">joint ordering from pool aggregate</text>
+  <rect x="542" y="365" width="66" height="20" rx="10" fill="#e7f2ec" stroke="#3a8a54"/>
+  <text x="575" y="379" font-size="11" font-weight="700" fill="#2e7d5b" text-anchor="middle">T4 &#183; T5</text>
+
+  <!-- ============ Column C: output ============ -->
+  <rect x="686" y="134" width="258" height="70" rx="10" fill="#eef7ef" stroke="#3a8a54"/>
+  <text x="700" y="163" font-size="14" font-weight="700" fill="#1c2430">Synthetic microdata</text>
+  <text x="700" y="184" font-size="12" fill="#5a6472">5,000 generated rows</text>
+
+  <rect x="686" y="244" width="258" height="66" rx="10" fill="#f4eefb" stroke="#7a4fb5"/>
+  <text x="700" y="271" font-size="14" font-weight="700" fill="#1c2430">SSDataBench scorer</text>
+  <text x="700" y="291" font-size="12" fill="#5a6472">seeded &#183; bootstrap B = 200</text>
+
+  <rect x="686" y="350" width="258" height="70" rx="10" fill="#fbf3e9" stroke="#c07a2a"/>
+  <text x="700" y="377" font-size="14" font-weight="700" fill="#1c2430">Pass rates T1&#8211;T5</text>
+  <text x="700" y="398" font-size="12" fill="#5a6472">higher = closer to real population</text>
+
+  <!-- ============ arrows ============ -->
+  <!-- A group -> B -->
+  <path d="M290 236 L336 236" fill="none" stroke="#5b6b7c" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- B -> synthetic -->
+  <path d="M636 259 L686 189" fill="none" stroke="#3a8a54" stroke-width="2" marker-end="url(#arrowG)"/>
+  <!-- synthetic -> scorer -->
+  <path d="M815 204 L815 244" fill="none" stroke="#5b6b7c" stroke-width="2" marker-end="url(#arrow)"/>
+  <!-- scorer -> scores -->
+  <path d="M815 310 L815 350" fill="none" stroke="#5b6b7c" stroke-width="2" marker-end="url(#arrow)"/>
+
+  <!-- ============ firewall band ============ -->
+  <line x1="34" y1="470" x2="944" y2="470" stroke="#c0392b" stroke-width="2" stroke-dasharray="7 5"/>
+  <text x="34" y="492" font-size="12" font-weight="700" letter-spacing="0.5" fill="#c0392b">FIREWALL &#8212; never accessed by any stage above</text>
+
+  <rect x="34" y="504" width="440" height="86" rx="9" fill="#fdecec" stroke="#c0392b"/>
+  <text x="52" y="530" font-size="14" font-weight="700" fill="#7a241b">Test reference sample</text>
+  <text x="52" y="551" font-size="12" fill="#8a3a30">the 1,000 held-out rows the scorer compares against</text>
+  <text x="52" y="571" font-size="12" fill="#8a3a30">&#8212; used only to score, never to fit or elicit</text>
+
+  <rect x="504" y="504" width="440" height="86" rx="9" fill="#fdecec" stroke="#c0392b"/>
+  <text x="522" y="530" font-size="14" font-weight="700" fill="#7a241b">Pool per-person joint (microdata)</text>
+  <text x="522" y="551" font-size="12" fill="#8a3a30">real rows a donor/copula method would copy &#8212; the</text>
+  <text x="522" y="571" font-size="12" fill="#8a3a30">&#8220;microdata ceiling&#8221;; we use only its aggregate margins</text>
+</svg>
