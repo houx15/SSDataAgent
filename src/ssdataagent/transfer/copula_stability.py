@@ -58,9 +58,15 @@ def copula_stability(a: pd.DataFrame, b: pd.DataFrame, cols: list[str],
     """Per unordered variable pair: association in A vs B, and |delta| stability label."""
     rows = []
     for v1, v2 in itertools.combinations(cols, 2):
-        assoc_a, method = pair_association(a, v1, v2)
-        assoc_b, _ = pair_association(b, v1, v2)
-        if np.isfinite(assoc_a) and np.isfinite(assoc_b):
+        assoc_a, method_a = pair_association(a, v1, v2)
+        assoc_b, method_b = pair_association(b, v1, v2)
+        method = method_a
+        if method_a != method_b:
+            # e.g. differential missingness pushed the pair below the numeric threshold in
+            # one context only -> Kendall tau vs Cramer's V are not comparable. Do not diff
+            # incomparable metrics; mark undefined.
+            delta, label, method = np.nan, "undefined", f"{method_a}/{method_b}"
+        elif np.isfinite(assoc_a) and np.isfinite(assoc_b):
             delta = abs(assoc_a - assoc_b)
             label = "stable" if delta < threshold else "shifted"
         else:

@@ -40,6 +40,18 @@ def test_copula_stability_frame_shape():
     assert df.iloc[0]["label"] == "stable"
 
 
+def test_method_mismatch_marks_undefined():
+    # If a pair is numeric (kendall) in A but nominal (cramers_v) in B, the two
+    # metrics are not comparable -> the pair must be labeled "undefined", not diffed.
+    a = _gauss_copula(400, 8, rho=0.6)                     # x,y both numeric -> kendall
+    b = pd.DataFrame({"x": ["p", "q", "r", "s"] * 100,      # x,y nominal -> cramers_v
+                      "y": ["a", "b", "c", "d"] * 100})
+    df = copula_stability(a, b, ["x", "y"])
+    row = df.iloc[0]
+    assert row["label"] == "undefined"
+    assert "kendall" in row["method"] and "cramers_v" in row["method"]
+
+
 def test_numeric_pair_with_missing_values_still_uses_kendall():
     # A numeric column with item non-response (NaN) should still be detected
     # as numeric (dropna before numeric-coercibility check), not miscategorized
