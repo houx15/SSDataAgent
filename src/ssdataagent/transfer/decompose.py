@@ -115,8 +115,9 @@ def kob_decompose(a: pd.DataFrame, b: pd.DataFrame, response: str,
             gap_raw = wasserstein_distance(avv / sd, bvv / sd)
             gap_res = wasserstein_distance(avv / sd, bvv / sd, u_weights=wv)
     else:
-        ok = a[response].notna().to_numpy()
-        ess_ratio = effective_sample_size(w[ok]) / int(ok.sum()) if int(ok.sum()) else 0.0
+        # gap_res uses _weighted_props over ALL rows (NaN bucketed as "__nan__"), so ESS must
+        # be measured on the SAME full weight vector to describe that estimate faithfully.
+        ess_ratio = effective_sample_size(w) / len(w) if len(w) else 0.0
         pa_raw = pd.Series(a[response]).astype("string").fillna("__nan__").value_counts(normalize=True)
         pb = pd.Series(b[response]).astype("string").fillna("__nan__").value_counts(normalize=True)
         pa_w = _weighted_props(a[response].to_numpy(), w)
