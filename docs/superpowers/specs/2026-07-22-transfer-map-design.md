@@ -98,7 +98,9 @@ composition share falls") is a headline finding, free.
 one instrument, so we intersect the target wave's `background_variables` + `target_variables`
 with the source frame's columns (same logic as `compute_crosswalk`, but tolerant of extra
 waves not in `datasets.yaml`). **Every dropped variable is logged**, the way `data_audit.py`
-documents traps.
+documents traps. **Wave time-identities are dropped** — `birth_year = year − age` has
+disjoint support across waves (every 1970 respondent's birth_year ≤ 1970) and carries no
+transferable mechanism, so it is excluded from the crosswalk (`NON_TRANSFERABLE`).
 
 **Covariates (X) vs outcomes (Y).** `X = crosswalk ∩ schema.background_variables`;
 `Y = crosswalk ∩ schema.target_variables`. Extra CPS waves use the `cps` schema's split
