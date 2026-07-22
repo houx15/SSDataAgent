@@ -165,6 +165,8 @@ def main() -> None:
     ap.add_argument("--seeds", type=int, default=5)
     ap.add_argument("--n", type=int, default=5000)
     ap.add_argument("--bootstrap-B", type=int, default=200)
+    ap.add_argument("--no-scoring", action="store_true",
+                    help="Layer 1 only (skip the slow Layer-2 firewalled baseline scoring)")
     a = ap.parse_args()
     OUT.mkdir(parents=True, exist_ok=True)
     pairs = [p for p in PAIRS if a.pairs is None or p.id in a.pairs]
@@ -181,7 +183,7 @@ def main() -> None:
         print(kob[["response", "composition_share", "mechanism_share", "label"]].to_string(index=False))
         stable = (cop["label"] == "stable").mean() if len(cop) else float("nan")
         print(f"copula stable fraction: {stable:.2f}  ({len(cop)} pairs)")
-        if p.scored:
+        if p.scored and not a.no_scoring:
             base = run_layer2(p, seeds=a.seeds, n=a.n, bootstrap_B=a.bootstrap_B)
             base.to_csv(OUT / f"baselines_{p.id}.csv", index=False)
             all_base.append(base)
