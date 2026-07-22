@@ -34,15 +34,58 @@ def fit_latent_correlation(pool: pd.DataFrame, cols: list[str], *,
     return np.nan_to_num(R, nan=0.0) * (1 - np.eye(len(cols))) + np.eye(len(cols)), num
 
 
-def nearest_correlation(R: np.ndarray, *, eps: float = _EPS) -> np.ndarray:
-    """Nearest PSD correlation matrix: symmetrize, clip eigenvalues to ``eps``, renormalize."""
+def nearest_correlation(R: np.ndarray, *, eps: float = _EPS, max_iter: int = 10) -> np.ndarray:
+    """Nearest PSD correlation matrix: symmetrize, clip eigenvalues to ``eps``, renormalize.
+
+    Contract: the returned matrix is symmetric, has a unit diagonal, and its
+    minimum eigenvalue is >= ``eps``.
+
+    A single clip -> reconstruct -> renormalize-diagonal pass is NOT enough:
+    renormalizing the diagonal via ``A / outer(d, d)`` is a congruence
+    transform (``A' = D A D`` for diagonal ``D``), which preserves
+    positive-*definiteness* in sign but does not preserve the eigenvalue
+    *floor* -- it can pull small eigenvalues back below ``eps``. So we
+    iterate the whole pass, re-checking the floor each round, which recovers
+    it for the vast majority of inputs within a couple of iterations.
+
+    If ``max_iter`` rounds are not enough (pathological/ill-conditioned
+    inputs), fall back to shrinking toward the identity matrix: for any
+    symmetric ``A`` with unit diagonal and ``alpha`` in [0, 1],
+    ``A' = (1 - alpha) * A + alpha * I`` shares A's eigenvectors (I is
+    invariant under any orthogonal change of basis), so its eigenvalues are
+    exactly ``(1 - alpha) * w_i + alpha``. Solving for the ``alpha`` that
+    maps the current minimum eigenvalue to ``eps`` gives a closed-form,
+    guaranteed fix -- no more iteration needed -- while also leaving the
+    diagonal exactly 1 (since ``(1 - alpha) * 1 + alpha * 1 == 1``).
+    """
     A = (R + R.T) / 2.0
-    w, V = np.linalg.eigh(A)
-    w = np.clip(w, eps, None)
-    A = (V * w) @ V.T
-    d = np.sqrt(np.clip(np.diag(A), eps, None))
-    A = A / np.outer(d, d)
     np.fill_diagonal(A, 1.0)
+    n = A.shape[0]
+
+    for _ in range(max_iter):
+        w, V = np.linalg.eigh(A)
+        w = np.clip(w, eps, None)
+        A = (V * w) @ V.T
+        d = np.sqrt(np.clip(np.diag(A), eps, None))
+        A = A / np.outer(d, d)
+        np.fill_diagonal(A, 1.0)
+        A = (A + A.T) / 2.0
+        if np.linalg.eigvalsh(A).min() >= eps:
+            return A
+
+    # Fallback: guaranteed shrinkage toward the identity (see docstring).
+    w_min = np.linalg.eigvalsh(A).min()
+    if w_min < eps:
+        # w_min < 1 always holds here (trace(A) == n with unit diagonal, so
+        # the minimum of n eigenvalues summing to n can't exceed 1), so this
+        # division is safe. Tiny slack guards against floating-point rounding
+        # landing exactly on the floor.
+        alpha = (eps - w_min) / (1.0 - w_min)
+        alpha = min(max(alpha, 0.0), 1.0) + 1e-12
+        alpha = min(alpha, 1.0)
+        A = (1.0 - alpha) * A + alpha * np.eye(n)
+        np.fill_diagonal(A, 1.0)
+        A = (A + A.T) / 2.0
     return A
 
 
