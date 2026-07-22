@@ -44,10 +44,10 @@ PAIRS: list[TransferPair] = [
     TransferPair("gss_1994_2018", _gss("gss1994.csv"), _gss("gss2018.csv"), "gss", True, "gss"),
     TransferPair("cps_1970_1980", _cps("cps-asec1970.csv"), _cps("cps-asec1980.csv"), "cps", True, "cps"),
     TransferPair("cps_1970_1990", _cps("cps-asec1970.csv"), _cps("cps-asec1990.csv"), "cps", False, None),
-    TransferPair("cps_1980_1990", _cps("cps-asec1980.csv"), _cps("cps-asec1990.csv"), "cps", False, None),
-    TransferPair("cps_1970_2000", _cps("cps-asec1970.csv"), _cps("cps-asec2000.csv"), "cps", False, None),
+    TransferPair("cps_1980_1990", _cps("cps-asec1980.csv"), _cps("cps-asec1990.csv"), "cps", True, "cps"),
+    TransferPair("cps_1970_2000", _cps("cps-asec1970.csv"), _cps("cps-asec2000.csv"), "cps", True, "cps"),
     TransferPair("cps_1980_2000", _cps("cps-asec1980.csv"), _cps("cps-asec2000.csv"), "cps", False, None),
-    TransferPair("cps_1990_2000", _cps("cps-asec1990.csv"), _cps("cps-asec2000.csv"), "cps", False, None),
+    TransferPair("cps_1990_2000", _cps("cps-asec1990.csv"), _cps("cps-asec2000.csv"), "cps", True, "cps"),
 ]
 
 

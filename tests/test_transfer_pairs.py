@@ -17,7 +17,8 @@ def test_pairs_registry_shape():
         "cps_1970_2000", "cps_1980_2000", "cps_1990_2000",
     ]
     scored = {p.id for p in PAIRS if p.scored}
-    assert scored == {"gss_1994_2018", "cps_1970_1980"}
+    assert scored == {"gss_1994_2018", "cps_1970_1980", "cps_1980_1990",
+                      "cps_1990_2000", "cps_1970_2000"}
     for p in PAIRS:
         assert isinstance(p, TransferPair)
         assert (p.target_dataset is not None) == p.scored
