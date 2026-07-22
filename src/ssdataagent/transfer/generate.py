@@ -95,56 +95,36 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
                       cols: list[str], covariates: list[str], outcomes: list[str],
                       n: int, seed: int) -> pd.DataFrame:
     """B2 — source's shared-latent construction (``transfer_build``'s vehicle),
-    recalibrated to the target's published aggregates (Amendment 1).
+    recalibrated to the target's published aggregates via Step B only (Amendment 2).
 
-    Step A: fit a per-column coherence rate ``alpha_c`` (``fit_coherence_alphas``) so
-    each pair's output association scales as ``alpha_c * alpha_d * a_src(c,d)`` toward
-    the target pool's associations, then generate via ``transfer_build``'s shared
-    ``base`` index -- kept for column ``c`` on a Bernoulli(``alpha_c``) fraction of
-    rows, independently redrawn otherwise (the same mechanism
-    ``conditional_variance.sample_variance_repaired`` uses per outcome). This
-    preserves nominal structure the way the retired Gaussian-copula vehicle did not
-    (every column still co-samples from the same source row, just less often).
-    ``alpha <= 1`` so this can only weaken dependence toward the target, never
-    manufacture dependence the source lacks -- see ``fit_coherence_alphas``.
+    Step A (a per-column coherence rate ``alpha_c`` shrinking each pair's output
+    association toward the target's, via ``fit_coherence_alphas``) was tried and
+    measured as a net drag: -0.015 overall on cps_1970_1980 at full protocol (T1
+    -0.024, T3 -0.033, T2 +0.012). See
+    docs/superpowers/specs/2026-07-22-b2-aggregate-recalibration-design.md,
+    "Amendment 2 — Step A is dropped; B2 is Step B only" for the ablation. B2 is now
+    B1's shared-latent marginal-swap draw plus Step B only -- every column always
+    uses the shared ``base`` index (no per-column Bernoulli mixing).
 
-    Step B (unchanged): nudge each numeric outcome's covariate-R^2 onto the target
-    pool's R^2. Reads from the target only low-order aggregates of ``target_pool``
-    (never its joint or a test sample).
+    Step B: nudge each numeric outcome's covariate-R^2 onto the target pool's R^2.
+    Reads from the target only low-order aggregates of ``target_pool`` (never its
+    joint or a test sample).
 
-    With every fitted ``alpha_c == 1.0`` and no outcomes to blend, this reproduces
+    With no outcomes to blend, this reproduces
     ``transfer_build(source_pool, target_pool, cols, n, seed, "marginal-swap")``
-    exactly -- same values, same RNG consumption order (asserted by test): B2 is B1
-    plus a knob.
+    exactly -- same values, same RNG consumption order (asserted by test).
     """
-    from ssdataagent.transfer.copula_stability import pairwise_associations
-    from ssdataagent.transfer.recalibrate import (
-        bidirectional_r2_blend, fit_coherence_alphas,
-    )
+    from ssdataagent.transfer.recalibrate import bidirectional_r2_blend
     from ssdataagent.transfer.target_aggregates import target_aggregates
 
     agg = target_aggregates(target_pool, cols, covariates, outcomes)
-    src_assoc = pairwise_associations(source_pool, cols)
-    a_src = {k: v[0] for k, v in src_assoc.items()}
-    a_tgt = agg["pairwise_assoc"]
-    # a pair is comparable only if source and target used the same association method
-    methods = {
-        k: (src_assoc[k][1] if src_assoc[k][1] == agg["pairwise_method"].get(k)
-            else "undefined")
-        for k in src_assoc
-    }
-    alphas, n_pairs_understrength = fit_coherence_alphas(cols, a_src, a_tgt, methods)
-    _logger.info(
-        "transfer_build_b2: fitted coherence alphas %s (n_pairs_understrength=%d)",
-        {c: round(alphas[c], 4) for c in cols}, n_pairs_understrength,
-    )
 
     # The shared-latent construction, mirroring transfer_build's marginal-swap path
-    # exactly (same rng object, same call order) so that alpha_c == 1.0 for every
-    # column reproduces it bit-for-bit. Numeric detection / the shared latent index /
-    # each column's missingness PATTERN come from the SOURCE (as in transfer_build's
-    # ``struct``); the inverse-CDF value map and missingness RATE come from the TARGET
-    # (as in transfer_build's ``marg``) -- using the target's own numeric verdict for
+    # exactly (same rng object, same call order) so it reproduces it bit-for-bit.
+    # Numeric detection / the shared latent index / each column's missingness
+    # PATTERN come from the SOURCE (as in transfer_build's ``struct``); the
+    # inverse-CDF value map and missingness RATE come from the TARGET (as in
+    # transfer_build's ``marg``) -- using the target's own numeric verdict for
     # target-side operations, since a shared column can legitimately flip numeric-ness
     # across pools and using the source's verdict there would corrupt the target
     # marginal (see _marginal_map: the numeric branch drops non-numeric rows first).
@@ -169,20 +149,12 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
     out: dict[str, np.ndarray] = {}
     for c in cols:
         u_full = _latent(source_pool, c, source_num[c], glat, rng)
-        a = float(np.clip(alphas.get(c, 1.0), 0.0, 1.0))
-        if a >= 1.0:
-            # No extra rng draw when fully coherent -- this is what makes alpha_c ==
-            # 1.0 for every column reproduce transfer_build's rng consumption exactly.
-            idx = base
-        else:
-            keep = rng.random(n) < a
-            idx = np.where(keep, base, rng.integers(0, m, n))
-        u = np.clip(u_full[idx], 1e-6, 1 - 1e-6)
+        u = np.clip(u_full[base], 1e-6, 1 - 1e-6)
         em = _marginal_map(target_pool[c], u, target_num[c])
         miss = float(target_pool[c].isna().mean())
         if miss > 0:
             want = int(round(miss * n))
-            mask = source_pool[c].isna().to_numpy()[idx].copy()
+            mask = source_pool[c].isna().to_numpy()[base].copy()
             have = int(mask.sum())
             if have > want:
                 mask[rng.choice(np.flatnonzero(mask), have - want, replace=False)] = False

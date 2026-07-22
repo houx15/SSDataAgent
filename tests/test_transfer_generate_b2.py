@@ -3,7 +3,6 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-from scipy.stats import kendalltau
 
 from ssdataagent.data.conditional_variance import covariate_r2
 from ssdataagent.transfer.generate import transfer_build, transfer_build_b2
@@ -43,44 +42,21 @@ def test_b2_recalibrates_outcome_r2_toward_target():
     assert abs(r2_b2 - tgt_r2) < abs(r2_b1 - tgt_r2)     # B2 closer to target than B1
 
 
-def test_b2_alpha_all_one_matches_b1_exactly():
-    # Amendment 1's critical regression test: with every column's fitted alpha == 1.0,
-    # the shared-latent B2 vehicle IS B1 plus a knob -- it must reproduce
-    # transfer_build(..., "marginal-swap") exactly (same values, same RNG order).
-    #
-    # target == source.copy() forces every pairwise association to be BIT-IDENTICAL
-    # between source and target (same computation on identical data, no floating-point
-    # drift), so fit_coherence_alphas' coordinate descent lands on alpha_c == 1.0
-    # exactly for every column (not just approximately -- floating-point exactness
-    # matters here because the generation loop branches on `alpha >= 1.0` and any
-    # value even a hair below 1.0 would take the Bernoulli-mixing branch instead,
-    # consuming extra RNG draws and breaking the byte-exact match).
-    # outcomes=[] makes Step B (bidirectional_r2_blend) a true no-op: its per-outcome
-    # loop never executes, so it consumes no RNG and changes no values either.
+def test_b2_matches_b1_exactly_with_no_outcomes():
+    # Amendment 2 regression test: B2 is now B1's shared-latent marginal-swap draw
+    # plus Step B only -- there is no more per-column alpha, so every column always
+    # uses the shared `base` index. With outcomes=[], Step B (bidirectional_r2_blend)
+    # is a true no-op: its per-outcome loop never executes, so it consumes no RNG and
+    # changes no values either. B2 must therefore reproduce
+    # transfer_build(..., "marginal-swap") exactly (same values, same RNG order),
+    # for ANY source/target pair -- not just when source == target.
     a = _ctx(800, 1, xmean=0.0, beta=1.8)
-    source = a
-    target = a.copy()
+    b = _ctx(800, 2, xmean=3.0, beta=0.5)
     cols = ["age", "education", "income"]
-    ref = transfer_build(source, target, cols, n=1500, seed=42, mode="marginal-swap")
-    got = transfer_build_b2(source, target, cols, ["age", "education"], [],
+    ref = transfer_build(a, b, cols, n=1500, seed=42, mode="marginal-swap")
+    got = transfer_build_b2(a, b, cols, ["age", "education"], [],
                             n=1500, seed=42)
     pd.testing.assert_frame_equal(got.reset_index(drop=True), ref.reset_index(drop=True))
-
-
-def test_b2_shrinks_association_toward_weaker_target():
-    # The core Amendment 1 mechanism at the generate.py level (not just via Step B's
-    # R^2 blend): when the target pool's age<->income association is much weaker than
-    # the source's, B2's fitted alpha should pull the OUTPUT association closer to the
-    # target than B1's raw carryover, on the same pair Step A is meant to calibrate.
-    a = _ctx(4000, 1, xmean=0.0, beta=2.5)      # source: strong age->income
-    b = _ctx(4000, 2, xmean=0.0, beta=0.1)      # target: much weaker mechanism
-    cols, cov, out_y = ["age", "education", "income"], ["age", "education"], ["income"]
-    tgt_tau = abs(kendalltau(b["age"], pd.to_numeric(b["income"]))[0])
-    b1 = transfer_build(a, b, cols, 4000, 7, "marginal-swap")
-    b2 = transfer_build_b2(a, b, cols, cov, out_y, n=4000, seed=7)
-    tau_b1 = abs(kendalltau(pd.to_numeric(b1["age"]), pd.to_numeric(b1["income"]))[0])
-    tau_b2 = abs(kendalltau(pd.to_numeric(b2["age"]), pd.to_numeric(b2["income"]))[0])
-    assert abs(tau_b2 - tgt_tau) < abs(tau_b1 - tgt_tau)
 
 
 def test_b2_does_not_drop_target_nonnumeric_subpopulation():
