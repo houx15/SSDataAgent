@@ -1,8 +1,12 @@
 # src/ssdataagent/transfer/generate.py
 from __future__ import annotations
 
+import logging
+
 import numpy as np
 import pandas as pd
+
+_logger = logging.getLogger(__name__)
 
 
 def _is_numeric(s: pd.Series) -> bool:
@@ -106,9 +110,27 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
     )
     from ssdataagent.transfer.target_aggregates import target_aggregates
 
-    R_source, num = fit_latent_correlation(source_pool, cols)
+    R_source, num = fit_latent_correlation(source_pool, cols, seed=seed)
     src_assoc = pairwise_associations(source_pool, cols)
     agg = target_aggregates(target_pool, cols, covariates, outcomes)
+
+    # `num` above is derived from the SOURCE pool and is only valid for the source-side
+    # copula fit above. Everything downstream that touches the TARGET (the marginal map
+    # and the R^2-blend predictor design) must use the target's own numeric verdict --
+    # a shared column can legitimately flip numeric-ness across pools (e.g. re-coded
+    # across survey waves), and using the source's verdict there would silently corrupt
+    # the target marginal (see copula_to_frame/_marginal_map: the numeric branch drops
+    # any non-numeric rows before building the marginal).
+    target_num = {c: _is_numeric(target_pool[c]) for c in cols}
+    for c in cols:
+        src_verdict, tgt_verdict = num.get(c), target_num.get(c)
+        if src_verdict != tgt_verdict:
+            _logger.warning(
+                "transfer_build_b2: numeric-ness of column %r disagrees between "
+                "source (%s) and target (%s); using the target's verdict for "
+                "target-side operations (marginal map, R^2-blend predictor design)",
+                c, src_verdict, tgt_verdict,
+            )
 
     a_src = {k: v[0] for k, v in src_assoc.items()}
     a_tgt = agg["pairwise_assoc"]
@@ -122,8 +144,8 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
 
     u = draw_copula(R_prime, n, seed)
     rng = np.random.default_rng(seed)
-    frame = copula_to_frame(u, target_pool, cols, num, rng)
+    frame = copula_to_frame(u, target_pool, cols, target_num, rng)
 
-    num_pred = frozenset(c for c in covariates if num.get(c, False))
+    num_pred = frozenset(c for c in covariates if target_num.get(c, False))
     return bidirectional_r2_blend(frame, outcomes, covariates, agg["outcome_r2"],
                                   numeric_predictors=num_pred, rng=rng)

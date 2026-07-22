@@ -41,3 +41,21 @@ def test_b2_recalibrates_outcome_r2_toward_target():
     r2_b1 = covariate_r2(b1, "income", ["age", "education"], numeric_predictors=np_)
     r2_b2 = covariate_r2(b2, "income", ["age", "education"], numeric_predictors=np_)
     assert abs(r2_b2 - tgt_r2) < abs(r2_b1 - tgt_r2)     # B2 closer to target than B1
+
+
+def test_b2_does_not_drop_target_nonnumeric_subpopulation():
+    # Shared column "x" is fully numeric in the source but 20% non-numeric strings in
+    # the target. The numeric-ness map used for target-side operations (marginal
+    # mapping) must come from the TARGET pool, not the source: using the source's
+    # verdict would build a numeric marginal and dropna() away the target's
+    # non-numeric subpopulation, silently violating the "target marginal recovered"
+    # guarantee.
+    rng = np.random.default_rng(0)
+    n = 600
+    source = pd.DataFrame({"x": rng.normal(0, 1, n)})
+    tgt_vals = rng.normal(0, 1, n).astype(object)
+    non_numeric_idx = rng.choice(n, int(0.2 * n), replace=False)
+    tgt_vals[non_numeric_idx] = "NA_CODE"
+    target = pd.DataFrame({"x": tgt_vals})
+    out = transfer_build_b2(source, target, ["x"], [], [], n=n, seed=7)
+    assert (out["x"] == "NA_CODE").any()
