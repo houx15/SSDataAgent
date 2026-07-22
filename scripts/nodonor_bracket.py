@@ -226,7 +226,10 @@ def _cfg_with_B(cfg: Path, td: Path, t: int, bootstrap_B: int | None) -> str:
     spec = yaml.safe_load(cfg.read_text())
     spec["bootstrap_B"] = int(bootstrap_B)
     out = td / f"type{t}_B{bootstrap_B}.yaml"
-    out.write_text(yaml.safe_dump(spec))
+    # sort_keys=False: T3's `model_type` list is paired positionally with `response`'s dict
+    # order by the runner, so re-alphabetizing the mapping keys here would silently scramble
+    # which model type is fit for which response (invisible while all model_types are equal).
+    out.write_text(yaml.safe_dump(spec, sort_keys=False))
     return str(out)
 
 

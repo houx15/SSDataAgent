@@ -73,7 +73,9 @@ def restrict_config_dir(subdir: str, cols: set[str], types, dest: Path) -> Path:
         for key in ("variables", "predictors", "response"):
             if isinstance(cfg.get(key), dict):
                 cfg[key] = {k: v for k, v in cfg[key].items() if k in cols}
-        (dest / subdir / f"type{t}.yaml").write_text(yaml.safe_dump(cfg))
+        # sort_keys=False: preserve `response` dict order so T3's positional `model_type`
+        # list stays paired with the right response (see nodonor_bracket._cfg_with_B).
+        (dest / subdir / f"type{t}.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False))
     return dest
 
 

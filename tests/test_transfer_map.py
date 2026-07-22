@@ -70,6 +70,29 @@ def test_restrict_config_dir_keeps_only_crosswalk_vars(tmp_path):
     assert not (set(restricted.get("variables", {})) & gss_only)
 
 
+def test_restrict_config_dir_preserves_model_type_pairing(tmp_path, monkeypatch):
+    # T3 pairs model_type[i] with response.keys()[i] positionally. Dropping a response must
+    # drop its model_type entry AND keep order (yaml sort_keys=False), or the wrong model is
+    # fit for each response. Stock cps/gss configs are uniform 'ols' so this is untested there.
+    import nodonor_bracket as nb
+    subdir = "fake/t3test"
+    src = tmp_path / "src"
+    (src / subdir).mkdir(parents=True)
+    cfg = {
+        "model_type": ["ols", "logit", "mnlogit"],
+        "response": {"income": {"type": "numeric"},
+                     "married": {"type": "categorical"},
+                     "occ": {"type": "categorical"}},
+        "predictors": {"age": {}, "gender": {}},
+    }
+    (src / subdir / "type3.yaml").write_text(yaml.safe_dump(cfg, sort_keys=False))
+    monkeypatch.setattr(nb, "CONFIG_DIR", src)
+    dest = restrict_config_dir(subdir, {"age", "gender", "income", "occ"}, (3,), tmp_path / "dest")
+    out = yaml.safe_load((dest / subdir / "type3.yaml").read_text())
+    assert list(out["response"].keys()) == ["income", "occ"]   # order preserved, married dropped
+    assert out["model_type"] == ["ols", "mnlogit"]             # married's 'logit' dropped, pairing intact
+
+
 def test_mean_scores_ignores_error_columns():
     # nb.score emits string T{t}_error columns on a failed type-eval; averaging must
     # not crash on them (regression: startswith('T') swept up 'T1_error').
