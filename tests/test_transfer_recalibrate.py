@@ -202,6 +202,84 @@ def test_blend_preserves_outcome_missingness_exactly():
     assert new < own                                 # non-missing values still moved toward target
 
 
+# --- Amendment 1: fit_coherence_alphas (shared-latent Step A knob) ---
+
+from ssdataagent.transfer.recalibrate import fit_coherence_alphas
+
+
+def test_alphas_stay_in_unit_interval():
+    cols = ["a", "b", "c"]
+    a_src = {("a", "b"): 0.9, ("a", "c"): 0.8, ("b", "c"): 0.7}
+    a_tgt = {("a", "b"): 0.05, ("a", "c"): 0.05, ("b", "c"): 0.05}
+    methods = {k: "kendall" for k in a_src}
+    alphas, _ = fit_coherence_alphas(cols, a_src, a_tgt, methods)
+    assert all(0.0 <= v <= 1.0 for v in alphas.values())
+
+
+def test_uniform_half_target_drives_alphas_to_sqrt_half():
+    cols = ["a", "b", "c"]
+    a_src = {("a", "b"): 0.5, ("a", "c"): 0.5, ("b", "c"): 0.5}
+    a_tgt = {("a", "b"): 0.25, ("a", "c"): 0.25, ("b", "c"): 0.25}
+    methods = {k: "kendall" for k in a_src}
+    alphas, n_under = fit_coherence_alphas(cols, a_src, a_tgt, methods)
+    for c in cols:
+        assert abs(alphas[c] - np.sqrt(0.5)) < 0.02
+    assert n_under == 0
+
+
+def test_all_stable_target_equals_source_leaves_alphas_at_one():
+    cols = ["a", "b", "c"]
+    a_src = {("a", "b"): 0.4, ("a", "c"): -0.3, ("b", "c"): 0.6}
+    a_tgt = dict(a_src)
+    methods = {k: "kendall" for k in a_src}
+    alphas, n_under = fit_coherence_alphas(cols, a_src, a_tgt, methods)
+    for c in cols:
+        assert abs(alphas[c] - 1.0) < 1e-9
+    assert n_under == 0
+
+
+def test_unusable_method_mismatch_pairs_excluded():
+    cols = ["a", "b"]
+    a_src = {("a", "b"): 0.5}
+    a_tgt = {("a", "b"): 0.1}
+    methods = {("a", "b"): "undefined"}   # not kendall/cramers_v -> excluded
+    alphas, n_under = fit_coherence_alphas(cols, a_src, a_tgt, methods)
+    assert alphas["a"] == 1.0 and alphas["b"] == 1.0
+    assert n_under == 0     # never entered the candidate set -- not comparable
+
+
+def test_n_pairs_understrength_counts_correctly():
+    cols = ["a", "b", "c"]
+    a_src = {("a", "b"): 0.5, ("a", "c"): 0.1, ("b", "c"): 0.3}
+    a_tgt = {("a", "b"): 0.2, ("a", "c"): 0.4, ("b", "c"): 0.3}  # a,c wants MORE than src
+    methods = {k: "kendall" for k in a_src}
+    alphas, n_under = fit_coherence_alphas(cols, a_src, a_tgt, methods)
+    assert n_under == 1
+    # the understrength pair is left as-is: alpha can only shrink, never invent strength
+    assert alphas["a"] * alphas["c"] * 0.1 <= 0.1 + 1e-9
+
+
+def test_missing_or_nonfinite_association_excluded():
+    cols = ["a", "b", "c"]
+    a_src = {("a", "b"): 0.5, ("b", "c"): float("nan")}
+    a_tgt = {("a", "b"): 0.25}   # ("b", "c") missing target entirely
+    methods = {("a", "b"): "kendall", ("b", "c"): "kendall"}
+    alphas, n_under = fit_coherence_alphas(cols, a_src, a_tgt, methods)
+    assert alphas["c"] == 1.0   # no usable pair touches c
+    assert n_under == 0
+
+
+def test_negligible_source_association_excluded_from_fit():
+    # source magnitude below the 0.05 floor is too weak to scale by reliably
+    cols = ["a", "b"]
+    a_src = {("a", "b"): 0.01}
+    a_tgt = {("a", "b"): 0.5}
+    methods = {("a", "b"): "cramers_v"}
+    alphas, n_under = fit_coherence_alphas(cols, a_src, a_tgt, methods)
+    assert alphas["a"] == 1.0 and alphas["b"] == 1.0
+    assert n_under == 1   # still counted as understrength even though excluded from the fit
+
+
 def test_blend_constant_outcome_left_completely_unchanged():
     # Finding 2: covariate_r2 returns nan (not None) for a constant-valued outcome, so
     # a guard that only checks `own <= _EPS` never fires on nan and the column falls

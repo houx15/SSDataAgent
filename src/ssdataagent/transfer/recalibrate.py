@@ -88,6 +88,82 @@ def recalibrate_matrix(R_source: np.ndarray, cols: list[str], a_src: dict,
     return nearest_correlation(R)
 
 
+def fit_coherence_alphas(cols: list[str], a_src: dict, a_tgt: dict, methods: dict, *,
+                         iters: int = 50) -> tuple[dict[str, float], int]:
+    """Fit a per-column coherence rate ``alpha_c in [0, 1]`` for the amended Step A
+    (Amendment 1): the shared-latent construction's ``base`` index is kept for column
+    ``c`` on a Bernoulli(``alpha_c``) fraction of rows and drawn independently
+    otherwise, so two columns land on the same source row with probability
+    ``alpha_c * alpha_d`` and their output association scales as
+    ``alpha_c * alpha_d * a_src(c, d)``.
+
+    Fits ``alpha`` (one per column, initialized at 1.0) minimizing
+    ``sum over usable pairs of (alpha_c * alpha_d * a_src(c,d) - a_tgt(c,d))**2``
+    by coordinate descent: holding every other alpha fixed, ``alpha_c``'s optimum is
+    the closed-form 1-D weighted-least-squares solution
+    ``sum(k_d * t_d) / sum(k_d**2)`` where ``k_d = alpha_d * |a_src(c,d)|`` and
+    ``t_d = |a_tgt(c,d)|``, clipped to ``[0, 1]`` after every update. Associations are
+    compared on magnitude (``abs``) throughout -- Cramer's V is unsigned and Kendall
+    tau is signed, so diffing raw signed and unsigned values would be incoherent; the
+    shared `base` index mechanism only ever scales magnitude (alpha >= 0), it never
+    flips a pair's sign.
+
+    A pair is usable only if ``methods[key]`` is exactly ``"kendall"`` or
+    ``"cramers_v"``, both ``a_src[key]`` and ``a_tgt[key]`` are present and finite, and
+    ``|a_src[key]|`` is non-negligible (>= 0.05 -- below this a target/source ratio is
+    unreliable, mirroring ``recalibrate_matrix``'s cramers_v guard). A column with no
+    usable pairs is left at its initial ``alpha = 1.0``.
+
+    Because ``alpha <= 1``, this mechanism can only weaken dependence toward the
+    target -- it cannot manufacture dependence the source lacks. Pairs (among those
+    with finite, method-matched associations) where the target wants MORE dependence
+    than the source has (``|a_tgt| > |a_src|``) are exactly the pairs this cannot fix;
+    they are left as-is and only counted in the returned ``n_pairs_understrength`` for
+    the caller to log, never silently ignored.
+
+    Returns ``(alphas, n_pairs_understrength)``.
+    """
+    _MIN_ABS_SRC = 0.05
+    col_set = set(cols)
+    adjacency: dict[str, list[tuple[str, float, float]]] = {c: [] for c in cols}
+    n_understrength = 0
+    for key, method in methods.items():
+        v1, v2 = key
+        if v1 not in col_set or v2 not in col_set:
+            continue
+        if method not in ("kendall", "cramers_v"):
+            # Same defensive guard as recalibrate_matrix: an "undefined" or
+            # concatenated mismatch-encoding method means source and target aren't
+            # comparable for this pair; it never enters the candidate set at all.
+            continue
+        s, t = a_src.get(key), a_tgt.get(key)
+        if s is None or t is None or not np.isfinite(s) or not np.isfinite(t):
+            continue
+        s_abs, t_abs = abs(float(s)), abs(float(t))
+        if t_abs > s_abs:
+            n_understrength += 1
+        if s_abs < _MIN_ABS_SRC:
+            continue
+        adjacency[v1].append((v2, s_abs, t_abs))
+        adjacency[v2].append((v1, s_abs, t_abs))
+
+    alphas = {c: 1.0 for c in cols}
+    for _ in range(iters):
+        for c in cols:
+            neighbors = adjacency[c]
+            if not neighbors:
+                continue
+            num = 0.0
+            den = 0.0
+            for d, s_abs, t_abs in neighbors:
+                k = alphas[d] * s_abs
+                num += k * t_abs
+                den += k * k
+            if den > 0.0:
+                alphas[c] = float(np.clip(num / den, 0.0, 1.0))
+    return alphas, n_understrength
+
+
 def _rank_pct(x: np.ndarray) -> np.ndarray:
     return pd.Series(x).rank(pct=True, method="first").to_numpy()
 
