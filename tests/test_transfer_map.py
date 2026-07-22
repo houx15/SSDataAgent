@@ -1,0 +1,35 @@
+# tests/test_transfer_map.py
+from __future__ import annotations
+
+import sys
+from pathlib import Path
+
+import numpy as np
+import pandas as pd
+
+REPO = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(REPO / "scripts"))
+
+from transfer_map import run_layer1
+
+
+def _frame(n, seed, xmean, beta):
+    rng = np.random.default_rng(seed)
+    x = rng.normal(xmean, 1, n)
+    edu = np.where(x > xmean, "hi", "lo")
+    return pd.DataFrame({"age": x, "education": edu, "income": beta * x + rng.normal(0, .3, n)})
+
+
+def test_run_layer1_returns_map_and_copula():
+    a = _frame(1500, 1, xmean=0.0, beta=1.0)
+    b = _frame(1500, 2, xmean=3.0, beta=1.0)   # composition shift on outcomes
+    covariates, outcomes = ["age", "education"], ["income"]
+    kob, cop = run_layer1(a, b, ["age", "education", "income"], covariates, outcomes)
+    # KOB has one row per outcome, with a share and a label
+    assert set(kob["response"]) == {"income"}
+    assert {"composition_share", "label", "gap_raw"}.issubset(kob.columns)
+    inc = kob[kob["response"] == "income"].iloc[0]
+    assert inc["label"] in {"composition-dominated", "mechanism-shifted", "aligned"}
+    # copula table covers all unordered pairs of the 3 columns
+    assert len(cop) == 3
+    assert {"v1", "v2", "abs_delta", "label"}.issubset(cop.columns)
