@@ -10,7 +10,21 @@ import pandas as pd
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 
-from transfer_map import mean_scores, run_layer1
+import yaml
+
+from transfer_map import (
+    composition_covariates, mean_scores, restrict_config_dir, run_layer1,
+)
+
+
+def test_composition_covariates_prefers_demographic_core():
+    # given the full background set, rake only on age/gender/race
+    assert composition_covariates(
+        ["age", "gender", "race", "mother_occupation", "immigrant_status"]
+    ) == ["age", "gender", "race"]
+    # fall back to all covariates when none of the core survived the crosswalk
+    assert composition_covariates(["mother_occupation", "father_education"]) == \
+        ["mother_occupation", "father_education"]
 
 
 def _frame(n, seed, xmean, beta):
@@ -33,6 +47,27 @@ def test_run_layer1_returns_map_and_copula():
     # copula table covers all unordered pairs of the 3 columns
     assert len(cop) == 3
     assert {"v1", "v2", "abs_delta", "label"}.issubset(cop.columns)
+
+
+def test_restrict_config_dir_keeps_only_crosswalk_vars(tmp_path):
+    # gss type configs reference variables gss1994 lacks (e.g. mental_health); restriction
+    # to a crosswalk set must drop them so a source-limited sim can be scored.
+    import nodonor_bracket as nb
+    from ssdataagent.data.schema import load_schema
+    sub = load_schema("gss").ssdatabench_sim_subdir
+    allowed = {"age", "gender", "race", "education", "income", "marital_status"}
+    dest = restrict_config_dir(sub, allowed, (1, 2, 3), tmp_path)
+    for t in (1, 2, 3):
+        cfg = yaml.safe_load((dest / sub / f"type{t}.yaml").read_text())
+        for key in ("variables", "predictors", "response"):
+            if isinstance(cfg.get(key), dict):
+                assert set(cfg[key]).issubset(allowed), f"type{t}.{key} leaked non-crosswalk var"
+    # a variable known to be gss2018-only must be gone from the restricted type1 config
+    stock = yaml.safe_load((nb.CONFIG_DIR / sub / "type1.yaml").read_text())
+    gss_only = set(stock.get("variables", {})) - allowed
+    assert gss_only, "sanity: stock config should contain vars outside the small allowed set"
+    restricted = yaml.safe_load((dest / sub / "type1.yaml").read_text())
+    assert not (set(restricted.get("variables", {})) & gss_only)
 
 
 def test_mean_scores_ignores_error_columns():

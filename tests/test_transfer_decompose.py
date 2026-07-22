@@ -84,6 +84,14 @@ def test_oaxaca_mechanism_shifted():
     assert ob["composition_share_ob"] < 0.3
 
 
+def test_decompose_reports_ess_ratio():
+    a = _mk(2000, 20, xmean=0.0, beta=1.0)
+    b = _mk(2000, 21, xmean=1.0, beta=1.0)
+    d = kob_decompose(a, b, "y", ["x"])
+    assert "ess_ratio" in d
+    assert 0.0 <= d["ess_ratio"] <= 1.0
+
+
 def test_aligned_returns_nan():
     a = _mk(2000, 8, xmean=0.0, beta=1.0)
     b = _mk(2000, 9, xmean=0.0, beta=1.0)   # essentially same distribution

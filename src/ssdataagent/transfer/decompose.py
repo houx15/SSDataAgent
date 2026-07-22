@@ -37,9 +37,23 @@ def _codes(s: pd.Series, num: bool, edges: np.ndarray | None) -> np.ndarray:
     return s.astype("string").fillna("__nan__").to_numpy().astype(str)
 
 
+def effective_sample_size(w: np.ndarray) -> float:
+    """Kish effective sample size (sum w)^2 / sum w^2. Falls toward 1 as a few rows
+    dominate; ess/n is a reliability ratio for a reweighting estimate."""
+    w = np.asarray(w, dtype=float)
+    denom = float((w ** 2).sum())
+    return float(w.sum() ** 2 / denom) if denom > 0 else 0.0
+
+
 def raking_weights(a: pd.DataFrame, b: pd.DataFrame, covariates: list[str],
                    *, bins: int = 10, iters: int = 30) -> np.ndarray:
-    """Per-row weights on A so its weighted covariate marginals match B's (IPF/raking)."""
+    """Per-row weights on A so its weighted covariate marginals match B's (IPF/raking).
+
+    Rake on a small, well-supported set of demographic composition axes (see the
+    orchestrator's CORE_DEMOGRAPHICS): raking on many high-cardinality margins creates thin
+    joint cells and concentrates weight on a few rows. ``effective_sample_size`` reports how
+    concentrated the weights ended up, so the caller can carry a reliability signal.
+    """
     n = len(a)
     w = np.ones(n, dtype=float)
     specs = []
@@ -93,6 +107,7 @@ def kob_decompose(a: pd.DataFrame, b: pd.DataFrame, response: str,
         oka, okb = av.notna().to_numpy(), bv.notna().to_numpy()
         avv, wv = av[oka].to_numpy(dtype=float), w[oka]
         bvv = bv[okb].to_numpy(dtype=float)
+        ess_ratio = effective_sample_size(wv) / len(wv) if len(wv) else 0.0
         if len(avv) == 0 or len(bvv) == 0:
             gap_raw = gap_res = np.nan
         else:
@@ -100,22 +115,27 @@ def kob_decompose(a: pd.DataFrame, b: pd.DataFrame, response: str,
             gap_raw = wasserstein_distance(avv / sd, bvv / sd)
             gap_res = wasserstein_distance(avv / sd, bvv / sd, u_weights=wv)
     else:
+        ok = a[response].notna().to_numpy()
+        ess_ratio = effective_sample_size(w[ok]) / int(ok.sum()) if int(ok.sum()) else 0.0
         pa_raw = pd.Series(a[response]).astype("string").fillna("__nan__").value_counts(normalize=True)
         pb = pd.Series(b[response]).astype("string").fillna("__nan__").value_counts(normalize=True)
         pa_w = _weighted_props(a[response].to_numpy(), w)
         gap_raw = _tv(pa_raw, pb)
         gap_res = _tv(pa_w, pb)
     if not np.isfinite(gap_raw) or gap_raw < _EPS:
-        share = np.nan
-        label = "aligned"
+        share, label = np.nan, "aligned"
     else:
+        # gap_res > gap_raw (share clips to 0) is meaningful, not a bug: reweighting A's
+        # demographics toward B's moves the outcome AWAY from B -- composition and mechanism
+        # oppose (e.g. an aging population vs a secular rise in education). ess_ratio is
+        # reported alongside so a reader can weigh how concentrated the raking weights were.
         share = float(np.clip((gap_raw - gap_res) / gap_raw, 0.0, 1.0))
         label = "composition-dominated" if share >= 0.5 else "mechanism-shifted"
     return {
         "response": response,
         "composition_share": share,
         "mechanism_share": (1.0 - share) if np.isfinite(share) else np.nan,
-        "gap_raw": gap_raw, "gap_residual": gap_res,
+        "gap_raw": gap_raw, "gap_residual": gap_res, "ess_ratio": ess_ratio,
         "label": label, "method": "dfl",
     }
 

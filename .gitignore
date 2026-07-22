@@ -144,3 +144,4 @@ web/dist/
 
 # TypeScript incremental build cache
 web/tsconfig.tsbuildinfo
+results/transfer_map/_*.log

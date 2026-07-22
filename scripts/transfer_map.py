@@ -21,13 +21,60 @@ sys.path.insert(0, str(REPO))
 sys.path.insert(0, str(REPO / "scripts"))
 
 from ssdataagent.transfer.copula_stability import copula_stability  # noqa: E402
-from ssdataagent.transfer.decompose import kob_decompose, oaxaca_blinder  # noqa: E402
+from ssdataagent.transfer.decompose import _is_num, kob_decompose, oaxaca_blinder  # noqa: E402
 from ssdataagent.transfer.generate import transfer_build  # noqa: E402
 from ssdataagent.transfer.pairs import (  # noqa: E402
     PAIRS, covariates_outcomes, load_pair,
 )
 
 OUT = REPO / "results" / "transfer_map"
+
+# Composition axes for the KOB reweighting: the demographic core the benchmark itself hands
+# systems as `input: true`. Raking on these (small, low-cardinality, always-supported) gives
+# a stable composition estimate; the full background set (parental occupation, immigrant
+# status) adds high-cardinality margins that concentrate the weights and add noise.
+CORE_DEMOGRAPHICS = ("age", "gender", "race")
+
+
+def composition_covariates(covariates: list[str]) -> list[str]:
+    """The demographic core present in this pair's covariates; fall back to all covariates
+    if none of the core axes survived the crosswalk."""
+    core = [c for c in covariates if c in CORE_DEMOGRAPHICS]
+    return core or covariates
+
+
+def restrict_config_dir(subdir: str, cols: set[str], types, dest: Path) -> Path:
+    """Write type configs restricted to the transferable (crosswalk) ``cols`` under
+    ``dest/subdir/``, and return ``dest`` (a ``config_dir`` for nb.score).
+
+    A transfer sim can only carry variables the SOURCE context has, so the target's stock
+    config — which may test variables the source lacks (gss2018's depress/mental_health) —
+    would KeyError. Restricting ``variables``/``predictors``/``response`` to ``cols`` scores
+    exactly the transferable variables. For a pair whose crosswalk already covers the config
+    (cps 1970->1980), this is a no-op and reproduces the stock score.
+    """
+    import yaml
+    import nodonor_bracket as nb
+    src = nb.CONFIG_DIR / subdir
+    (dest / subdir).mkdir(parents=True, exist_ok=True)
+    for t in types:
+        p = src / f"type{t}.yaml"
+        if not p.exists():
+            continue
+        cfg = yaml.safe_load(p.read_text())
+        # T3 carries a model_type list aligned positionally to `response`; when we drop a
+        # response we must drop its model_type entry too, or the runner raises
+        # "N model types but M responses".
+        resp = cfg.get("response")
+        mt = cfg.get("model_type")
+        if isinstance(resp, dict) and isinstance(mt, list) and len(mt) == len(resp):
+            keep_mask = [k in cols for k in resp]
+            cfg["model_type"] = [m for m, keep in zip(mt, keep_mask) if keep]
+        for key in ("variables", "predictors", "response"):
+            if isinstance(cfg.get(key), dict):
+                cfg[key] = {k: v for k, v in cfg[key].items() if k in cols}
+        (dest / subdir / f"type{t}.yaml").write_text(yaml.safe_dump(cfg))
+    return dest
 
 
 def mean_scores(df: pd.DataFrame) -> dict:
@@ -48,13 +95,20 @@ def mean_scores(df: pd.DataFrame) -> dict:
 def run_layer1(a: pd.DataFrame, b: pd.DataFrame, cols: list[str],
                covariates: list[str], outcomes: list[str]) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Diagnostic map (reads both contexts' microdata — the answer key, not firewalled)."""
+    comp_cov = composition_covariates(covariates)
     rows = []
     for y in outcomes:
-        d = kob_decompose(a, b, y, covariates)
-        try:
-            ob = oaxaca_blinder(a, b, y, covariates)
-            d["composition_share_ob"] = ob["composition_share_ob"]
-        except Exception:
+        d = kob_decompose(a, b, y, comp_cov)
+        # Oaxaca-Blinder is a numeric-outcome cross-check only; skip categorical outcomes
+        # (an all-NaN coerced design produces meaningless terms + numpy warnings).
+        if _is_num(a[y]) and _is_num(b[y]):
+            try:
+                ob = oaxaca_blinder(a, b, y, comp_cov, numeric_predictors=frozenset(
+                    c for c in comp_cov if _is_num(a[c])))
+                d["composition_share_ob"] = ob["composition_share_ob"]
+            except Exception:
+                d["composition_share_ob"] = float("nan")
+        else:
             d["composition_share_ob"] = float("nan")
         rows.append(d)
     kob = pd.DataFrame(rows)
@@ -63,7 +117,12 @@ def run_layer1(a: pd.DataFrame, b: pd.DataFrame, cols: list[str],
 
 
 def run_layer2(pair, *, seeds: int, n: int, bootstrap_B: int) -> pd.DataFrame:
-    """Firewalled B0/B1 baselines scored against the target's benchmark reference."""
+    """Firewalled B0/B1 baselines scored against the target's benchmark reference.
+
+    Scored on the crosswalk variables only (config restricted to what the source can carry).
+    """
+    import tempfile
+
     import nodonor_bracket as nb
     from ssdataagent.data.schema import load_schema
 
@@ -75,22 +134,27 @@ def run_layer2(pair, *, seeds: int, n: int, bootstrap_B: int) -> pd.DataFrame:
     cols = [c for c in cols if c in a.columns and c in b_pool.columns and c in ref.columns]
     types = nb.TYPES.get(pair.target_dataset, (1, 2, 3))
 
-    def _score_many(builder):
-        recs = [nb.score(builder(s), pair.target_dataset, ref, types,
-                         seed=1000 + s, bootstrap_B=bootstrap_B) for s in range(1, seeds + 1)]
-        return mean_scores(pd.DataFrame(recs))
-
-    configs = {
-        "B0_carryover": lambda s: transfer_build(a, a, cols, n, s, "carryover"),
-        "B1_marginal_swap": lambda s: transfer_build(a, b_pool, cols, n, s, "marginal-swap"),
-        "within_B_floor": lambda s: nb.build(b_pool, cols, n, s, "independence"),
-        "within_B_ceiling": lambda s: nb.build(b_pool, cols, n, s, "rowresample"),
-    }
     out = []
-    for name, builder in configs.items():
-        rec = {"pair": pair.id, "config": name, "guarantee": guarantee}
-        rec.update(_score_many(builder))
-        out.append(rec)
+    with tempfile.TemporaryDirectory() as cfg_td:
+        cfg_dir = restrict_config_dir(schema.ssdatabench_sim_subdir, set(cols), types,
+                                      Path(cfg_td))
+
+        def _score_many(builder):
+            recs = [nb.score(builder(s), pair.target_dataset, ref, types,
+                             seed=1000 + s, bootstrap_B=bootstrap_B, config_dir=cfg_dir)
+                    for s in range(1, seeds + 1)]
+            return mean_scores(pd.DataFrame(recs))
+
+        configs = {
+            "B0_carryover": lambda s: transfer_build(a, a, cols, n, s, "carryover"),
+            "B1_marginal_swap": lambda s: transfer_build(a, b_pool, cols, n, s, "marginal-swap"),
+            "within_B_floor": lambda s: nb.build(b_pool, cols, n, s, "independence"),
+            "within_B_ceiling": lambda s: nb.build(b_pool, cols, n, s, "rowresample"),
+        }
+        for name, builder in configs.items():
+            rec = {"pair": pair.id, "config": name, "guarantee": guarantee}
+            rec.update(_score_many(builder))
+            out.append(rec)
     return pd.DataFrame(out)
 
 

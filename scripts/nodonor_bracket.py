@@ -231,14 +231,19 @@ def _cfg_with_B(cfg: Path, td: Path, t: int, bootstrap_B: int | None) -> str:
 
 
 def score(sim: pd.DataFrame, ds: str, ref: pd.DataFrame, types: tuple[int, ...],
-          *, seed: int | None = None, bootstrap_B: int | None = None) -> dict:
+          *, seed: int | None = None, bootstrap_B: int | None = None,
+          config_dir: Path | None = None) -> dict:
     """Score ``sim`` against ``ref``.
 
     ``seed`` pins the benchmark's unseeded bootstrap so a run is reproducible.
     ``bootstrap_B`` overrides the config's Monte Carlo replicate count (see
     ``_cfg_with_B``); leave it None to reproduce a published-comparable run.
+    ``config_dir`` overrides the type-config root (default ``CONFIG_DIR``); the
+    transfer runner passes a restricted-to-crosswalk config here so a sim that can only
+    carry the source's variables is scored on exactly those. Omit for the stock configs.
     """
     schema = load_schema(ds)
+    base_cfg = config_dir or CONFIG_DIR
     from ssdatabench.evaluation.code_by_type import type1, type2, type3, type4, type5
     runners = {1: type1.run_type1_eval, 2: type2.run_type2_eval, 3: type3.run_type3_eval,
                4: type4.run_type4_eval, 5: type5.run_type5_eval}
@@ -249,7 +254,7 @@ def score(sim: pd.DataFrame, ds: str, ref: pd.DataFrame, types: tuple[int, ...],
         _prep(ref).to_csv(real_csv, index=False)
         _prep(sim).to_csv(sim_csv, index=False)
         for t in types:
-            cfg = CONFIG_DIR / schema.ssdatabench_sim_subdir / f"type{t}.yaml"
+            cfg = base_cfg / schema.ssdatabench_sim_subdir / f"type{t}.yaml"
             if not cfg.exists():
                 continue
             odir, buf = td / f"out{t}", io.StringIO()
