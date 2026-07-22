@@ -311,3 +311,69 @@ documented in `docs/report/` for `child_number`.
   correct and may serve later work — but they leave B2's pipeline.
 - **Retained unchanged:** `recalibrate.bidirectional_r2_blend` (Step B), the firewalled
   `target_aggregates` reader, the widened scored-pair registry, and the Layer-2 ladder wiring.
+
+---
+
+# Amendment 2 — Step A is dropped; B2 is Step B only (2026-07-22)
+
+**Status:** supersedes Amendment 1's Step A. B2's final definition.
+
+## Why — the Step A ablation
+
+Three configurations, `cps_1970_1980`, publication protocol (3 seeds, n=3000, B=200).
+`alpha_c == 1.0` for every column provably reduces the generator to B1's draw
+(verified byte-for-byte), so forcing alphas to 1 isolates Step B exactly.
+
+| config | T1 | T2 | T3 | overall |
+|---|---:|---:|---:|---:|
+| B1 (neither step) | 0.8100 | 0.5540 | 0.5728 | 0.6456 |
+| **B2 with alpha == 1 (Step B only)** | 0.8014 | 0.5585 | **0.6289** | **0.6629** |
+| B2 fitted alpha (Step A + B) | 0.7771 | 0.5701 | 0.5956 | 0.6476 |
+
+Validity check: B1 reproduced its known row exactly and the fitted-alpha config reproduced
+the recorded `B2_recalibrated` row byte-for-byte, so the three rows are comparable.
+
+- **Step A contributes −0.015 overall** (T1 −0.024, T3 −0.033, T2 +0.012). A net drag.
+- **Step B alone beats B1 by +0.017**, driven by **T3 +0.056** — the only movement in this
+  feature that clears per-type noise.
+
+Two diagnostics explain why Step A cannot work on this vehicle:
+
+1. **It barely moves.** 7 of 11 columns fit to exactly `alpha = 1.0`; the rest only reach
+   0.92–0.99. Yet it still costs, because the pair is ~95% copula-stable: any weakening
+   damages the many pairs that were already right in order to chase the few that drifted.
+   A per-column knob cannot localize a correction to a per-pair problem.
+2. **It is directionally incapable.** `n_pairs_understrength = 27 of 55` — on half the pairs
+   the target wants MORE dependence than the source has, which `alpha <= 1` structurally
+   cannot supply. Amendment 1 predicted this limitation; the ablation measured that it bites
+   on half the problem.
+
+## B2's final definition
+
+**B2 = B1's shared-latent marginal-swap draw + Step B (`bidirectional_r2_blend`).** No
+per-column alpha, no per-pair association calibration.
+
+This is *more* faithful to the roadmap, which defines B2 as recalibrating "θ and dispersion
+from B's published aggregates only" — precisely what Step B does via per-outcome covariate-R².
+Per-pair association calibration was an addition of this spec, and it is abandoned as a
+measured negative result, not quietly dropped.
+
+**Implementation note (load-bearing).** Keep `transfer_build_b2`'s own generation loop and
+remove only the alpha machinery. Do NOT redefine B2 as `transfer_build(...) + Step B`:
+`transfer_build` derives its numeric map from the SOURCE, whereas `transfer_build_b2` was
+fixed to use the TARGET's map for target-side operations. Those maps disagree exactly on
+sentinel-bearing columns, so the naive substitution would not reproduce the 0.6629 measured
+here.
+
+## Retired but retained
+
+`fit_coherence_alphas`, `recalibrate_matrix`, and `gaussian_copula.py` stay in the tree with
+their tests passing — they are correct code and may serve later work — but none is in B2's
+path. The Step A ablation is reported as a finding.
+
+## What still bounds B2
+
+B2 (0.663) remains far below the within-target microdata ceiling (0.816). A large
+mechanism-shift residual survives aggregate recalibration. Per the roadmap's decision gate,
+that is the condition under which Phase 3 (learned adaptation) is justified rather than
+ruled out.
