@@ -15,8 +15,8 @@ def target_aggregates(pool: pd.DataFrame, cols: list[str], covariates: list[str]
     assoc = pairwise_associations(pool, cols)
     pairwise_assoc = {k: v[0] for k, v in assoc.items()}
     pairwise_method = {k: v[1] for k, v in assoc.items()}
-    num_pred = frozenset(c for c in covariates if _is_numeric(pool[c]))
     preds = [c for c in covariates if c in pool.columns]
+    num_pred = frozenset(c for c in preds if _is_numeric(pool[c]))
     outcome_r2 = {
         y: (covariate_r2(pool, y, preds, numeric_predictors=num_pred)
             if y in pool.columns and _is_numeric(pool[y]) else None)

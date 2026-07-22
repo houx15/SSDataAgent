@@ -32,3 +32,20 @@ def test_target_aggregates_reads_only_pool():
     import inspect
     sig = inspect.signature(target_aggregates)
     assert set(sig.parameters) == {"pool", "cols", "covariates", "outcomes"}
+
+
+def test_target_aggregates_missing_covariate():
+    # Regression test: covariates not in pool should not raise KeyError.
+    # Variable crosswalks routinely drop variables absent from one context,
+    # so a missing covariate is a realistic input that should be gracefully skipped.
+    pool = _pool(2000, 1)
+    # Request "education" as a covariate, but pool only has age/gender/income
+    agg = target_aggregates(pool, ["age", "gender", "income"],
+                           covariates=["age", "education"],  # "education" not in pool
+                           outcomes=["income"])
+    # Should return normally with expected structure, not raise KeyError
+    assert "pairwise_assoc" in agg
+    assert "outcome_r2" in agg
+    assert "provenance" in agg
+    # missing covariate filtered out gracefully; outcome_r2 computed on only age (available)
+    assert isinstance(agg["outcome_r2"]["income"], (float, type(None)))
