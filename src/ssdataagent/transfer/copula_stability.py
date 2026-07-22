@@ -53,6 +53,14 @@ def pair_association(frame: pd.DataFrame, v1: str, v2: str) -> tuple[float, str]
     return _cramers_v(c1[ok], c2[ok]), "cramers_v"
 
 
+def pairwise_associations(frame: pd.DataFrame, cols: list[str]) -> dict:
+    """Every unordered pair (in ``cols`` order) -> (association, method) via pair_association."""
+    out = {}
+    for v1, v2 in itertools.combinations(cols, 2):
+        out[(v1, v2)] = pair_association(frame, v1, v2)
+    return out
+
+
 def copula_stability(a: pd.DataFrame, b: pd.DataFrame, cols: list[str],
                      *, threshold: float = 0.10) -> pd.DataFrame:
     """Per unordered variable pair: association in A vs B, and |delta| stability label."""

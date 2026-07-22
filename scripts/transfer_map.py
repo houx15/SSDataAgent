@@ -22,12 +22,19 @@ sys.path.insert(0, str(REPO / "scripts"))
 
 from ssdataagent.transfer.copula_stability import copula_stability  # noqa: E402
 from ssdataagent.transfer.decompose import _is_num, kob_decompose, oaxaca_blinder  # noqa: E402
-from ssdataagent.transfer.generate import transfer_build  # noqa: E402
+from ssdataagent.transfer.generate import transfer_build, transfer_build_b2  # noqa: E402
 from ssdataagent.transfer.pairs import (  # noqa: E402
     PAIRS, covariates_outcomes, load_pair,
 )
 
 OUT = REPO / "results" / "transfer_map"
+
+# Layer-2 ladder order — single source of truth, checked against `run_layer2`'s
+# `configs` dict so the two cannot drift apart (see the assert in `run_layer2`).
+LAYER2_CONFIG_NAMES = [
+    "B0_carryover", "B1_marginal_swap", "B2_recalibrated",
+    "within_B_floor", "within_B_ceiling",
+]
 
 # Composition axes for the KOB reweighting: the demographic core the benchmark itself hands
 # systems as `input: true`. Raking on these (small, low-cardinality, always-supported) gives
@@ -147,12 +154,16 @@ def run_layer2(pair, *, seeds: int, n: int, bootstrap_B: int) -> pd.DataFrame:
                     for s in range(1, seeds + 1)]
             return mean_scores(pd.DataFrame(recs))
 
+        covs, outs = covariates_outcomes(pair.schema_name, cols)
+
         configs = {
             "B0_carryover": lambda s: transfer_build(a, a, cols, n, s, "carryover"),
             "B1_marginal_swap": lambda s: transfer_build(a, b_pool, cols, n, s, "marginal-swap"),
+            "B2_recalibrated": lambda s: transfer_build_b2(a, b_pool, cols, covs, outs, n, s),
             "within_B_floor": lambda s: nb.build(b_pool, cols, n, s, "independence"),
             "within_B_ceiling": lambda s: nb.build(b_pool, cols, n, s, "rowresample"),
         }
+        assert list(configs.keys()) == LAYER2_CONFIG_NAMES  # single source of truth for order
         for name, builder in configs.items():
             rec = {"pair": pair.id, "config": name, "guarantee": guarantee}
             rec.update(_score_many(builder))

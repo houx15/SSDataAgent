@@ -3,7 +3,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from ssdataagent.transfer.copula_stability import copula_stability, pair_association
+from ssdataagent.transfer.copula_stability import (
+    copula_stability,
+    pair_association,
+    pairwise_associations,
+)
 
 
 def _gauss_copula(n, seed, rho, xmean=0.0, ymean=0.0):
@@ -61,3 +65,13 @@ def test_numeric_pair_with_missing_values_still_uses_kendall():
     tau, method = pair_association(a, "x", "y")
     assert method == "kendall"
     assert tau == tau  # not NaN
+
+
+def test_pairwise_associations_covers_every_unordered_pair():
+    a = _gauss_copula(500, 9, rho=0.5)
+    a["z"] = pd.Series(["p", "q"] * 250)
+    out = pairwise_associations(a, ["x", "y", "z"])
+    assert set(out.keys()) == {("x", "y"), ("x", "z"), ("y", "z")}
+    for value, method in out.values():
+        assert method in {"kendall", "cramers_v"}
+    assert out[("x", "y")] == pair_association(a, "x", "y")

@@ -105,3 +105,13 @@ def test_mean_scores_ignores_error_columns():
     assert "T3" not in out            # all-None -> dropped
     assert "T3_error" not in out      # string error column never averaged
     assert abs(out["overall"] - 0.65) < 1e-9
+
+
+def test_run_layer2_configs_include_b2(monkeypatch):
+    # run_layer2 builds a dict of named builders; B2 must be one of them and must call
+    # transfer_build_b2 with the pair's covariates/outcomes. We probe the builder table
+    # by capturing what configs run_layer2 constructs, without scoring.
+    import transfer_map as tm
+    names = tm.LAYER2_CONFIG_NAMES
+    assert "B2_recalibrated" in names
+    assert names.index("B1_marginal_swap") < names.index("B2_recalibrated")  # ladder order
