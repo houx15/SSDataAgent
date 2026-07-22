@@ -10,7 +10,7 @@ import pandas as pd
 REPO = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(REPO / "scripts"))
 
-from transfer_map import run_layer1
+from transfer_map import mean_scores, run_layer1
 
 
 def _frame(n, seed, xmean, beta):
@@ -33,3 +33,17 @@ def test_run_layer1_returns_map_and_copula():
     # copula table covers all unordered pairs of the 3 columns
     assert len(cop) == 3
     assert {"v1", "v2", "abs_delta", "label"}.issubset(cop.columns)
+
+
+def test_mean_scores_ignores_error_columns():
+    # nb.score emits string T{t}_error columns on a failed type-eval; averaging must
+    # not crash on them (regression: startswith('T') swept up 'T1_error').
+    df = pd.DataFrame([
+        {"T1": 0.8, "T2": 0.6, "T3": None, "T3_error": "KeyError: education", "overall": 0.7},
+        {"T1": 0.7, "T2": 0.5, "T3": None, "T3_error": "KeyError: education", "overall": 0.6},
+    ])
+    out = mean_scores(df)
+    assert out["T1"] == 0.75 and out["T2"] == 0.55
+    assert "T3" not in out            # all-None -> dropped
+    assert "T3_error" not in out      # string error column never averaged
+    assert abs(out["overall"] - 0.65) < 1e-9

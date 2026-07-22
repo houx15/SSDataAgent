@@ -30,6 +30,21 @@ from ssdataagent.transfer.pairs import (  # noqa: E402
 OUT = REPO / "results" / "transfer_map"
 
 
+def mean_scores(df: pd.DataFrame) -> dict:
+    """Average the numeric per-type / overall score columns across seeds.
+
+    nb.score() emits per-type rates as ``T1``..``T5`` and ``overall``, but also stores
+    per-type FAILURES as string columns ``T{t}_error`` (e.g. a type-eval that KeyErrors on
+    a crosswalk-dropped column). Those also start with 'T', so a naive ``startswith('T')``
+    would call ``.mean()`` on a string column and crash. Select only ``overall`` and
+    ``T<digit>`` columns explicitly.
+    """
+    keep = [c for c in df.columns
+            if (c == "overall" or (c.startswith("T") and c[1:].isdigit()))
+            and df[c].notna().any()]
+    return {c: float(df[c].mean()) for c in keep}
+
+
 def run_layer1(a: pd.DataFrame, b: pd.DataFrame, cols: list[str],
                covariates: list[str], outcomes: list[str]) -> tuple[pd.DataFrame, pd.DataFrame]:
     """Diagnostic map (reads both contexts' microdata — the answer key, not firewalled)."""
@@ -63,9 +78,7 @@ def run_layer2(pair, *, seeds: int, n: int, bootstrap_B: int) -> pd.DataFrame:
     def _score_many(builder):
         recs = [nb.score(builder(s), pair.target_dataset, ref, types,
                          seed=1000 + s, bootstrap_B=bootstrap_B) for s in range(1, seeds + 1)]
-        df = pd.DataFrame(recs)
-        return {f"{c}": float(df[c].mean()) for c in df.columns if c.startswith(("T", "overall"))
-                and df[c].notna().any()}
+        return mean_scores(pd.DataFrame(recs))
 
     configs = {
         "B0_carryover": lambda s: transfer_build(a, a, cols, n, s, "carryover"),
