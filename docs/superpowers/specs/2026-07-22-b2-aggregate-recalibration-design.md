@@ -230,3 +230,84 @@ All deterministic (seeded), LLM-free.
 
 Outputs extend `results/transfer_map/baselines_<pair>.csv` with a `B2` row per pair.
 ```
+
+---
+
+# Amendment 1 — Step A moves onto B1's shared-latent vehicle (2026-07-22)
+
+**Status:** supersedes the "Step A — copula strengths" section above. Written after the
+first full-protocol run + diagnosis; the original Step A is retired.
+
+## Why
+
+The first `cps_1970_1980` run at the publication protocol (3 seeds, n=3000, B=200) gave:
+
+| config | T1 | T2 | T3 | overall |
+|---|---:|---:|---:|---:|
+| B0 carryover | 0.401 | 0.619 | 0.656 | 0.558 |
+| B1 marginal-swap | 0.810 | 0.554 | 0.573 | **0.646** |
+| B2 (original Step A) | **0.859** | 0.503 | 0.442 | 0.601 |
+| within-B floor | 0.856 | 0.378 | 0.004 | 0.413 |
+| within-B ceiling | 0.849 | 0.840 | 0.761 | 0.816 |
+
+B2 lost to B1 on T2/T3. Diagnosis (`.superpowers/sdd/diag/b2-diagnosis.md`) attributed
+this to the **vehicle, not the hypothesis**:
+
+- On the ~95% of variable pairs Step A's threshold never edits, mean association error vs
+  the target pool was **0.067 (B1) vs 0.114 (B2)** — 70% worse on pairs meant to be left
+  untouched. The loss is in the fit→redraw round trip itself.
+- It concentrates in **nominal** pairs, where the heuristic category-ordering + Pearson-on-
+  normal-scores approximation is weakest: `age × marital_status` target 0.61, B1 0.36,
+  B2 0.17; `gender × occupation` target 0.48, B1 0.35, B2 0.11.
+- **Step B was validated**: it lands its R² targets almost exactly (income target 0.187,
+  achieved 0.186) and is a genuine repair (+0.195 T3, +0.033 T2). It is retained unchanged.
+
+So the spec's hypothesis was **untested, not disproven**. The explicit Gaussian-copula
+construction is retired as B2's vehicle.
+
+## The amended Step A
+
+Build on `transfer_build`'s shared-latent construction, which preserves nominal structure
+(it co-samples every column from the same source row via a shared `base` index).
+
+**Recalibration knob.** Give each column `c` a coherence rate `alpha_c ∈ [0, 1]`: a
+Bernoulli(`alpha_c`) fraction of output rows keep the shared `base` index, the rest draw an
+independent source row — the same mechanism `conditional_variance.sample_variance_repaired`
+already uses per outcome. Two columns then land on the same source row with probability
+`alpha_c · alpha_d`, so pairwise association scales as:
+
+```
+assoc_out(c, d)  ≈  alpha_c · alpha_d · assoc_src(c, d)
+```
+
+**Fitting.** This is `V` knobs against `V(V-1)/2` pair targets — over-determined, so fit in
+a least-squares sense: choose `alpha` minimizing
+`Σ_pairs ( alpha_c · alpha_d · a_src(c,d) − a_tgt(c,d) )²` over pairs whose method matches
+and whose association is finite, by coordinate descent on `alpha` (each `alpha_c` update is
+a bounded 1-D least-squares solve; clip to `[0, 1]`). Initialize at `alpha_c = 1`.
+
+**Accepted limitation (write it in the report).** Because `alpha ≤ 1`, amended Step A can
+only **weaken** dependence toward the target; it cannot manufacture dependence the source
+lacks. Pairs whose target association exceeds the source's are left at the source value and
+counted in a `n_pairs_understrength` diagnostic. This narrows the bidirectional capability
+of the original design — Step B remains bidirectional (it has the conditional-mean pole),
+Step A no longer is. `alpha_c = 1` for every column must reproduce B1 exactly; that is the
+key regression test.
+
+## Second defect found by the diagnosis
+
+`age_first_childbirth` carries a `"No Child"` sentinel string, so `_is_numeric` rejects the
+column and Step B silently skips it — only **2 of 8** outcomes ever get R² repair. Sentinel
+handling must be addressed so numeric outcomes with categorical sentinels are recognized
+(and the sentinel preserved as missing-like rather than coerced), or the skip must at least
+be logged loudly rather than silently. This is the same class of variable-semantics trap
+documented in `docs/report/` for `child_number`.
+
+## What is retired vs retained
+
+- **Retired:** `gaussian_copula.fit_latent_correlation` / `draw_copula` / `copula_to_frame`
+  as B2's generation path, and `recalibrate.recalibrate_matrix` (the matrix-edit Step A).
+  Keep the modules and their tests — `nearest_correlation` and the copula primitives remain
+  correct and may serve later work — but they leave B2's pipeline.
+- **Retained unchanged:** `recalibrate.bidirectional_r2_blend` (Step B), the firewalled
+  `target_aggregates` reader, the widened scored-pair registry, and the Layer-2 ladder wiring.
