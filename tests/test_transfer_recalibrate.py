@@ -352,6 +352,42 @@ def test_blend_preserves_sentinel_and_missing_together_byte_identical():
     assert df.loc[preserved_mask, "y"].equals(out.loc[preserved_mask, "y"])
 
 
+def test_blend_repairs_stringdtype_outcome_with_sentinel_no_typeerror():
+    # Real crash: `_marginal_map`'s categorical branch (which `transfer_build_b2`
+    # takes for a sentinel-bearing column because `_is_numeric` rejects it) returns
+    # an object array of stringified values; under pandas 3's default
+    # `future.infer_string=True`, constructing a DataFrame from that array yields a
+    # `str`/`StringDtype`-backed column -- not plain `object`. The prior fix
+    # (`out_col = orig.copy(); out_col.iloc[obs_idx] = best[obs_idx]`) assumed
+    # `orig`'s dtype could already hold floats, which is true for `object` but NOT
+    # for `str`/`StringDtype`: pandas 3 raises `TypeError: Invalid value for dtype
+    # 'str'` on that write-back. Reproduce with a `y` column that arrives as
+    # StringDtype (numeric-looking strings + a "No Child" sentinel), exactly as
+    # `_marginal_map` would emit it.
+    n = 3000
+    rng_data = np.random.default_rng(21)
+    x = rng_data.normal(0, 1, n)
+    y_num = 2.0 * x + rng_data.normal(0, 1, n)          # strong R^2 (~0.8)
+    sentinel_mask = rng_data.random(n) < 0.30
+    y_str = np.where(sentinel_mask, "No Child", y_num.astype(str))
+    df = pd.DataFrame({"x": x, "y": y_str})
+    assert isinstance(df["y"].dtype, pd.StringDtype)    # confirms the StringDtype repro
+    assert not _generate_is_numeric(df["y"])            # confirms the >10% sentinel gate
+
+    own = covariate_r2(df, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    out = bidirectional_r2_blend(df, ["y"], ["x"], {"y": 0.2},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    new = covariate_r2(out, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    # completes without raising, and covariate-R^2 actually moved toward the target
+    assert own > 0.5 and new < own and abs(new - 0.2) < 0.12
+
+    # every sentinel value survives at exactly its original position, unchanged
+    assert int(sentinel_mask.sum()) > 0
+    assert (out.loc[sentinel_mask, "y"] == "No Child").all()
+    assert (out.loc[~sentinel_mask, "y"] != "No Child").all()
+
+
 def test_blend_skips_genuinely_categorical_outcome_unchanged():
     # A genuinely categorical outcome (too few coercible rows) keeps being skipped,
     # even when a target IS supplied -- distinguishing this from the "target is

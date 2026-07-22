@@ -311,6 +311,18 @@ def bidirectional_r2_blend(frame: pd.DataFrame, outcomes: list[str],
         # + pre-existing NaN) comes from `orig.copy()` untouched -- same values, same
         # positions, same dtype -- never overwritten by the float-coerced `best`.
         out_col = orig.copy()
+        if not (pd.api.types.is_float_dtype(out_col.dtype)
+                or pd.api.types.is_integer_dtype(out_col.dtype)):
+            # `orig`'s dtype (string/StringDtype/categorical -- what
+            # `_marginal_map`'s categorical branch produces once pandas 3's
+            # default string inference kicks in on frame construction) cannot
+            # hold the repaired float values. Object dtype can hold both the
+            # repaired floats and the untouched sentinel/NaN values side by
+            # side, so widen to object before writing back. Only positions in
+            # `obs_idx` are overwritten, so the preserved sentinel/NaN values
+            # are unaffected in value -- only the column's dtype widens,
+            # which is expected and correct for a genuinely mixed column.
+            out_col = out_col.astype(object)
         out_col.iloc[obs_idx] = best[obs_idx]
         frame[y] = out_col
         _logger.info(
