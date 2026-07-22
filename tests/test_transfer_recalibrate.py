@@ -290,3 +290,75 @@ def test_blend_constant_outcome_left_completely_unchanged():
                                  numeric_predictors=frozenset({"x"}),
                                  rng=np.random.default_rng(0))
     assert out["y"].equals(df["y"])
+
+
+# --- Task A1: numeric-with-sentinels outcomes must still be repaired ---
+
+from ssdataagent.transfer.generate import _is_numeric as _generate_is_numeric
+
+
+def test_blend_repairs_numeric_outcome_with_categorical_sentinel():
+    # Real bug: age_first_childbirth-style column is numeric except for a "No Child"
+    # sentinel in ~30% of rows -- _is_numeric rejects it (<90% coercible) and Step B
+    # silently skipped it. It must still be repaired on the numeric subpopulation,
+    # with every sentinel value preserved unchanged at its original position.
+    n = 3000
+    rng_data = np.random.default_rng(11)
+    x = rng_data.normal(0, 1, n)
+    y_num = 2.0 * x + rng_data.normal(0, 1, n)          # strong R^2 (~0.8)
+    df = pd.DataFrame({"x": x, "y": y_num.astype(object)})
+    sentinel_mask = rng_data.random(n) < 0.30
+    df.loc[sentinel_mask, "y"] = "No Child"
+    assert not _generate_is_numeric(df["y"])   # confirms this hits the >10% gate
+
+    own = covariate_r2(df, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    out = bidirectional_r2_blend(df, ["y"], ["x"], {"y": 0.2},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    new = covariate_r2(out, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    # actually repaired, not silently skipped
+    assert own > 0.5 and new < own and abs(new - 0.2) < 0.12
+
+    # every sentinel value survives at exactly its original position, unchanged
+    assert (out.loc[sentinel_mask, "y"] == "No Child").all()
+    assert int(sentinel_mask.sum()) > 0
+    assert (out.loc[~sentinel_mask, "y"] != "No Child").all()
+
+
+def test_blend_preserves_sentinel_and_missing_together_byte_identical():
+    # The preserved set (sentinels + pre-existing NaN together) must come back
+    # byte-identical -- same values, same positions, same dtype.
+    n = 2000
+    rng_data = np.random.default_rng(12)
+    x = rng_data.normal(0, 1, n)
+    y_num = 2.0 * x + rng_data.normal(0, 1, n)
+    df = pd.DataFrame({"x": x, "y": y_num.astype(object)})
+    sentinel_mask = rng_data.random(n) < 0.20
+    df.loc[sentinel_mask, "y"] = "No Child"
+    nan_mask = (~sentinel_mask) & (rng_data.random(n) < 0.15)
+    df.loc[nan_mask, "y"] = np.nan
+    preserved_mask = sentinel_mask | nan_mask
+    assert int(preserved_mask.sum()) > 0
+
+    own = covariate_r2(df, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    out = bidirectional_r2_blend(df, ["y"], ["x"], {"y": 0.2},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    new = covariate_r2(out, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    # the column must actually get repaired here (not silently skipped -- a full
+    # skip would trivially satisfy "preserved subset unchanged" without ever
+    # exercising the write-back path this test is really checking)
+    assert abs(new - own) > 0.05
+    assert df.loc[preserved_mask, "y"].equals(out.loc[preserved_mask, "y"])
+
+
+def test_blend_skips_genuinely_categorical_outcome_unchanged():
+    # A genuinely categorical outcome (too few coercible rows) keeps being skipped,
+    # even when a target IS supplied -- distinguishing this from the "target is
+    # unknown" skip path already covered elsewhere.
+    df = _linear(500, 13, beta=1.0)
+    df["cat2"] = np.where(df["x"] > 0, "alpha", "beta")
+    out = bidirectional_r2_blend(df, ["cat2"], ["x"], {"cat2": 0.3},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    assert out["cat2"].equals(df["cat2"])

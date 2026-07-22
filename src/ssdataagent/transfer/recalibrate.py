@@ -1,6 +1,8 @@
 # src/ssdataagent/transfer/recalibrate.py
 from __future__ import annotations
 
+import logging
+
 import numpy as np
 import pandas as pd
 
@@ -8,7 +10,13 @@ from ssdataagent.data.conditional_variance import covariate_r2
 from ssdataagent.transfer.gaussian_copula import nearest_correlation
 from ssdataagent.transfer.generate import _is_numeric, _marginal_map
 
+_logger = logging.getLogger(__name__)
+
 _EPS = 1e-9
+# Matches covariate_r2's own min_rows default: the bar for a "usable" numeric
+# subpopulation. A column with fewer coercible rows than this is genuinely
+# categorical, not numeric-with-sentinels, and stays skipped.
+_MIN_COERCIBLE_ROWS = 20
 
 
 def tau_to_r(tau: float) -> float:
@@ -207,13 +215,50 @@ def bidirectional_r2_blend(frame: pd.DataFrame, outcomes: list[str],
                            rng: np.random.Generator, iters: int = 16) -> pd.DataFrame:
     """Nudge each numeric outcome's covariate-R^2 onto its target by blending toward an
     independent pole (weaken) or the conditional-mean pole (strengthen), preserving the
-    outcome's marginal via inverse-CDF back onto its own column."""
+    outcome's marginal via inverse-CDF back onto its own column.
+
+    A real survey column can be numeric except for a categorical sentinel embedded in
+    it (e.g. ``age_first_childbirth`` carrying the string "No Child" for respondents
+    who never had one). ``_is_numeric`` rejects such a column once the non-coercible
+    fraction passes 10%, which used to mean Step B silently skipped it entirely. That
+    sentinel is not missing data and not a measurement -- it's a distinct category
+    that must be preserved, not coerced and not dropped. So instead of gating on
+    ``_is_numeric`` alone, every outcome is coerced with ``pd.to_numeric(errors=
+    "coerce")``; rows that fail to coerce (the sentinels) plus rows already missing
+    form a **preserved set**. If the coercible subpopulation clears
+    ``_MIN_COERCIBLE_ROWS`` (mirroring ``covariate_r2``'s own ``min_rows`` bar), the
+    blend runs on that subpopulation exactly as it would for a fully numeric column,
+    and the preserved set is written back completely unchanged -- same values, same
+    positions, same dtype -- never touched by the blend. A column with too few
+    coercible rows is genuinely categorical and keeps being skipped as before.
+    """
     frame = frame.copy()
     num_pred = frozenset(numeric_predictors)
     preds = [p for p in predictors if p in frame.columns]
     for y in outcomes:
-        if y not in frame.columns or not _is_numeric(frame[y]):
+        if y not in frame.columns:
+            _logger.info("bidirectional_r2_blend: skip %r (not a column in frame)", y)
             continue
+        orig = frame[y]
+        # Restrict the whole blend (rank, pole, threshold draw, remap) to the rows
+        # where the outcome coerces to a number, so sentinel rows and originally-
+        # missing rows are never touched: they must come back byte-identical, not
+        # filled from the pole or pinned to the marginal's minimum by an
+        # undefined-index cast.
+        full = pd.to_numeric(orig, errors="coerce").to_numpy(dtype=float)
+        obs_idx = np.flatnonzero(~np.isnan(full))
+        is_num = _is_numeric(orig)
+        if len(obs_idx) < _MIN_COERCIBLE_ROWS:
+            _logger.info(
+                "bidirectional_r2_blend: skip %r (categorical -- only %d/%d rows "
+                "numeric-coercible, need >= %d)",
+                y, len(obs_idx), len(orig), _MIN_COERCIBLE_ROWS)
+            continue
+        if not is_num:
+            _logger.info(
+                "bidirectional_r2_blend: %r is numeric-with-sentinels -- repairing "
+                "on %d/%d coercible rows, preserving %d sentinel/missing rows "
+                "unchanged", y, len(obs_idx), len(orig), len(orig) - len(obs_idx))
         target = r2_target.get(y)
         own = covariate_r2(frame, y, preds, numeric_predictors=num_pred)
         # covariate_r2 returns nan (not None) for a constant-valued outcome (zero
@@ -225,14 +270,9 @@ def bidirectional_r2_blend(frame: pd.DataFrame, outcomes: list[str],
         # Guard against non-finite `own`/`target` explicitly so it never gets that far.
         if (target is None or own is None or not np.isfinite(own)
                 or not np.isfinite(target) or own <= _EPS or abs(target - own) < 1e-3):
-            continue
-        # Restrict the whole blend (rank, pole, threshold draw, remap) to the rows
-        # where the outcome is observed, so originally-missing rows are never touched:
-        # they must come back exactly as NaN, not filled from the pole or pinned to
-        # the marginal's minimum by an undefined-index cast.
-        full = pd.to_numeric(frame[y], errors="coerce").to_numpy(dtype=float)
-        obs_idx = np.flatnonzero(~np.isnan(full))
-        if len(obs_idx) == 0:
+            _logger.info(
+                "bidirectional_r2_blend: skip %r (own=%r target=%r -- unknown, "
+                "degenerate, or already at target)", y, own, target)
             continue
         yv = full[obs_idx]
         u_cur = _rank_pct(yv)
@@ -240,12 +280,15 @@ def bidirectional_r2_blend(frame: pd.DataFrame, outcomes: list[str],
         if strengthen:
             yhat = _ols_prediction(frame, y, preds, num_pred)
             if yhat is None:
+                _logger.info(
+                    "bidirectional_r2_blend: skip %r (no valid conditional-mean "
+                    "pole for strengthening)", y)
                 continue
             pole = _rank_pct(yhat[obs_idx])
         else:
             pole = _rank_pct(rng.permutation(len(yv)).astype(float))
         r = rng.random(len(yv))                         # fixed thresholds -> monotone in g
-        marg = frame[y]
+        marg = orig
         lo, hi, best = 0.0, 1.0, full.copy()
         for _ in range(iters):
             g = (lo + hi) / 2.0
@@ -264,5 +307,13 @@ def bidirectional_r2_blend(frame: pd.DataFrame, outcomes: list[str],
                 lo = g
             else:
                 hi = g
-        frame[y] = best
+        # Write back only the coercible subpopulation; the preserved set (sentinels
+        # + pre-existing NaN) comes from `orig.copy()` untouched -- same values, same
+        # positions, same dtype -- never overwritten by the float-coerced `best`.
+        out_col = orig.copy()
+        out_col.iloc[obs_idx] = best[obs_idx]
+        frame[y] = out_col
+        _logger.info(
+            "bidirectional_r2_blend: repaired %r (own=%.4f -> target=%.4f)",
+            y, own, target)
     return frame
