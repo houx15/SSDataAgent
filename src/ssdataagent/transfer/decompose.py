@@ -11,7 +11,11 @@ _EPS = 1e-9
 
 
 def _is_num(s: pd.Series) -> bool:
-    return pd.to_numeric(s, errors="coerce").notna().mean() > 0.9
+    """Numeric iff the NON-MISSING values are (almost all) numeric. Drop NaN FIRST so
+    item non-response never flips a numeric column to categorical — a column can be 40%
+    missing (income, wealth) and still be numeric. Mirrors nodonor_bracket._is_numeric."""
+    s = s.dropna()
+    return bool(len(s)) and pd.to_numeric(s, errors="coerce").notna().mean() > 0.9
 
 
 def _edges(a_col: pd.Series, b_col: pd.Series, bins: int) -> np.ndarray:
@@ -75,6 +79,11 @@ def kob_decompose(a: pd.DataFrame, b: pd.DataFrame, response: str,
     composition_share = (gap_raw - gap_residual) / gap_raw, where gap_residual is the gap
     remaining after raking A's covariates to B's. Numeric response uses standardized
     1-Wasserstein; categorical uses total-variation distance.
+
+    LIMITATION: raking matches covariate *marginals* (per-covariate IPF), not the joint. A
+    composition difference that lives purely in covariate interactions (same marginals,
+    different joint) is invisible here and is attributed to "mechanism". This is inherent to
+    marginal reweighting, not a bug; the copula-stability map is the complementary probe.
     """
     num = _is_num(a[response]) and _is_num(b[response])
     w = raking_weights(a, b, covariates)
@@ -119,6 +128,11 @@ def oaxaca_blinder(a: pd.DataFrame, b: pd.DataFrame, response: str,
     Builds a SHARED dummy design on A∪B so coefficient vectors are aligned, fits OLS
     separately on each, and splits the mean gap into endowment (composition) and
     coefficient (mechanism) terms with A as the reference.
+
+    CAVEAT: composition_share_ob = |endowment| / (|endowment| + |coefficient|) is a
+    magnitude ratio; when the two terms have opposite signs and nearly cancel (mean gap ~ 0)
+    the ratio can read as strongly one-sided even though little is being explained. Read it
+    alongside the raw endowment/coefficient terms, not alone.
     """
     both = pd.concat([a[covariates], b[covariates]], ignore_index=True)
     design, ok = _dummy_design(both, covariates, numeric_predictors)

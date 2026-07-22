@@ -50,6 +50,40 @@ def test_oaxaca_agrees_on_linear_case():
     assert ob["composition_share_ob"] > 0.7
 
 
+def test_numeric_detection_survives_missingness():
+    # A numeric response/covariate with 30% item non-response must STILL be treated as
+    # numeric (Wasserstein branch), not flipped to categorical. Regression for the
+    # _is_num completeness-threshold bug: pure composition shift with missing y.
+    a = _mk(3000, 10, xmean=0.0, beta=1.0)
+    b = _mk(3000, 11, xmean=3.0, beta=1.0)
+    rng = np.random.default_rng(99)
+    a.loc[rng.random(len(a)) < 0.3, "y"] = np.nan     # 30% missing outcome
+    b.loc[rng.random(len(b)) < 0.3, "y"] = np.nan
+    d = kob_decompose(a, b, "y", ["x"])
+    assert d["method"] == "dfl"
+    assert d["composition_share"] > 0.6               # still recovered as composition
+    assert d["label"] == "composition-dominated"
+
+
+def test_raking_survives_covariate_missingness():
+    a = _mk(3000, 12, xmean=0.0, beta=1.0)
+    b = _mk(3000, 13, xmean=3.0, beta=1.0)
+    rng = np.random.default_rng(7)
+    a.loc[rng.random(len(a)) < 0.25, "x"] = np.nan     # 25% missing covariate
+    w = raking_weights(a, b, ["x"], bins=8)
+    wm = np.average(pd.to_numeric(a["x"]).fillna(pd.to_numeric(a["x"]).mean()), weights=w)
+    # raking still moves A's weighted x toward B's ~3 (not stuck near A's ~0)
+    assert wm > 1.5
+
+
+def test_oaxaca_mechanism_shifted():
+    # mirror of the composition case: same X, flipped beta -> coefficient term dominates
+    a = _mk(4000, 14, xmean=0.0, beta=1.0)
+    b = _mk(4000, 14, xmean=0.0, beta=-1.0)   # same seed => same X
+    ob = oaxaca_blinder(a, b, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    assert ob["composition_share_ob"] < 0.3
+
+
 def test_aligned_returns_nan():
     a = _mk(2000, 8, xmean=0.0, beta=1.0)
     b = _mk(2000, 9, xmean=0.0, beta=1.0)   # essentially same distribution
