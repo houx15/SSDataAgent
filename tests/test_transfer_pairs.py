@@ -17,8 +17,13 @@ def test_pairs_registry_shape():
         "cps_1970_2000", "cps_1980_2000", "cps_1990_2000",
     ]
     scored = {p.id for p in PAIRS if p.scored}
-    assert scored == {"gss_1994_2018", "cps_1970_1980", "cps_1980_1990",
-                      "cps_1990_2000", "cps_1970_2000"}
+    # Only benchmark-backed targets. Layer-2 resolves its reference from target_dataset
+    # (one fixed sample per dataset: cps -> the 1980 wave, gss -> 2018), so a pair may be
+    # scored ONLY if its target_csv is that very wave. Widening this silently re-scores
+    # other pairs against the same reference and yields duplicate rows.
+    assert scored == {"gss_1994_2018", "cps_1970_1980"}
+    assert {p.target_csv.name for p in PAIRS if p.scored} == {"cps-asec1980.csv",
+                                                              "gss2018.csv"}
     for p in PAIRS:
         assert isinstance(p, TransferPair)
         assert (p.target_dataset is not None) == p.scored

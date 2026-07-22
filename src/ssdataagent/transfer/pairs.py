@@ -28,7 +28,16 @@ class TransferPair:
     source_csv: Path
     target_csv: Path
     schema_name: str        # "gss" | "cps": drives X/Y split + scoring config
-    scored: bool             # True only for benchmark-backed targets
+    scored: bool             # True only for benchmark-backed targets -- see NOTE below
+    #: NOTE (2026-07-23): Layer-2 scoring resolves its target pool + reference from
+    #: ``target_dataset`` (a DATASET name -> one fixed reference sample), NOT from
+    #: ``target_csv``. SSDataBench defines exactly one reference per dataset
+    #: (samples_cps.csv == the 1980 wave; sampled_gss.csv == 2018), so only a pair whose
+    #: target_csv IS that wave can be scored honestly. Marking any other cps pair scored
+    #: silently re-scores it against the 1980 reference, producing duplicate/mislabeled
+    #: rows (cps_1970_2000 came out byte-identical to cps_1970_1980). ``target_csv`` is
+    #: used only for the crosswalk. Do not widen ``scored`` without adding a real
+    #: per-wave reference + config.
     target_dataset: str | None  # ds name passed to score() when scored
 
 
@@ -44,10 +53,10 @@ PAIRS: list[TransferPair] = [
     TransferPair("gss_1994_2018", _gss("gss1994.csv"), _gss("gss2018.csv"), "gss", True, "gss"),
     TransferPair("cps_1970_1980", _cps("cps-asec1970.csv"), _cps("cps-asec1980.csv"), "cps", True, "cps"),
     TransferPair("cps_1970_1990", _cps("cps-asec1970.csv"), _cps("cps-asec1990.csv"), "cps", False, None),
-    TransferPair("cps_1980_1990", _cps("cps-asec1980.csv"), _cps("cps-asec1990.csv"), "cps", True, "cps"),
-    TransferPair("cps_1970_2000", _cps("cps-asec1970.csv"), _cps("cps-asec2000.csv"), "cps", True, "cps"),
+    TransferPair("cps_1980_1990", _cps("cps-asec1980.csv"), _cps("cps-asec1990.csv"), "cps", False, None),
+    TransferPair("cps_1970_2000", _cps("cps-asec1970.csv"), _cps("cps-asec2000.csv"), "cps", False, None),
     TransferPair("cps_1980_2000", _cps("cps-asec1980.csv"), _cps("cps-asec2000.csv"), "cps", False, None),
-    TransferPair("cps_1990_2000", _cps("cps-asec1990.csv"), _cps("cps-asec2000.csv"), "cps", True, "cps"),
+    TransferPair("cps_1990_2000", _cps("cps-asec1990.csv"), _cps("cps-asec2000.csv"), "cps", False, None),
 ]
 
 
