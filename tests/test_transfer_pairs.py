@@ -1,6 +1,8 @@
 # tests/test_transfer_pairs.py
 from __future__ import annotations
 
+import logging
+
 import pandas as pd
 
 from ssdataagent.transfer.pairs import (
@@ -34,6 +36,18 @@ def test_crosswalk_keeps_common_logs_dropped():
     # birth_year is a wave time-identity (birth_year = year - age), disjoint support
     # across waves -> non-transferable, dropped even though present in both frames.
     assert "birth_year" not in cols
+
+
+def test_crosswalk_logs_every_drop_reason(caplog):
+    src = pd.DataFrame({"age": [1], "gender": [1], "race": [1], "education": [1],
+                        "income": [1], "birth_year": [1]})
+    tgt = pd.DataFrame({"age": [1], "gender": [1], "race": [1], "education": [1],
+                        "birth_year": [1]})  # income only in source
+    with caplog.at_level(logging.INFO, logger="ssdataagent.transfer.pairs"):
+        crosswalk_columns("cps", src, tgt)
+    msg = caplog.text
+    assert "birth_year" in msg          # the non-transferable identity drop is logged
+    assert "income" in msg              # the not-in-both drop is logged
 
 
 def test_covariates_outcomes_split():

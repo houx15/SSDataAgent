@@ -55,13 +55,16 @@ def crosswalk_columns(schema_name: str, source_df: pd.DataFrame,
                       target_df: pd.DataFrame) -> list[str]:
     """Background+target vars present as columns in BOTH frames, ordered by schema."""
     schema = load_schema(schema_name)
-    candidate = [v for v in list(schema.background_variables) + list(schema.target_variables)
-                 if v not in NON_TRANSFERABLE]
-    common = [v for v in candidate
-              if v in source_df.columns and v in target_df.columns]
-    dropped = [v for v in candidate if v not in common]
-    log.info("crosswalk[%s]: %d common (dropped %d: %s)",
-             schema_name, len(common), len(dropped), dropped)
+    candidate = list(schema.background_variables) + list(schema.target_variables)
+    common = [v for v in candidate if v not in NON_TRANSFERABLE
+              and v in source_df.columns and v in target_df.columns]
+    dropped_identity = [v for v in candidate if v in NON_TRANSFERABLE]
+    dropped_missing = [v for v in candidate
+                       if v not in NON_TRANSFERABLE and v not in common]
+    log.info("crosswalk[%s]: %d common; dropped %d not-in-both %s; "
+             "dropped %d non-transferable identity %s",
+             schema_name, len(common), len(dropped_missing), dropped_missing,
+             len(dropped_identity), dropped_identity)
     return common
 
 
