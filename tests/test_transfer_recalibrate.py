@@ -182,3 +182,33 @@ def test_blend_leaves_covariate_columns_untouched():
                                  rng=np.random.default_rng(0))
     assert out["x"].equals(df["x"]) and out["age"].equals(df["age"])
     assert not out["y"].equals(df["y"])             # the outcome DID change
+
+
+def test_blend_preserves_outcome_missingness_exactly():
+    # Finding 1: originally-missing outcome rows must come back missing -- same
+    # positions, same count -- never filled from the pole and never silently pinned
+    # to the marginal's minimum value by an undefined-index cast.
+    df = _linear(2000, 5, beta=2.0)                  # strong R^2 (~0.8) -> weaken path
+    miss_mask = np.random.default_rng(42).random(len(df)) < 0.2
+    df.loc[miss_mask, "y"] = np.nan
+    own = covariate_r2(df, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    out = bidirectional_r2_blend(df, ["y"], ["x"], {"y": 0.2},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    out_missing = out["y"].isna()
+    assert int(out_missing.sum()) == int(miss_mask.sum())
+    assert (out_missing.to_numpy() == miss_mask).all()
+    new = covariate_r2(out, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    assert new < own                                 # non-missing values still moved toward target
+
+
+def test_blend_constant_outcome_left_completely_unchanged():
+    # Finding 2: covariate_r2 returns nan (not None) for a constant-valued outcome, so
+    # a guard that only checks `own <= _EPS` never fires on nan and the column falls
+    # through into the blend, flipping its dtype even though the values can't move.
+    df = _linear(300, 6, beta=1.0)
+    df["y"] = 5.0
+    out = bidirectional_r2_blend(df, ["y"], ["x"], {"y": 0.3},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    assert out["y"].equals(df["y"])

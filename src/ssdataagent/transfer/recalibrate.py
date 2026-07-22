@@ -94,7 +94,17 @@ def _rank_pct(x: np.ndarray) -> np.ndarray:
 
 def _ols_prediction(frame: pd.DataFrame, y: str, predictors: list[str],
                     num_pred: frozenset[str]) -> np.ndarray | None:
-    """Fitted E[y|X] with a one-hot / numeric design (mirrors covariate_r2's design)."""
+    """Fitted E[y|X] over a one-hot / numeric design of its own -- NOT the same design
+    as ``conditional_variance._dummy_design``: this mean-imputes numeric predictor NaNs
+    and one-hot encodes with ``dummy_na=True`` (keeping every row), whereas
+    ``_dummy_design`` drops any row with a missing predictor and uses ``dummy_na=False``.
+
+    That's fine here: this only orders the "strengthen" pole (the fitted E[y|X] used to
+    rank rows before blending), it does not measure R^2 itself. The bisection in
+    ``bidirectional_r2_blend`` re-measures the true ``covariate_r2`` (via the real
+    ``_dummy_design``) every iteration and is self-correcting, so a slightly different
+    design here only perturbs the pole's row ordering, never the target R^2 achieved.
+    """
     yv = pd.to_numeric(frame[y], errors="coerce")
     blocks = []
     for p in predictors:
@@ -130,31 +140,49 @@ def bidirectional_r2_blend(frame: pd.DataFrame, outcomes: list[str],
             continue
         target = r2_target.get(y)
         own = covariate_r2(frame, y, preds, numeric_predictors=num_pred)
-        if target is None or own is None or own <= _EPS or abs(target - own) < 1e-3:
+        # covariate_r2 returns nan (not None) for a constant-valued outcome (zero
+        # variance -> sst == 0). A bare `own <= _EPS` guard never fires on nan (every
+        # nan comparison is False), so a constant column would fall through into the
+        # blend below; the marginal is degenerate so the VALUES wouldn't move, but the
+        # dtype would still flip (e.g. float64 -> object) via the object-typed
+        # `_marginal_map` output, breaking the "left completely unchanged" contract.
+        # Guard against non-finite `own`/`target` explicitly so it never gets that far.
+        if (target is None or own is None or not np.isfinite(own)
+                or not np.isfinite(target) or own <= _EPS or abs(target - own) < 1e-3):
             continue
-        yv = pd.to_numeric(frame[y], errors="coerce").to_numpy()
+        # Restrict the whole blend (rank, pole, threshold draw, remap) to the rows
+        # where the outcome is observed, so originally-missing rows are never touched:
+        # they must come back exactly as NaN, not filled from the pole or pinned to
+        # the marginal's minimum by an undefined-index cast.
+        full = pd.to_numeric(frame[y], errors="coerce").to_numpy(dtype=float)
+        obs_idx = np.flatnonzero(~np.isnan(full))
+        if len(obs_idx) == 0:
+            continue
+        yv = full[obs_idx]
         u_cur = _rank_pct(yv)
         strengthen = target > own
         if strengthen:
             yhat = _ols_prediction(frame, y, preds, num_pred)
             if yhat is None:
                 continue
-            pole = _rank_pct(yhat)
+            pole = _rank_pct(yhat[obs_idx])
         else:
             pole = _rank_pct(rng.permutation(len(yv)).astype(float))
         r = rng.random(len(yv))                         # fixed thresholds -> monotone in g
         marg = frame[y]
-        lo, hi, best = 0.0, 1.0, frame[y].to_numpy()
+        lo, hi, best = 0.0, 1.0, full.copy()
         for _ in range(iters):
             g = (lo + hi) / 2.0
             u = np.where(r < g, pole, u_cur)
-            remapped = _marginal_map(marg, np.clip(u, 1e-6, 1 - 1e-6), True)
+            remapped_obs = _marginal_map(marg, np.clip(u, 1e-6, 1 - 1e-6), True)
+            candidate = full.copy()
+            candidate[obs_idx] = remapped_obs
             tmp = frame.copy()
-            tmp[y] = remapped
+            tmp[y] = candidate
             r2 = covariate_r2(tmp, y, preds, numeric_predictors=num_pred)
             if r2 is None:
                 break
-            best = remapped
+            best = candidate
             need_more_pole = (r2 < target) if strengthen else (r2 > target)
             if need_more_pole:
                 lo = g
