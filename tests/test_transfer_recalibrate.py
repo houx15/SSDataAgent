@@ -121,3 +121,64 @@ def test_nonfinite_association_value_keeps_source():
                             {("x", "y"): "kendall"})
     assert abs(Rp[0, 1] - 0.4) < 1e-9
     assert np.isfinite(Rp[0, 1])
+
+
+# --- Task 3: Step B -- bidirectional R^2 blend ---
+
+import pandas as pd
+
+from ssdataagent.data.conditional_variance import covariate_r2
+from ssdataagent.transfer.recalibrate import bidirectional_r2_blend
+
+
+def _linear(n, seed, beta):
+    rng = np.random.default_rng(seed)
+    x = rng.normal(0, 1, n)
+    return pd.DataFrame({"x": x, "y": beta * x + rng.normal(0, 1, n)})
+
+
+def test_blend_weakens_toward_low_target():
+    df = _linear(4000, 1, beta=2.0)           # strong R^2 (~0.8)
+    own = covariate_r2(df, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    out = bidirectional_r2_blend(df, ["y"], ["x"], {"y": 0.2},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    new = covariate_r2(out, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    assert own > 0.5 and new < own and abs(new - 0.2) < 0.12
+    # marginal preserved: every output value is drawn from the source column's support
+    # (_marginal_map is a quantile map, not a permutation) and the mean is close
+    assert set(np.round(out["y"].astype(float), 6)).issubset(
+        set(np.round(df["y"].astype(float), 6)))
+    assert abs(pd.to_numeric(out["y"]).mean() - df["y"].mean()) < 0.15
+
+
+def test_blend_strengthens_toward_high_target():
+    df = _linear(4000, 2, beta=0.3)           # weak R^2 (~0.08)
+    own = covariate_r2(df, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    out = bidirectional_r2_blend(df, ["y"], ["x"], {"y": 0.4},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    new = covariate_r2(out, "y", ["x"], numeric_predictors=frozenset({"x"}))
+    assert new > own + 0.1                     # moved up toward the higher target
+
+
+def test_blend_skips_unknown_and_nonnumeric():
+    df = _linear(500, 3, beta=1.0)
+    df["cat"] = np.where(df["x"] > 0, "hi", "lo")
+    out = bidirectional_r2_blend(df, ["y", "cat"], ["x"], {"y": None},
+                                 numeric_predictors=frozenset({"x"}),
+                                 rng=np.random.default_rng(0))
+    # y target unknown -> unchanged; cat non-numeric -> unchanged
+    assert out["y"].equals(df["y"]) and out["cat"].equals(df["cat"])
+
+
+def test_blend_leaves_covariate_columns_untouched():
+    # The copula/R^2 seam: Step B only rewrites outcome columns, so covariate columns
+    # (and hence covariate-covariate associations Step A set) are unchanged by construction.
+    df = _linear(3000, 4, beta=2.0)
+    df["age"] = df["x"]                              # a covariate that is NOT an outcome
+    out = bidirectional_r2_blend(df, ["y"], ["x", "age"], {"y": 0.2},
+                                 numeric_predictors=frozenset({"x", "age"}),
+                                 rng=np.random.default_rng(0))
+    assert out["x"].equals(df["x"]) and out["age"].equals(df["age"])
+    assert not out["y"].equals(df["y"])             # the outcome DID change

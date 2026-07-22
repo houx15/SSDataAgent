@@ -2,8 +2,13 @@
 from __future__ import annotations
 
 import numpy as np
+import pandas as pd
 
+from ssdataagent.data.conditional_variance import covariate_r2
 from ssdataagent.transfer.gaussian_copula import nearest_correlation
+from ssdataagent.transfer.generate import _is_numeric, _marginal_map
+
+_EPS = 1e-9
 
 
 def tau_to_r(tau: float) -> float:
@@ -81,3 +86,79 @@ def recalibrate_matrix(R_source: np.ndarray, cols: list[str], a_src: dict,
         new = _target_entry(r_src, float(s), float(t), method)
         R[i, j] = R[j, i] = new
     return nearest_correlation(R)
+
+
+def _rank_pct(x: np.ndarray) -> np.ndarray:
+    return pd.Series(x).rank(pct=True, method="first").to_numpy()
+
+
+def _ols_prediction(frame: pd.DataFrame, y: str, predictors: list[str],
+                    num_pred: frozenset[str]) -> np.ndarray | None:
+    """Fitted E[y|X] with a one-hot / numeric design (mirrors covariate_r2's design)."""
+    yv = pd.to_numeric(frame[y], errors="coerce")
+    blocks = []
+    for p in predictors:
+        if p not in frame.columns:
+            continue
+        if p in num_pred or _is_numeric(frame[p]):
+            v = pd.to_numeric(frame[p], errors="coerce")
+            blocks.append(v.fillna(v.mean()).to_numpy().reshape(-1, 1))
+        else:
+            d = pd.get_dummies(frame[p].astype("string"), dummy_na=True, dtype=float)
+            blocks.append(d.to_numpy())
+    ok = yv.notna().to_numpy()
+    if not blocks or int(ok.sum()) < 20:
+        return None
+    design = np.column_stack(blocks)
+    X = np.column_stack([np.ones(len(frame)), design])
+    beta, *_ = np.linalg.lstsq(X[ok], yv.to_numpy()[ok], rcond=None)
+    return X @ beta
+
+
+def bidirectional_r2_blend(frame: pd.DataFrame, outcomes: list[str],
+                           predictors: list[str], r2_target: dict,
+                           *, numeric_predictors: frozenset[str],
+                           rng: np.random.Generator, iters: int = 16) -> pd.DataFrame:
+    """Nudge each numeric outcome's covariate-R^2 onto its target by blending toward an
+    independent pole (weaken) or the conditional-mean pole (strengthen), preserving the
+    outcome's marginal via inverse-CDF back onto its own column."""
+    frame = frame.copy()
+    num_pred = frozenset(numeric_predictors)
+    preds = [p for p in predictors if p in frame.columns]
+    for y in outcomes:
+        if y not in frame.columns or not _is_numeric(frame[y]):
+            continue
+        target = r2_target.get(y)
+        own = covariate_r2(frame, y, preds, numeric_predictors=num_pred)
+        if target is None or own is None or own <= _EPS or abs(target - own) < 1e-3:
+            continue
+        yv = pd.to_numeric(frame[y], errors="coerce").to_numpy()
+        u_cur = _rank_pct(yv)
+        strengthen = target > own
+        if strengthen:
+            yhat = _ols_prediction(frame, y, preds, num_pred)
+            if yhat is None:
+                continue
+            pole = _rank_pct(yhat)
+        else:
+            pole = _rank_pct(rng.permutation(len(yv)).astype(float))
+        r = rng.random(len(yv))                         # fixed thresholds -> monotone in g
+        marg = frame[y]
+        lo, hi, best = 0.0, 1.0, frame[y].to_numpy()
+        for _ in range(iters):
+            g = (lo + hi) / 2.0
+            u = np.where(r < g, pole, u_cur)
+            remapped = _marginal_map(marg, np.clip(u, 1e-6, 1 - 1e-6), True)
+            tmp = frame.copy()
+            tmp[y] = remapped
+            r2 = covariate_r2(tmp, y, preds, numeric_predictors=num_pred)
+            if r2 is None:
+                break
+            best = remapped
+            need_more_pole = (r2 < target) if strengthen else (r2 > target)
+            if need_more_pole:
+                lo = g
+            else:
+                hi = g
+        frame[y] = best
+    return frame
