@@ -85,3 +85,45 @@ def transfer_build(struct: pd.DataFrame, marg: pd.DataFrame, cols: list[str],
             em[mask] = np.nan
         out[c] = em
     return pd.DataFrame(out)
+
+
+def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
+                      cols: list[str], covariates: list[str], outcomes: list[str],
+                      n: int, seed: int) -> pd.DataFrame:
+    """B2 — source copula recalibrated to the target's published aggregates.
+
+    Step A: fit the source latent correlation, edit unstable pairs toward the target
+    pool's associations (bidirectional, sign preserved), draw onto target marginals.
+    Step B: nudge each numeric outcome's covariate-R^2 onto the target pool's R^2.
+    Reads from the target only low-order aggregates of ``target_pool`` (never its joint
+    or a test sample)."""
+    from ssdataagent.transfer.copula_stability import pairwise_associations
+    from ssdataagent.transfer.gaussian_copula import (
+        copula_to_frame, draw_copula, fit_latent_correlation,
+    )
+    from ssdataagent.transfer.recalibrate import (
+        bidirectional_r2_blend, recalibrate_matrix,
+    )
+    from ssdataagent.transfer.target_aggregates import target_aggregates
+
+    R_source, num = fit_latent_correlation(source_pool, cols)
+    src_assoc = pairwise_associations(source_pool, cols)
+    agg = target_aggregates(target_pool, cols, covariates, outcomes)
+
+    a_src = {k: v[0] for k, v in src_assoc.items()}
+    a_tgt = agg["pairwise_assoc"]
+    # a pair is comparable only if source and target used the same association method
+    methods = {
+        k: (src_assoc[k][1] if src_assoc[k][1] == agg["pairwise_method"].get(k)
+            else "undefined")
+        for k in src_assoc
+    }
+    R_prime = recalibrate_matrix(R_source, cols, a_src, a_tgt, methods)
+
+    u = draw_copula(R_prime, n, seed)
+    rng = np.random.default_rng(seed)
+    frame = copula_to_frame(u, target_pool, cols, num, rng)
+
+    num_pred = frozenset(c for c in covariates if num.get(c, False))
+    return bidirectional_r2_blend(frame, outcomes, covariates, agg["outcome_r2"],
+                                  numeric_predictors=num_pred, rng=rng)
