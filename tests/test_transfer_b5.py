@@ -41,3 +41,21 @@ def test_noise_points_from_cps_are_positive():
     assert len(pts) >= 2                    # >=2 cps pseudo-targets -> a real curve
     for ess, sq in pts:
         assert 0.0 < ess <= 1.0 and sq >= 0.0
+
+
+def test_cps_pseudo_targets_exclude_the_real_target():
+    import transfer_b5
+    target = REPO / "real_data" / "cps" / "cps-asec1980.csv"
+    pairs = transfer_b5._cps_pseudo_targets(target)
+    tgt = target.resolve()
+    assert pairs, "cps has pseudo-targets"
+    # the real target is never a pseudo-target and never a sibling
+    for w, sibs in pairs:
+        assert w.resolve() != tgt
+        assert all(s.resolve() != tgt for s in sibs)
+        assert sibs, "each pseudo-target keeps >=1 sibling after LOCO"
+    # excluding a real target strictly shrinks the sibling universe vs excluding nothing-in-cps
+    gss = REPO / "real_data" / "gss" / "gss2018.csv"
+    n_target = sum(len(s) for _, s in pairs)
+    n_gss = sum(len(s) for _, s in transfer_b5._cps_pseudo_targets(gss))
+    assert n_target < n_gss

@@ -98,20 +98,25 @@ def _cps_wave_csvs() -> list[Path]:
     return sorted((data_root() / "cps").glob("cps-asec*.csv"))
 
 
+def _cps_pseudo_targets(exclude_csv: Path) -> list[tuple[Path, list[Path]]]:
+    """(pseudo_target_wave, sibling_waves) for cps calibration, LOCO-clean: the real
+    target ``exclude_csv`` is dropped as a pseudo-target AND from every sibling pool,
+    so no calibration point ever reads the held-out target's microdata. Path-level
+    only (no I/O), so it is cheap to unit-test."""
+    exclude = exclude_csv.resolve()
+    waves = [w for w in _cps_wave_csvs() if w.resolve() != exclude]
+    return [(w, [s for s in waves if s.resolve() != w.resolve()]) for w in waves]
+
+
 def noise_points(exclude_csv: Path) -> list[tuple[float, float]]:
     """(ess, squared_error) calibration points from cps waves as pseudo-targets: for
     each cps wave w (!= exclude_csv), rake the OTHER cps waves to w's margins, and
     compare the transported R^2 against w's TRUE R^2 per shared outcome. cps always
     has >=2 remaining siblings, so every ESS point is well-supported. gss is never a
     pseudo-target (its only sibling is the real target -> would leak)."""
-    exclude = exclude_csv.resolve()
-    waves = _cps_wave_csvs()
     pts: list[tuple[float, float]] = []
-    for w in waves:
-        if w.resolve() == exclude:
-            continue
-        sibs = [s for s in waves if s.resolve() != w.resolve()]
-        if len(sibs) < 1:
+    for w, sibs in _cps_pseudo_targets(exclude_csv):
+        if not sibs:
             continue
         wpool = _load(w)
         sch = load_schema("cps")
