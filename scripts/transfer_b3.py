@@ -101,11 +101,19 @@ def run_b3(pair, *, seeds, n, bootstrap_B, people=480, batch=20, regenerate=Fals
         cfg_dir = restrict_config_dir(load_schema(ds).ssdatabench_sim_subdir,
                                       set(cols), types, Path(cfg_td))
         for name, alpha in alphas.items():
+            # default_alpha is the coherence rate for outcomes NOT in `alpha`. Categorical
+            # outcomes carry no covariate-R^2 target (covariate_r2 -> None), so the repair
+            # has no basis to weaken them -- they stay at full LLM coherence (1.0) in EVERY
+            # rung, and only numeric outcomes with an R^2 target get a fitted alpha < 1.
+            # (nodonor_fullmethod passes 0.5 here, which additionally half-shrinks every
+            # categorical outcome's dependence -- a heuristic we deliberately drop: it both
+            # tanks T2/T3 and confounds the clean "structure source" comparison against B2,
+            # which likewise recalibrates only numeric R^2. So B3 keeps default_alpha=1.0.)
             recs = []
             for s in range(1, seeds + 1):
                 sim = cv.sample_variance_repaired(raw, pool, cols, predictors, n,
                                                   np.random.default_rng(s),
-                                                  alpha=alpha, default_alpha=0.5)
+                                                  alpha=alpha, default_alpha=1.0)
                 recs.append(nb.score(sim, ds, ref, types, seed=1000 + s,
                                      bootstrap_B=bootstrap_B, config_dir=cfg_dir))
             row = {"pair": pair.id, "config": name, "guarantee": guarantee}
