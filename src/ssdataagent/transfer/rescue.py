@@ -75,7 +75,7 @@ class NoiseFit:
     per-sibling spread is measurable (cps pseudo-targets); extrapolated to gss."""
     a: float
     b: float
-    floor: float = 0.0
+    floor: float = 1e-4
 
     def sigma2(self, ess: float) -> float:
         return max(self.a + self.b / max(ess, 1e-6), self.floor)

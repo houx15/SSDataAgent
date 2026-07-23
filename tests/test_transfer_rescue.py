@@ -50,7 +50,7 @@ def test_predict_limits():
     prior = fit_prior(_rows([(e, 3.0, 1.0, 0.3) for e in (0.0, 0.5, 1.0)]))  # mu == 0.3
     feats = {"entropy": 0.5, "n_predictors": 3.0, "is_numeric": 1.0}
     # sigma^2 -> 0 (huge precision on retrieval): posterior == x_co
-    tiny = NoiseFit(a=1e-12, b=0.0)
+    tiny = NoiseFit(a=1e-12, b=0.0, floor=0.0)
     assert abs(predict_r2(0.9, ess=0.5, feats=feats, prior=prior, noise=tiny) - 0.9) < 1e-3
     # x_co is None: posterior == mu
     assert abs(predict_r2(None, ess=0.5, feats=feats, prior=prior, noise=tiny) - 0.3) < 1e-9
