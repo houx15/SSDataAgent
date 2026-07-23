@@ -59,3 +59,31 @@ def test_cps_pseudo_targets_exclude_the_real_target():
     n_target = sum(len(s) for _, s in pairs)
     n_gss = sum(len(s) for _, s in transfer_b5._cps_pseudo_targets(gss))
     assert n_target < n_gss
+
+
+def test_run_b5_smoke_scores_both_configs(tmp_path, monkeypatch):
+    import transfer_b5
+    from ssdataagent.transfer.pairs import PAIRS
+    monkeypatch.setattr(transfer_b5, "OUT", tmp_path)
+    pair = [p for p in PAIRS if p.id == "cps_1970_1980"][0]
+    df = transfer_b5.run_b5(pair, seeds=2, n=800, bootstrap_B=50)
+    assert list(df["config"]) == ["B5_learned", "B5_prior_only"]
+    for col in ("T1", "T2", "T3", "overall"):
+        assert df[col].notna().all()
+        assert (df[col] >= 0).all() and (df[col] <= 1).all()
+    assert "ess_ratio" in df.columns
+    assert (tmp_path / "b5_cps_1970_1980.csv").exists()
+
+
+def test_predict_target_r2_shapes(tmp_path):
+    import transfer_b5
+    from ssdataagent.transfer.pairs import PAIRS
+    pair = [p for p in PAIRS if p.id == "cps_1970_1980"][0]
+    learned, prior_only, ess, sib_rew = transfer_b5.predict_target_r2(pair)
+    assert set(learned) == set(prior_only)          # same outcome keys
+    assert len(sib_rew) > 0                          # structure vehicle materialized
+    assert learned                                   # non-empty
+    assert 0.0 < ess <= 1.0
+    for d in (learned, prior_only):
+        for v in d.values():
+            assert 0.0 <= v <= 1.0
