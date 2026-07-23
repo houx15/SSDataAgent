@@ -75,3 +75,35 @@ def test_b2_does_not_drop_target_nonnumeric_subpopulation():
     target = pd.DataFrame({"x": tgt_vals})
     out = transfer_build_b2(source, target, ["x"], [], [], n=n, seed=7)
     assert (out["x"] == "NA_CODE").any()
+
+
+def test_b2_r2_pool_none_is_byte_identical_to_default():
+    # The new keyword-only param must not perturb the default path at all.
+    rng = np.random.default_rng(3)
+    a = pd.DataFrame({"age": rng.integers(20, 70, 500),
+                      "education": rng.choice(["HS", "College"], 500),
+                      "income": rng.normal(50000, 15000, 500)})
+    b = pd.DataFrame({"age": rng.integers(20, 70, 500),
+                      "education": rng.choice(["HS", "College"], 500),
+                      "income": rng.normal(60000, 15000, 500)})
+    cols, cov, out_y = ["age", "education", "income"], ["age", "education"], ["income"]
+    base = transfer_build_b2(a, b, cols, cov, out_y, n=2000, seed=11)
+    same = transfer_build_b2(a, b, cols, cov, out_y, n=2000, seed=11, r2_pool=None)
+    assert base.equals(same)
+
+
+def test_b2_r2_pool_changes_the_recalibration_target():
+    # Pointing Step B at a DIFFERENT R^2 source must change the output (proves the R^2
+    # target is sourced from r2_pool, not target_pool). r2_pool has a MUCH stronger
+    # age->income signal than the target, so the recalibrated frames must differ.
+    rng = np.random.default_rng(5)
+    a = pd.DataFrame({"age": rng.integers(20, 70, 800),
+                      "income": 300 * rng.integers(20, 70, 800) + rng.normal(0, 20000, 800)})
+    target = pd.DataFrame({"age": rng.integers(20, 70, 800),
+                           "income": rng.normal(50000, 20000, 800)})   # ~no signal
+    strong = pd.DataFrame({"age": rng.integers(20, 70, 800),
+                           "income": 1500 * rng.integers(20, 70, 800)})  # very strong signal
+    cols, cov, out_y = ["age", "income"], ["age"], ["income"]
+    via_target = transfer_build_b2(a, target, cols, cov, out_y, n=3000, seed=9)
+    via_strong = transfer_build_b2(a, target, cols, cov, out_y, n=3000, seed=9, r2_pool=strong)
+    assert not via_target.equals(via_strong)

@@ -93,7 +93,8 @@ def transfer_build(struct: pd.DataFrame, marg: pd.DataFrame, cols: list[str],
 
 def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
                       cols: list[str], covariates: list[str], outcomes: list[str],
-                      n: int, seed: int) -> pd.DataFrame:
+                      n: int, seed: int, *,
+                      r2_pool: pd.DataFrame | None = None) -> pd.DataFrame:
     """B2 — source's shared-latent construction (``transfer_build``'s vehicle),
     recalibrated to the target's published aggregates via Step B only (Amendment 2).
 
@@ -110,6 +111,13 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
     Reads from the target only low-order aggregates of ``target_pool`` (never its
     joint or a test sample).
 
+    ``r2_pool`` (keyword-only, default ``None``) chooses which frame the Step-B
+    covariate-R^2 target is read from. ``None`` -> read it from ``target_pool``
+    (byte-identical to the original B2). A supplied frame (e.g. B4's reweighted
+    sibling pseudo-population) sources the R^2 target from THAT frame instead, while
+    the marginals still come from ``target_pool``. B4_retrieval passes its sib_rew
+    here to keep the R^2 target off the target's Y-side aggregates entirely.
+
     With no outcomes to blend, this reproduces
     ``transfer_build(source_pool, target_pool, cols, n, seed, "marginal-swap")``
     exactly -- same values, same RNG consumption order (asserted by test).
@@ -117,7 +125,8 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
     from ssdataagent.transfer.recalibrate import bidirectional_r2_blend
     from ssdataagent.transfer.target_aggregates import target_aggregates
 
-    agg = target_aggregates(target_pool, cols, covariates, outcomes)
+    r2_frame = target_pool if r2_pool is None else r2_pool
+    agg = target_aggregates(r2_frame, cols, covariates, outcomes)
 
     # The shared-latent construction, mirroring transfer_build's marginal-swap path
     # exactly (same rng object, same call order) so it reproduces it bit-for-bit.
