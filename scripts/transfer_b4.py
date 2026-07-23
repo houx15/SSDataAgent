@@ -77,6 +77,10 @@ def reweighted_pool_for(pair, cols, target_pool, rng, n_rew=None):
     size (preserve scale). Returns (sib_rew, ess_ratio, used_waves, dropped)."""
     # composition_covariates(cols) returns {age,gender,race} ∩ cols (the raking axes),
     # falling back to all cols only if none of the demographic core survived the crosswalk.
+    # Firewall-safe either way: raking (raking_weights) reads only per-column UNIVARIATE
+    # target marginals, never a joint -- so even the fallback stays within "public
+    # marginals". For both scored pairs the demographic core survives, so the fallback is
+    # never hit today.
     rake_cols = composition_covariates(cols)
     frames, dropped = _load_siblings(pair, cols)
     if not frames:
