@@ -70,8 +70,9 @@ def test_run_b3_cps_off_warm_cache(tmp_path, monkeypatch):
     out = tmp_path / "b3_cps_1970_1980.csv"
     assert out.exists()
     # The three rungs apply genuinely different alphas (raw=1.0 everywhere; the repaired
-    # rungs shrink numerics via R^2 and categoricals to 0.5), so they must not collapse to
-    # identical scores -- that would mean the rung machinery is a no-op. No DIRECTIONAL claim:
-    # for this data the repair can legitimately lower T3, so we don't assert repair "helps".
+    # rungs shrink the NUMERIC outcomes via their R^2 targets while categoricals stay at
+    # full coherence, default_alpha=1.0), so they must not collapse to identical scores --
+    # that would mean the rung machinery is a no-op. No DIRECTIONAL claim: for this data the
+    # repair can legitimately lower T3, so we don't assert repair "helps".
     overalls = {r.config: r.overall for r in df.itertuples()}
     assert overalls["B3_raw"] != overalls["B3_pool_R2"]
