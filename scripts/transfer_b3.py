@@ -54,6 +54,9 @@ def rung_alphas(raw, spec, elicited, pool, predictors):
     """The three rungs' alpha dicts. raw = all 1.0 (no repair); elicited = alphas from the
     LLM-elicited R^2 targets; pool_R2 = alphas from the pool's covariate-R^2 (a low-order
     aggregate, same footing as B2). Numeric-only outcomes are repaired; cv skips the rest."""
+    # outcomes excludes the `predictors` arg (this call's predictor set); elic_targets then
+    # re-excludes spec.predictors (the full spec predictor set, a superset) -- redundant but
+    # harmless since predictors <= spec.predictors.
     outcomes = [c for c in raw.columns if c not in predictors]
     elic_targets = {c: elicited[c] for c in outcomes
                     if c not in spec.predictors and elicited.get(c) is not None}
@@ -72,3 +75,67 @@ def rung_alphas(raw, spec, elicited, pool, predictors):
         "B3_elicited": elic_alpha,
         "B3_pool_R2": pool_alpha,
     }
+
+
+def run_b3(pair, *, seeds, n, bootstrap_B, people=480, batch=20, regenerate=False):
+    """Generate (LLM, cached) -> elicit (cached) -> score three rungs through the restricted
+    config against the target reference. Firewalled: reads only the target pool's marginals
+    and (pool_R2 rung) its covariate-R^2, never its joint or the reference sample."""
+    import tempfile
+
+    import nodonor_bracket as nb
+    import nodonor_fullmethod as nf
+    from ssdataagent.data.schema import load_schema
+
+    ds, cols, spec, predictors, downstream = b3_columns(pair)
+    pool, guarantee = nb.carve_pool(ds)
+    ref = nb._drop_unnamed(pd.read_csv(load_schema(ds).real_data_path, low_memory=False))
+    types = nb.TYPES.get(ds, (1, 2, 3))
+
+    raw = nf.generate(ds, pool, cols, spec, people, batch, regenerate)
+    elicited = nf.elicit(ds, cols, spec, regenerate)
+    alphas = rung_alphas(raw, spec, elicited, pool, predictors)
+
+    out_rows = []
+    with tempfile.TemporaryDirectory() as cfg_td:
+        cfg_dir = restrict_config_dir(load_schema(ds).ssdatabench_sim_subdir,
+                                      set(cols), types, Path(cfg_td))
+        for name, alpha in alphas.items():
+            recs = []
+            for s in range(1, seeds + 1):
+                sim = cv.sample_variance_repaired(raw, pool, cols, predictors, n,
+                                                  np.random.default_rng(s),
+                                                  alpha=alpha, default_alpha=0.5)
+                recs.append(nb.score(sim, ds, ref, types, seed=1000 + s,
+                                     bootstrap_B=bootstrap_B, config_dir=cfg_dir))
+            row = {"pair": pair.id, "config": name, "guarantee": guarantee}
+            row.update(mean_scores(pd.DataFrame(recs)))
+            out_rows.append(row)
+
+    df = pd.DataFrame(out_rows)
+    OUT.mkdir(parents=True, exist_ok=True)
+    df.to_csv(OUT / f"b3_{pair.id}.csv", index=False)
+    return df
+
+
+def main() -> None:
+    ap = argparse.ArgumentParser(description=__doc__,
+                                 formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("pair", choices=[p.id for p in PAIRS if p.scored])
+    ap.add_argument("--seeds", type=int, default=3)
+    ap.add_argument("--n", type=int, default=3000)
+    ap.add_argument("--people", type=int, default=480)
+    ap.add_argument("--batch", type=int, default=20)
+    ap.add_argument("--bootstrap-B", type=int, default=200)
+    ap.add_argument("--regenerate", action="store_true")
+    a = ap.parse_args()
+    pair = [p for p in PAIRS if p.id == a.pair][0]
+    df = run_b3(pair, seeds=a.seeds, n=a.n, bootstrap_B=a.bootstrap_B,
+                people=a.people, batch=a.batch, regenerate=a.regenerate)
+    print(df.to_string(index=False))
+    print(f"\nwrote {OUT / f'b3_{pair.id}.csv'}")
+    print("REGIME: no-donor. Target supplies marginals + (pool_R2 rung) covariate-R^2 only.")
+
+
+if __name__ == "__main__":
+    main()
