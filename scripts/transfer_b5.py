@@ -151,15 +151,15 @@ def predict_target_r2(pair):
     crosswalk-outcome R^2 two ways: full posterior (learned) and prior-only. Also
     returns B4's raked sibling pool (the structure vehicle) so the scorer draws
     through the IDENTICAL vehicle B4 used -- B5 vs B4 then differs ONLY in the R^2
-    target. Returns (learned_r2, prior_only_r2, ess, sib_rew)."""
+    target. Returns (learned_r2, prior_only_r2, ess, sib_rew, n_siblings)."""
     import nodonor_bracket as nb
     ds, cols, covs, outs = b4_columns(pair)
     target_pool, _ = nb.carve_pool(ds)
 
     # Retrieval data point x_co + ESS, reusing B4's raked sibling pool (default_rng(0)
     # -> byte-identical to B4's sib_rew).
-    sib_rew, ess, _, _ = reweighted_pool_for(pair, cols, target_pool,
-                                             np.random.default_rng(0))
+    sib_rew, ess, used_waves, _ = reweighted_pool_for(pair, cols, target_pool,
+                                                      np.random.default_rng(0))
     x_co = target_aggregates(sib_rew, cols, covs, outs)["outcome_r2"]
 
     # Fit prior on all contexts except the held-out target wave; noise on cps waves
@@ -175,7 +175,7 @@ def predict_target_r2(pair):
         feats = outcome_features(target_pool, o, covs, numeric_predictors=num_pred)
         learned[o] = predict_r2(x_co.get(o), ess, feats, prior, noise)
         prior_only[o] = predict_r2(None, ess, feats, prior, noise)
-    return learned, prior_only, ess, sib_rew
+    return learned, prior_only, ess, sib_rew, len(used_waves)
 
 
 def run_b5(pair, *, seeds, n, bootstrap_B):
@@ -189,7 +189,7 @@ def run_b5(pair, *, seeds, n, bootstrap_B):
     ref = _load(load_schema(ds).real_data_path)
     types = nb.TYPES.get(ds, (1, 2, 3))
 
-    learned, prior_only, ess, sib_rew = predict_target_r2(pair)
+    learned, prior_only, ess, sib_rew, _ = predict_target_r2(pair)
     configs = {"B5_learned": learned, "B5_prior_only": prior_only}
 
     out_rows = []
