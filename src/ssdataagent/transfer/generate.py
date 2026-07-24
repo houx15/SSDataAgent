@@ -94,7 +94,8 @@ def transfer_build(struct: pd.DataFrame, marg: pd.DataFrame, cols: list[str],
 def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
                       cols: list[str], covariates: list[str], outcomes: list[str],
                       n: int, seed: int, *,
-                      r2_pool: pd.DataFrame | None = None) -> pd.DataFrame:
+                      r2_pool: pd.DataFrame | None = None,
+                      r2_target: dict | None = None) -> pd.DataFrame:
     """B2 — source's shared-latent construction (``transfer_build``'s vehicle),
     recalibrated to the target's published aggregates via Step B only (Amendment 2).
 
@@ -118,6 +119,10 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
     the marginals still come from ``target_pool``. B4_retrieval passes its sib_rew
     here to keep the R^2 target off the target's Y-side aggregates entirely.
 
+    ``r2_target`` (keyword-only, default ``None``) is a precomputed per-outcome R^2
+    dict (e.g. B5's empirical Bayes prediction) that, when supplied, is used verbatim
+    as the Step-B recalibration target and takes precedence over ``r2_pool``.
+
     With no outcomes to blend, this reproduces
     ``transfer_build(source_pool, target_pool, cols, n, seed, "marginal-swap")``
     exactly -- same values, same RNG consumption order (asserted by test).
@@ -125,8 +130,14 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
     from ssdataagent.transfer.recalibrate import bidirectional_r2_blend
     from ssdataagent.transfer.target_aggregates import target_aggregates
 
-    r2_frame = target_pool if r2_pool is None else r2_pool
-    agg = target_aggregates(r2_frame, cols, covariates, outcomes)
+    # r2_target (a precomputed per-outcome R^2 dict, e.g. B5's EB prediction) wins
+    # outright and skips target_aggregates. Otherwise the R^2 target is read from
+    # r2_pool (B4) or the target pool (B2), exactly as before.
+    if r2_target is not None:
+        r2_map = r2_target
+    else:
+        r2_frame = target_pool if r2_pool is None else r2_pool
+        r2_map = target_aggregates(r2_frame, cols, covariates, outcomes)["outcome_r2"]
 
     # The shared-latent construction, mirroring transfer_build's marginal-swap path
     # exactly (same rng object, same call order) so it reproduces it bit-for-bit.
@@ -175,5 +186,5 @@ def transfer_build_b2(source_pool: pd.DataFrame, target_pool: pd.DataFrame,
     frame = pd.DataFrame(out)
 
     num_pred = frozenset(c for c in covariates if target_num.get(c, False))
-    return bidirectional_r2_blend(frame, outcomes, covariates, agg["outcome_r2"],
+    return bidirectional_r2_blend(frame, outcomes, covariates, r2_map,
                                   numeric_predictors=num_pred, rng=rng)

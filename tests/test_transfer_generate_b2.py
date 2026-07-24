@@ -107,3 +107,31 @@ def test_b2_r2_pool_changes_the_recalibration_target():
     via_target = transfer_build_b2(a, target, cols, cov, out_y, n=3000, seed=9)
     via_strong = transfer_build_b2(a, target, cols, cov, out_y, n=3000, seed=9, r2_pool=strong)
     assert not via_target.equals(via_strong)
+
+
+def _toy_pools():
+    rng = np.random.default_rng(0)
+    n = 400
+    src = pd.DataFrame({
+        "age": rng.integers(18, 80, n).astype(float),
+        "sex": rng.choice(["M", "F"], n),
+        "income": rng.normal(50, 10, n),
+    })
+    tgt = src.sample(frac=1.0, random_state=1).reset_index(drop=True)
+    return src, tgt
+
+
+def test_r2_target_override_changes_output_and_default_is_unchanged():
+    src, tgt = _toy_pools()
+    cols = ["age", "sex", "income"]
+    covs, outs = ["age", "sex"], ["income"]
+    base = transfer_build_b2(src, tgt, cols, covs, outs, 300, 7)
+    # A very low R^2 target must pull income's covariate-R^2 down vs the default.
+    forced = transfer_build_b2(src, tgt, cols, covs, outs, 300, 7,
+                               r2_target={"income": 0.0})
+    r2_base = covariate_r2(base, "income", covs, numeric_predictors=frozenset({"age"}))
+    r2_forced = covariate_r2(forced, "income", covs, numeric_predictors=frozenset({"age"}))
+    assert r2_forced <= r2_base + 1e-9
+    # Default None path is byte-identical to a second default call (determinism gate).
+    base2 = transfer_build_b2(src, tgt, cols, covs, outs, 300, 7)
+    pd.testing.assert_frame_equal(base, base2)
