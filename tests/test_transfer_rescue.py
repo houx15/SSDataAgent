@@ -78,3 +78,44 @@ def test_fit_noise_single_point_and_curve():
     assert abs(nf2.a) < 1e-6 and abs(nf2.b - 1.0) < 1e-6
     # sigma2 decreases as ess grows
     assert nf2.sigma2(1.0) < nf2.sigma2(0.1)
+
+
+def test_select_r2_source_truth_table():
+    from ssdataagent.transfer.rescue import select_r2_source
+    # cps: plural pool, well-sized -> trust retrieval
+    assert select_r2_source(3, 0.65) is True
+    # gss: lone thin sibling -> fall back to prior (fails BOTH criteria)
+    assert select_r2_source(1, 0.10) is False
+    # plural pool but poorly raked -> prior (ESS fails)
+    assert select_r2_source(3, 0.10) is False
+    # well-raked but only one sibling -> prior (count fails)
+    assert select_r2_source(1, 0.65) is False
+
+
+def test_select_r2_source_boundaries_and_tau():
+    from ssdataagent.transfer.rescue import select_r2_source
+    assert select_r2_source(2, 0.30) is True          # both at threshold -> eligible
+    assert select_r2_source(2, 0.2999) is False        # just below tau
+    assert select_r2_source(1, 0.99) is False          # count dominates
+    # tau is non-load-bearing: any value across the (0.10, 0.65) gap selects identically
+    for tau in (0.15, 0.30, 0.50, 0.60):
+        assert select_r2_source(3, 0.65, tau=tau) is True
+        assert select_r2_source(1, 0.10, tau=tau) is False
+
+
+def test_hybrid_r2_map_retrieval_branch_is_truthful():
+    from ssdataagent.transfer.rescue import hybrid_r2_map
+    learned = {"a": 0.80, "b": 0.20, "c": 0.35}
+    prior_only = {"a": 0.30, "b": 0.20, "c": 0.35}   # b, c unmoved by retrieval
+    r2_map, prov = hybrid_r2_map(learned, prior_only, use_retrieval=True)
+    assert r2_map == learned
+    assert prov == {"a": "retrieval-blend", "b": "prior", "c": "prior"}
+
+
+def test_hybrid_r2_map_prior_branch_all_prior():
+    from ssdataagent.transfer.rescue import hybrid_r2_map
+    learned = {"a": 0.80, "b": 0.20}
+    prior_only = {"a": 0.30, "b": 0.20}
+    r2_map, prov = hybrid_r2_map(learned, prior_only, use_retrieval=False)
+    assert r2_map == prior_only
+    assert prov == {"a": "prior", "b": "prior"}

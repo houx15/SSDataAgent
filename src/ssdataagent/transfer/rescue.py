@@ -128,3 +128,32 @@ def predict_r2(x_co: float | None, ess: float, feats: dict,
         t2 = prior.tau2
         post = (x_co / s2 + mu / t2) / (1.0 / s2 + 1.0 / t2)
     return float(np.clip(post, clip[0], clip[1]))
+
+
+def select_r2_source(n_siblings: int, ess: float, *,
+                     tau: float = 0.3, min_siblings: int = 2) -> bool:
+    """ESS-gated hybrid gate (B6). Trust retrieval-blend only when the sibling pool
+    is both plural (>= min_siblings independent same-instrument contexts) AND
+    effectively-sized (ess >= tau) -- i.e. not a lone thin sibling. Returns True to
+    use the retrieval-blended R^2 (B5 ``learned``), False to fall back to the pooled
+    prior (B5 ``prior_only``). tau is deliberately non-load-bearing: the
+    sibling-count criterion separates the scored pairs, and any tau in the
+    unidentified (0.10, 0.65) gap gives identical selection. Reads no score."""
+    return (n_siblings >= min_siblings) and (ess >= tau)
+
+
+def hybrid_r2_map(learned: dict, prior_only: dict,
+                  use_retrieval: bool) -> tuple[dict, dict]:
+    """Select the per-outcome R^2 map and a truthful per-outcome provenance tag.
+    use_retrieval True  -> r2_map = learned; provenance[o] = 'retrieval-blend' iff
+                           retrieval actually moved it (learned[o] != prior_only[o])
+                           else 'prior'.
+    use_retrieval False -> r2_map = prior_only; every provenance[o] = 'prior'."""
+    if use_retrieval:
+        r2_map = dict(learned)
+        prov = {o: ("retrieval-blend" if learned.get(o) != prior_only.get(o)
+                    else "prior") for o in r2_map}
+    else:
+        r2_map = dict(prior_only)
+        prov = {o: "prior" for o in r2_map}
+    return r2_map, prov

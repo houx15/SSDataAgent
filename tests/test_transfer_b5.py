@@ -79,11 +79,12 @@ def test_predict_target_r2_shapes(tmp_path):
     import transfer_b5
     from ssdataagent.transfer.pairs import PAIRS
     pair = [p for p in PAIRS if p.id == "cps_1970_1980"][0]
-    learned, prior_only, ess, sib_rew = transfer_b5.predict_target_r2(pair)
+    learned, prior_only, ess, sib_rew, n_siblings = transfer_b5.predict_target_r2(pair)
     assert set(learned) == set(prior_only)          # same outcome keys
     assert len(sib_rew) > 0                          # structure vehicle materialized
     assert learned                                   # non-empty
     assert 0.0 < ess <= 1.0
+    assert isinstance(n_siblings, int) and n_siblings >= 1   # cps holds out 1980 -> 3 sibs
     for d in (learned, prior_only):
         for v in d.values():
             assert 0.0 <= v <= 1.0
