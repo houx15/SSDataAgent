@@ -130,20 +130,23 @@ def parse_marginals(text: str, source_a: pd.DataFrame, cols: list[str]) -> dict:
     """Parse the LLM's JSON into {var: dist}. Keeps only well-formed entries for ``cols``;
     a numeric var needs a non-empty ``quantiles`` list, a categorical var a non-empty
     ``probs`` dict. Malformed/absent entries are dropped (build_marg_frame then carries A)."""
-    raw = _last_json_object(text)
+    raw = _last_json_object(text)                    # always a dict ({} on junk)
     out: dict = {}
     for c in cols:
-        d = raw.get(c) if isinstance(raw, dict) else None
+        d = raw.get(c)
         if not isinstance(d, dict):
             continue
-        if _is_numeric(source_a[c]):
-            q = d.get("quantiles")
-            if isinstance(q, list) and len(q) >= 2:
-                out[c] = {"quantiles": [float(x) for x in q]}
-        else:
-            pr = d.get("probs")
-            if isinstance(pr, dict) and pr:
-                out[c] = {"probs": {str(k): float(v) for k, v in pr.items()}}
+        try:
+            if _is_numeric(source_a[c]):
+                q = d.get("quantiles")
+                if isinstance(q, list) and len(q) >= 2:
+                    out[c] = {"quantiles": [float(x) for x in q]}
+            else:
+                pr = d.get("probs")
+                if isinstance(pr, dict) and pr:
+                    out[c] = {"probs": {str(k): float(v) for k, v in pr.items()}}
+        except (ValueError, TypeError):              # non-numeric junk in a well-shaped entry
+            continue                                 # drop it -> build_marg_frame carries A
     return out
 
 

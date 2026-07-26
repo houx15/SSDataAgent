@@ -107,3 +107,15 @@ def test_elicit_prompt_lists_categories_from_A_not_B():
     p = elicit_prompt("gss", a, ["age", "sex"])
     assert "quantiles" in p and "probs" in p
     assert "M" in p and "F" in p            # category universe surfaced from A
+
+
+def test_parse_marginals_drops_malformed_values():
+    from ssdataagent.transfer.blind import parse_marginals
+    a = pd.DataFrame({"age": [20, 30, 40], "sex": ["M", "F", "M"],
+                      "edu": ["hs", "col", "hs"]})
+    text = ('{"age": {"quantiles": [1, "N/A", 3]}, '        # bad numeric value -> drop
+            '"sex": {"probs": {"M": "lots", "F": 0.3}}, '    # bad prob value -> drop
+            '"edu": {"probs": {"hs": 0.6, "col": 0.4}}}')    # well-formed -> kept
+    got = parse_marginals(text, a, ["age", "sex", "edu"])
+    assert set(got) == {"edu"}
+    assert got["edu"]["probs"]["hs"] == 0.6
