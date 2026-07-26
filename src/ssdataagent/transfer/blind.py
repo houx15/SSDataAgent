@@ -4,7 +4,10 @@ docs/superpowers/specs/2026-07-26-blind-faceswap-design.md.
 """
 from __future__ import annotations
 
+import json
 import logging
+import os
+from pathlib import Path
 
 import numpy as np
 import pandas as pd
@@ -12,6 +15,10 @@ import pandas as pd
 from ssdataagent.transfer.generate import _is_numeric
 
 _logger = logging.getLogger(__name__)
+
+MODEL = "anthropic/claude-sonnet-4.5"
+_REPO = Path(__file__).resolve().parents[3]
+_DEFAULT_CACHE = _REPO / "results" / "blind_cache"
 
 
 def _synth_numeric(quantiles: list[float], L: int) -> np.ndarray:
@@ -68,3 +75,96 @@ def build_marg_frame(elicited: dict, source_a: pd.DataFrame, cols: list[str], *,
                 col[rng.choice(L, min(k, L), replace=False)] = np.nan
         out[c] = col
     return pd.DataFrame(out)
+
+
+def elicit_prompt(ds: str, source_a: pd.DataFrame, cols: list[str], *,
+                  max_cats: int = 20) -> str:
+    """Prompt asking ONLY for per-variable marginal distributions of the described target
+    context. Categorical variables list their category universe (from source A, the
+    codebook level); numeric variables ask for 11 quantiles at probabilities 0.0..1.0."""
+    from ssdataagent.transfer.blind_specs import BLIND_SPECS
+    spec = BLIND_SPECS[ds]
+    lines = []
+    for c in cols:
+        gloss = spec.glosses.get(c, c)
+        if _is_numeric(source_a[c]):
+            lines.append(f'- "{c}" (NUMERIC): {gloss}. Give "quantiles": 11 values at '
+                         f'probabilities 0.0,0.1,...,1.0 (min..max).')
+        else:
+            cats = source_a[c].dropna().astype(str).value_counts().index.tolist()[:max_cats]
+            lines.append(f'- "{c}" (CATEGORICAL, categories={cats}): {gloss}. '
+                         f'Give "probs": a probability for each category (summing to ~1).')
+    body = "\n".join(lines)
+    return (
+        f"You are estimating the population marginals of {spec.population}.\n"
+        f"Context and coherence structure:\n{spec.description}\n\n"
+        f"Using ONLY your knowledge of this described population — no external data — "
+        f"estimate the marginal distribution of EACH variable below. Do not model any "
+        f"joint relationship; marginals only.\n\n{body}\n\n"
+        f'Reply with ONE JSON object keyed by variable name, each value either '
+        f'{{"quantiles": [...]}} (numeric) or {{"probs": {{cat: p, ...}}}} (categorical). '
+        f"Output only the JSON."
+    )
+
+
+def _last_json_object(text: str) -> dict:
+    """The last complete top-level JSON object in ``text`` (brace-balanced, so nested
+    objects/arrays parse -- the elicited marginals are nested, unlike B3's flat R^2 JSON,
+    so this is self-contained here rather than reusing conditional_variance's flat-regex
+    extractor). Returns {} if none parses."""
+    decoder = json.JSONDecoder()
+    last, idx = None, 0
+    while True:
+        start = text.find("{", idx)
+        if start == -1:
+            break
+        try:
+            obj, end = decoder.raw_decode(text, start)
+            last, idx = obj, end
+        except json.JSONDecodeError:
+            idx = start + 1
+    return last if isinstance(last, dict) else {}
+
+
+def parse_marginals(text: str, source_a: pd.DataFrame, cols: list[str]) -> dict:
+    """Parse the LLM's JSON into {var: dist}. Keeps only well-formed entries for ``cols``;
+    a numeric var needs a non-empty ``quantiles`` list, a categorical var a non-empty
+    ``probs`` dict. Malformed/absent entries are dropped (build_marg_frame then carries A)."""
+    raw = _last_json_object(text)
+    out: dict = {}
+    for c in cols:
+        d = raw.get(c) if isinstance(raw, dict) else None
+        if not isinstance(d, dict):
+            continue
+        if _is_numeric(source_a[c]):
+            q = d.get("quantiles")
+            if isinstance(q, list) and len(q) >= 2:
+                out[c] = {"quantiles": [float(x) for x in q]}
+        else:
+            pr = d.get("probs")
+            if isinstance(pr, dict) and pr:
+                out[c] = {"probs": {str(k): float(v) for k, v in pr.items()}}
+    return out
+
+
+def elicit_marginals(ds: str, source_a: pd.DataFrame, cols: list[str], *,
+                     client=None, cache_dir: Path | None = None,
+                     regenerate: bool = False) -> dict:
+    """Elicit B's marginals from its description (LLM), cached to
+    ``<cache_dir>/<ds>_marginals.json`` (durable, gitignored). Reads no B data. When the
+    cache is warm and ``regenerate`` is False, returns it without calling the LLM."""
+    cache_dir = cache_dir or _DEFAULT_CACHE
+    cache_dir.mkdir(parents=True, exist_ok=True)
+    path = cache_dir / f"{ds}_marginals.json"
+    if path.exists() and not regenerate:
+        return json.loads(path.read_text())
+    if client is None:
+        from openai import OpenAI
+        client = OpenAI(base_url="https://openrouter.ai/api/v1",
+                        api_key=os.environ["OPENROUTER_API_KEY"])
+    prompt = elicit_prompt(ds, source_a, cols)
+    resp = client.chat.completions.create(
+        model=MODEL, messages=[{"role": "user", "content": prompt}])
+    parsed = parse_marginals(resp.choices[0].message.content, source_a, cols)
+    path.write_text(json.dumps(parsed, ensure_ascii=False, indent=2))
+    return parsed

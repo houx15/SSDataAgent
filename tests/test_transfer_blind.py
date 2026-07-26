@@ -62,3 +62,48 @@ def test_build_marg_frame_empty_probs_falls_back_not_crash():
     assert len(frame) == 500
     assert set(frame["sex"].dropna().astype(str).unique()) <= {"M", "F"}
     assert frame["sex"].notna().any()
+
+
+class _StubMsg:
+    def __init__(self, content): self.message = type("M", (), {"content": content})
+class _StubResp:
+    def __init__(self, content): self.choices = [_StubMsg(content)]
+class _StubClient:
+    def __init__(self, content): self._c = content; self.calls = 0
+    @property
+    def chat(self):
+        outer = self
+        class _Chat:
+            class completions:
+                @staticmethod
+                def create(**kw):
+                    outer.calls += 1
+                    return _StubResp(outer._c)
+        return _Chat()
+
+
+def test_elicit_marginals_parses_and_caches(tmp_path):
+    from ssdataagent.transfer.blind import elicit_marginals
+    a = pd.DataFrame({"age": [20, 30, 40, 50, 60], "sex": ["M", "F", "M", "F", "M"]})
+    payload = ('{"age": {"quantiles": [18,22,30,40,50,60,65,70,75,80,90]}, '
+               '"sex": {"probs": {"M": 0.7, "F": 0.3}}}')
+    client = _StubClient(payload)
+    got = elicit_marginals("gss", a, ["age", "sex"], client=client,
+                           cache_dir=tmp_path, regenerate=True)
+    assert set(got) == {"age", "sex"}
+    assert abs(got["sex"]["probs"]["M"] - 0.7) < 1e-9
+    assert len(got["age"]["quantiles"]) == 11
+    assert (tmp_path / "gss_marginals.json").exists()
+    assert client.calls == 1
+    # second call with the cache warm must NOT hit the client
+    client2 = _StubClient(payload)
+    again = elicit_marginals("gss", a, ["age", "sex"], client=client2, cache_dir=tmp_path)
+    assert client2.calls == 0 and again["sex"]["probs"]["M"] == got["sex"]["probs"]["M"]
+
+
+def test_elicit_prompt_lists_categories_from_A_not_B():
+    from ssdataagent.transfer.blind import elicit_prompt
+    a = pd.DataFrame({"age": [20, 30, 40], "sex": ["M", "F", "M"]})
+    p = elicit_prompt("gss", a, ["age", "sex"])
+    assert "quantiles" in p and "probs" in p
+    assert "M" in p and "F" in p            # category universe surfaced from A
