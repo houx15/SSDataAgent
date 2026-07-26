@@ -51,3 +51,14 @@ def test_build_marg_frame_falls_back_to_A_when_missing():
     frame = build_marg_frame({}, a, ["x"], L=1000, seed=0)   # nothing elicited -> carry A
     assert len(frame) == 1000
     assert 1 <= np.nanmedian(pd.to_numeric(frame["x"])) <= 10
+
+
+def test_build_marg_frame_empty_probs_falls_back_not_crash():
+    from ssdataagent.transfer.blind import build_marg_frame
+    a = pd.DataFrame({"age": [20, 30, 40, 50, 60],
+                      "sex": ["M", "F", "M", "F", "M"]})
+    # sex has an empty probs dict -> must fall back to A's marginal, not crash
+    frame = build_marg_frame({"sex": {"probs": {}}}, a, ["age", "sex"], L=500, seed=0)
+    assert len(frame) == 500
+    assert set(frame["sex"].dropna().astype(str).unique()) <= {"M", "F"}
+    assert frame["sex"].notna().any()

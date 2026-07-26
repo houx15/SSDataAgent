@@ -27,6 +27,8 @@ def _synth_categorical(probs: dict, L: int) -> np.ndarray:
     """Length-L object column whose value_counts(normalize) match ``probs`` (largest-remainder
     rounding, so the length is exactly L and the result is deterministic)."""
     cats = np.array(list(probs.keys()), dtype=object)
+    if len(cats) == 0:
+        raise ValueError("empty probs")
     p = np.asarray([probs[c] for c in probs.keys()], dtype=float)
     p = p / p.sum()
     exact = p * L
