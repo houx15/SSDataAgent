@@ -93,7 +93,9 @@ def elicit_prompt(ds: str, source_a: pd.DataFrame, cols: list[str], *,
         else:
             cats = source_a[c].dropna().astype(str).value_counts().index.tolist()[:max_cats]
             lines.append(f'- "{c}" (CATEGORICAL, categories={cats}): {gloss}. '
-                         f'Give "probs": a probability for each category (summing to ~1).')
+                         f'Give "probs": one probability per category. Use each category '
+                         f'label EXACTLY and VERBATIM as written above as the JSON key — do '
+                         f'not paraphrase, abbreviate, merge, split, or rename any label.')
     body = "\n".join(lines)
     return (
         f"You are estimating the population marginals of {spec.population}.\n"
@@ -103,7 +105,8 @@ def elicit_prompt(ds: str, source_a: pd.DataFrame, cols: list[str], *,
         f"joint relationship; marginals only.\n\n{body}\n\n"
         f'Reply with ONE JSON object keyed by variable name, each value either '
         f'{{"quantiles": [...]}} (numeric) or {{"probs": {{cat: p, ...}}}} (categorical). '
-        f"Output only the JSON."
+        f"For categorical variables the probs keys MUST be drawn verbatim from the category "
+        f"lists above. Output only the JSON."
     )
 
 
@@ -144,7 +147,13 @@ def parse_marginals(text: str, source_a: pd.DataFrame, cols: list[str]) -> dict:
             else:
                 pr = d.get("probs")
                 if isinstance(pr, dict) and pr:
-                    out[c] = {"probs": {str(k): float(v) for k, v in pr.items()}}
+                    # Restrict to A's category universe (the codebook labels handed to the
+                    # LLM): drop any drifted/renamed key so the synthetic marginal never
+                    # invents a category the reference lacks. _synth_categorical renormalizes.
+                    allowed = set(source_a[c].dropna().astype(str).unique())
+                    kept = {str(k): float(v) for k, v in pr.items() if str(k) in allowed}
+                    if kept:
+                        out[c] = {"probs": kept}
         except (ValueError, TypeError):              # non-numeric junk in a well-shaped entry
             continue                                 # drop it -> build_marg_frame carries A
     return out

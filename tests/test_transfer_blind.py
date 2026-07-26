@@ -119,3 +119,15 @@ def test_parse_marginals_drops_malformed_values():
     got = parse_marginals(text, a, ["age", "sex", "edu"])
     assert set(got) == {"edu"}
     assert got["edu"]["probs"]["hs"] == 0.6
+
+
+def test_parse_marginals_restricts_categorical_to_A_universe():
+    from ssdataagent.transfer.blind import parse_marginals
+    a = pd.DataFrame({"marital": ["Married", "Single", "Separated-Divorced-Widowed",
+                                  "Married", "Single"]})
+    # LLM drifted the label ("Divorced/widowed" not in A) -> that key is dropped,
+    # the in-universe keys are kept (renormalized downstream by _synth_categorical).
+    text = ('{"marital": {"probs": {"Married": 0.6, "Single": 0.25, '
+            '"Divorced/widowed": 0.15}}}')
+    got = parse_marginals(text, a, ["marital"])
+    assert set(got["marital"]["probs"]) == {"Married", "Single"}
