@@ -14,14 +14,27 @@ def test_blind_specs_cover_both_datasets_with_fields():
         assert isinstance(s.glosses, dict) and s.glosses
 
 
-def test_firewall_scrubbed_target_sample_numbers_are_gone():
+def _llm_visible_text(spec) -> str:
+    """Everything the LLM sees for a context: population + description + glosses. (Excludes
+    AUDIT_NOTES, which legitimately quotes the removed phrases as internal documentation.)"""
+    return " ".join([spec.population, spec.description, *spec.glosses.values()])
+
+
+# Target-sample statistics that must NOT appear in any LLM-visible string. These are the
+# specific leaks the reused b3 rules/glosses carried: pool means, modal-category claims,
+# quantiles, and age-conditional statistics that could only be known from B's microdata.
+_FORBIDDEN = {
+    "gss": ["1.8", "pool mean", "0..8", "climbing to", "$10000 OR MORE", "typically 18-30"],
+    "cps": ["0.66", "30-45", "late 50s", "~22", "~33", "a few thousand", "peaks"],
+}
+
+
+def test_firewall_no_target_sample_statistics_in_llm_visible_text():
     from ssdataagent.transfer.blind_specs import BLIND_SPECS
-    # The gss child_number gloss must no longer quote the pool mean ("1.8").
-    gss_text = BLIND_SPECS["gss"].description + " " + " ".join(BLIND_SPECS["gss"].glosses.values())
-    assert "1.8" not in gss_text and "pool mean" not in gss_text.lower()
-    # cps: no household-roster sample mean leaked into LLM-visible strings.
-    cps_text = BLIND_SPECS["cps"].description + " " + " ".join(BLIND_SPECS["cps"].glosses.values())
-    assert "0.66" not in cps_text
+    for ds, forbidden in _FORBIDDEN.items():
+        text = _llm_visible_text(BLIND_SPECS[ds]).lower()
+        for phrase in forbidden:
+            assert phrase.lower() not in text, f"{ds}: firewall leak {phrase!r} still present"
 
 
 def test_audit_notes_document_removals():
