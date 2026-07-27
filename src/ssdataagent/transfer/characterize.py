@@ -232,3 +232,15 @@ def run_characterization(pairs: list[Pair] = PAIRS) -> pd.DataFrame:
     for p in pairs:
         rows.extend(pair_records(p))
     return pd.DataFrame(rows)
+
+
+def write_outputs(df: pd.DataFrame, repo_root: Path) -> tuple[Path, Path]:
+    """Write the tidy table to results/ (gitignored) and a committed copy under docs/report."""
+    out_dir = repo_root / "results" / "characterization"
+    out_dir.mkdir(parents=True, exist_ok=True)
+    results_csv = out_dir / "characterization.csv"
+    df.to_csv(results_csv, index=False)
+    committed = repo_root / "docs" / "report" / "2026-07-27-characterization-data.csv"
+    committed.parent.mkdir(parents=True, exist_ok=True)
+    df.to_csv(committed, index=False)
+    return results_csv, committed

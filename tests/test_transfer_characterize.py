@@ -112,3 +112,14 @@ def test_run_characterization_tidy_schema_on_one_pair():
     q1 = df[(df["question"] == "Q1") & (df["metric"] == "composition_share")]
     assert len(q1) > 0 and q1["value"].notna().any()
     assert (df["pair"] == "gss_2018_race").all()
+
+
+def test_write_outputs_writes_both_copies(tmp_path):
+    from ssdataagent.transfer.characterize import write_outputs
+    df = pd.DataFrame({"pair": ["p"], "question": ["Q1"], "value": [0.5]})
+    results_csv, committed_csv = write_outputs(df, tmp_path)
+    assert results_csv.exists() and committed_csv.exists()
+    assert results_csv == tmp_path / "results" / "characterization" / "characterization.csv"
+    assert committed_csv == tmp_path / "docs" / "report" / "2026-07-27-characterization-data.csv"
+    back = pd.read_csv(committed_csv)
+    assert list(back["pair"]) == ["p"] and float(back["value"].iloc[0]) == 0.5
