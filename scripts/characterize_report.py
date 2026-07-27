@@ -36,7 +36,8 @@ def _fig_q1(df):
     fig, ax = plt.subplots(figsize=(7, 4))
     fams = ["time", "group"]
     data = [d[d["family"] == f]["value"].to_numpy() for f in fams]
-    ax.boxplot(data, labels=[f"{f}\n(n={len(v)})" for f, v in zip(fams, data)], showmeans=True)
+    ax.boxplot(data, tick_labels=[f"{f}\n(n={len(v)})" for f, v in zip(fams, data)],
+               showmeans=True)
     for i, f in enumerate(fams, start=1):
         sub = d[d["family"] == f]
         ax.scatter([i] * len(sub), sub["value"], alpha=0.5,
@@ -84,7 +85,7 @@ def _fig_q4(df):
     fams = ["time", "group"]
     data = [d[d["family"] == f]["value"].to_numpy() for f in fams]
     data = [v if len(v) else [float("nan")] for v in data]
-    ax.boxplot(data, labels=fams, showmeans=True)
+    ax.boxplot(data, tick_labels=fams, showmeans=True)
     ax.set_ylabel("shape_ratio  (0 = pure level shift, 1 = shape change)")
     ax.set_ylim(-0.02, 1.02)
     ax.set_title("Q4 — when mechanism moves, is it level or shape? (numeric Y)")
