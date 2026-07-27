@@ -58,3 +58,35 @@ def test_shape_level_split_pure_shape_change():
     assert abs(r["level"]) < 1e-6
     assert r["shape"] > 3.0
     assert r["shape_ratio"] > 0.99
+
+
+def test_load_context_group_filter_and_negate(tmp_path):
+    from ssdataagent.transfer.characterize import Context, load_context
+    csv = tmp_path / "toy.csv"
+    pd.DataFrame({
+        "Unnamed: 0": [0, 1, 2, 3],
+        "race": ["Black", "White", None, "Black"],
+        "x": [1, 2, 3, 4],
+    }).to_csv(csv, index=False)
+    minority = Context("toy", csv, "black", "race", "Black")
+    df = load_context(minority)
+    assert list(df.columns) == ["race", "x"]      # Unnamed dropped
+    assert len(df) == 2 and set(df["race"]) == {"Black"}
+    majority = Context("toy", csv, "rest", "race", "Black", negate=True)
+    dfm = load_context(majority)
+    assert len(dfm) == 1 and set(dfm["race"]) == {"White"}   # NaN excluded from both
+
+
+def test_pairs_registry_shape_and_paths():
+    from ssdataagent.transfer.characterize import PAIRS, CORE_DEMOGRAPHICS, FOCAL, GROUP_COL
+    ids = [p.id for p in PAIRS]
+    assert ids == [
+        "cps_1970_1980", "cps_1980_1990", "cps_1990_2000", "cps_1970_2000",
+        "gss_1994_2018", "cps_1980_race", "gss_2018_race", "cfps_minzu",
+    ]
+    fams = {p.id: p.family for p in PAIRS}
+    assert fams["gss_1994_2018"] == "time" and fams["cfps_minzu"] == "group"
+    for p in PAIRS:
+        assert p.a.csv.exists() and p.b.csv.exists(), f"missing csv for {p.id}"
+    assert CORE_DEMOGRAPHICS["cfps"] == ("gender", "sib_number")
+    assert FOCAL["cfps"] == "birth_year" and GROUP_COL["gss"] == "race"

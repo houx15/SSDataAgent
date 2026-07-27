@@ -5,11 +5,16 @@ docs/superpowers/specs/2026-07-27-transfer-characterization-study-design.md.
 """
 from __future__ import annotations
 
+from dataclasses import dataclass
+from pathlib import Path
+
 import numpy as np
 import pandas as pd
 from scipy.stats import wasserstein_distance
 
+from ssdataagent.config import data_root
 from ssdataagent.transfer.decompose import _is_num
+from ssdataagent.transfer.pairs import _drop_unnamed
 
 _EPS = 1e-9
 
@@ -70,3 +75,83 @@ def shape_level_split(a: pd.DataFrame, b: pd.DataFrame, response: str, focal: st
     shape = float(np.sqrt(np.mean((g - level) ** 2)))
     return {"response": response, "focal": focal, "level": level, "shape": shape,
             "shape_ratio": float(shape / (abs(level) + shape + _EPS)), "n_bins": len(g)}
+
+
+CORE_DEMOGRAPHICS: dict[str, tuple[str, ...]] = {
+    "cps": ("age", "gender", "race"),
+    "gss": ("age", "gender", "race"),
+    "cfps": ("gender", "sib_number"),
+}
+FOCAL: dict[str, str] = {"cps": "age", "gss": "age", "cfps": "birth_year"}
+GROUP_COL: dict[str, str] = {"cps": "race", "gss": "race", "cfps": "minzu"}
+
+
+@dataclass(frozen=True)
+class Context:
+    dataset: str
+    csv: Path
+    label: str
+    group_col: str | None = None
+    group_val: str | None = None
+    negate: bool = False   # True -> keep rows where group_col != group_val (majority/rest)
+
+
+@dataclass(frozen=True)
+class Pair:
+    id: str
+    family: str            # "time" | "group"
+    a: Context
+    b: Context
+    schema_name: str
+
+
+def load_context(ctx: Context) -> pd.DataFrame:
+    """Read a context's CSV, drop ``Unnamed:`` index columns, and apply the group filter.
+    NaN in the grouping column is excluded from BOTH subgroups (== and != both drop it)."""
+    df = _drop_unnamed(pd.read_csv(ctx.csv, low_memory=False))
+    if ctx.group_col is not None:
+        col = df[ctx.group_col].astype("string")
+        mask = (col != ctx.group_val) if ctx.negate else (col == ctx.group_val)
+        df = df[mask.fillna(False)].reset_index(drop=True)
+    return df
+
+
+def _cps(name: str) -> Path:
+    return data_root() / "cps" / name
+
+
+def _gss(name: str) -> Path:
+    return data_root() / "gss" / name
+
+
+def _cfps() -> Path:
+    return data_root() / "cfps" / "cfps_2010_2022.csv"
+
+
+CONTEXTS: dict[str, Context] = {
+    "cps_1970": Context("cps", _cps("cps-asec1970.csv"), "cps 1970"),
+    "cps_1980": Context("cps", _cps("cps-asec1980.csv"), "cps 1980"),
+    "cps_1990": Context("cps", _cps("cps-asec1990.csv"), "cps 1990"),
+    "cps_2000": Context("cps", _cps("cps-asec2000.csv"), "cps 2000"),
+    "gss_1994": Context("gss", _gss("gss1994.csv"), "gss 1994"),
+    "gss_2018": Context("gss", _gss("gss2018.csv"), "gss 2018"),
+    "cps_1980_maj": Context("cps", _cps("cps-asec1980.csv"), "cps1980 non-Black",
+                            "race", "Black", negate=True),
+    "cps_1980_min": Context("cps", _cps("cps-asec1980.csv"), "cps1980 Black", "race", "Black"),
+    "gss_2018_maj": Context("gss", _gss("gss2018.csv"), "gss2018 non-Black",
+                            "race", "Black", negate=True),
+    "gss_2018_min": Context("gss", _gss("gss2018.csv"), "gss2018 Black", "race", "Black"),
+    "cfps_han": Context("cfps", _cfps(), "cfps han", "minzu", "han"),
+    "cfps_min": Context("cfps", _cfps(), "cfps minority", "minzu", "minority"),
+}
+
+PAIRS: list[Pair] = [
+    Pair("cps_1970_1980", "time", CONTEXTS["cps_1970"], CONTEXTS["cps_1980"], "cps"),
+    Pair("cps_1980_1990", "time", CONTEXTS["cps_1980"], CONTEXTS["cps_1990"], "cps"),
+    Pair("cps_1990_2000", "time", CONTEXTS["cps_1990"], CONTEXTS["cps_2000"], "cps"),
+    Pair("cps_1970_2000", "time", CONTEXTS["cps_1970"], CONTEXTS["cps_2000"], "cps"),
+    Pair("gss_1994_2018", "time", CONTEXTS["gss_1994"], CONTEXTS["gss_2018"], "gss"),
+    Pair("cps_1980_race", "group", CONTEXTS["cps_1980_maj"], CONTEXTS["cps_1980_min"], "cps"),
+    Pair("gss_2018_race", "group", CONTEXTS["gss_2018_maj"], CONTEXTS["gss_2018_min"], "gss"),
+    Pair("cfps_minzu", "group", CONTEXTS["cfps_han"], CONTEXTS["cfps_min"], "cfps"),
+]
