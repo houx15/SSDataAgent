@@ -127,3 +127,15 @@ def llm_shifts(a: pd.DataFrame, ds: str, ys: list[str], *, client=None,
         levels = parse_levels(resp.choices[0].message.content, ys)
         path.write_text(json.dumps(levels, ensure_ascii=False, indent=2))
     return {y: float(levels[y]) - outcome_mean(a, y) for y in ys if y in levels}
+
+
+def assemble_shifts(a: pd.DataFrame, b: pd.DataFrame, sib_rew: pd.DataFrame, ds: str,
+                    ys: list[str], n_siblings: int, ess: float, *, client=None,
+                    cache_dir: Path | None = None) -> dict[str, dict]:
+    """Assemble the four arms' shift dicts for one pair: oracle (reads B), llm (description),
+    pooled (siblings raked to B's public X-margins), hybrid (ESS-gated fuse of pooled+llm)."""
+    oracle = oracle_shifts(a, b, ys)
+    llm = llm_shifts(a, ds, ys, client=client, cache_dir=cache_dir)
+    pooled = pooled_shifts(a, sib_rew, ys)
+    hybrid = hybrid_shifts(pooled, llm, n_siblings, ess)
+    return {"oracle": oracle, "llm": llm, "pooled": pooled, "hybrid": hybrid}

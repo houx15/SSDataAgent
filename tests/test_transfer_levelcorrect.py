@@ -95,3 +95,16 @@ def test_llm_shifts_cache_hit_skips_client(tmp_path):
             raise AssertionError("client must not be called on a cache hit")
     sh = llm_shifts(a, "cps", ["inc"], client=Boom(), cache_dir=tmp_path)
     assert abs(sh["inc"] - 8.0) < 1e-9        # 9 - mean 1, from cache
+
+
+def test_assemble_shifts_wires_all_four_arms(tmp_path):
+    from ssdataagent.transfer.levelcorrect import assemble_shifts
+    a = pd.DataFrame({"inc": [0.0, 0.0, 0.0, 0.0]})
+    b = pd.DataFrame({"inc": [10.0, 10.0, 10.0, 10.0]})          # oracle Δ = 10
+    sib_rew = pd.DataFrame({"inc": [4.0, 4.0, 4.0, 4.0]})        # pooled Δ = 4
+    shifts = assemble_shifts(a, b, sib_rew, "cps", ["inc"], n_siblings=3, ess=0.6,
+                             client=_FakeClient('{"inc": 7}'), cache_dir=tmp_path)  # llm Δ = 7
+    assert abs(shifts["oracle"]["inc"] - 10.0) < 1e-9
+    assert abs(shifts["pooled"]["inc"] - 4.0) < 1e-9
+    assert abs(shifts["llm"]["inc"] - 7.0) < 1e-9
+    assert abs(shifts["hybrid"]["inc"] - 4.0) < 1e-9             # 3 sib, ess .6 -> pooled
