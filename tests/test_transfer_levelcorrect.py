@@ -48,3 +48,50 @@ def test_hybrid_shifts_gate_routes_pooled_vs_llm():
     assert hybrid_shifts(pooled, llm, n_siblings=1, ess=0.6)["inc"] == 7.0   # thin -> llm
     # an outcome absent from the chosen arm falls back to the other
     assert hybrid_shifts({}, {"inc": 7.0}, n_siblings=3, ess=0.6)["inc"] == 7.0
+
+
+class _FakeClient:
+    """Minimal stand-in for the OpenRouter client: .chat.completions.create(...) returns an
+    object whose choices[0].message.content is the canned text."""
+    def __init__(self, content):
+        self._content = content
+    @property
+    def chat(self):
+        return self
+    @property
+    def completions(self):
+        return self
+    def create(self, model, messages):
+        msg = type("M", (), {"content": self._content})
+        return type("R", (), {"choices": [type("C", (), {"message": msg})]})
+
+
+def test_llm_shifts_uses_elicited_mean(tmp_path):
+    from ssdataagent.transfer.levelcorrect import llm_shifts
+    a = pd.DataFrame({"inc": [0.0, 0.0, 0.0, 0.0], "kid": [2.0, 2.0, 2.0, 2.0]})
+    client = _FakeClient('{"inc": 5, "kid": 3}')
+    sh = llm_shifts(a, "cps", ["inc", "kid"], client=client, cache_dir=tmp_path)
+    assert abs(sh["inc"] - 5.0) < 1e-9        # 5 - mean 0
+    assert abs(sh["kid"] - 1.0) < 1e-9        # 3 - mean 2
+    assert (tmp_path / "cps_levels.json").exists()
+
+
+def test_llm_shifts_drops_junk_entries(tmp_path):
+    from ssdataagent.transfer.levelcorrect import llm_shifts
+    a = pd.DataFrame({"inc": [0.0, 0.0]})
+    sh = llm_shifts(a, "cps", ["inc"], client=_FakeClient('{"inc": "NaN-ish"}'), cache_dir=tmp_path)
+    assert "inc" not in sh                    # dropped -> carryover for that outcome
+
+
+def test_llm_shifts_cache_hit_skips_client(tmp_path):
+    import json
+    from ssdataagent.transfer.levelcorrect import llm_shifts
+    (tmp_path / "cps_levels.json").write_text(json.dumps({"inc": 9.0}))
+    a = pd.DataFrame({"inc": [1.0, 1.0]})
+
+    class Boom:
+        @property
+        def chat(self):
+            raise AssertionError("client must not be called on a cache hit")
+    sh = llm_shifts(a, "cps", ["inc"], client=Boom(), cache_dir=tmp_path)
+    assert abs(sh["inc"] - 8.0) < 1e-9        # 9 - mean 1, from cache
