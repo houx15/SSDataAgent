@@ -15,6 +15,9 @@ from scipy.stats import wasserstein_distance
 from ssdataagent.config import data_root
 from ssdataagent.transfer.decompose import _is_num
 from ssdataagent.transfer.pairs import _drop_unnamed
+from ssdataagent.transfer import copula_stability as _cop
+from ssdataagent.transfer import decompose as _dec
+from ssdataagent.transfer.pairs import covariates_outcomes, crosswalk_columns
 
 _EPS = 1e-9
 
@@ -155,3 +158,77 @@ PAIRS: list[Pair] = [
     Pair("gss_2018_race", "group", CONTEXTS["gss_2018_maj"], CONTEXTS["gss_2018_min"], "gss"),
     Pair("cfps_minzu", "group", CONTEXTS["cfps_han"], CONTEXTS["cfps_min"], "cfps"),
 ]
+
+
+def resolve_columns(pair: Pair, a: pd.DataFrame | None = None,
+                    b: pd.DataFrame | None = None) -> dict:
+    """Load both contexts and resolve the column sets for one pair. For a group pair the
+    grouping variable (GROUP_COL[schema]) is dropped from both the Q1 core and Q2 sweep."""
+    if a is None:
+        a = load_context(pair.a)
+    if b is None:
+        b = load_context(pair.b)
+    cols = crosswalk_columns(pair.schema_name, a, b)
+    x, y = covariates_outcomes(pair.schema_name, cols)
+    is_group = pair.family == "group"
+    gcol = GROUP_COL.get(pair.schema_name)
+    core = [c for c in CORE_DEMOGRAPHICS[pair.schema_name]
+            if c in cols and not (is_group and c == gcol)]
+    x_sweep = [c for c in x if not (is_group and c == gcol)]
+    return {"a": a, "b": b, "cols": cols, "x": x, "y": y,
+            "core": core, "x_sweep": x_sweep, "focal": FOCAL[pair.schema_name]}
+
+
+def pair_records(pair: Pair) -> list[dict]:
+    """Run Q1-Q4 for one pair and return tidy long-format rows."""
+    r = resolve_columns(pair)
+    a, b, cols = r["a"], r["b"], r["cols"]
+    core, x_sweep, focal = r["core"], r["x_sweep"], r["focal"]
+    base = {"pair": pair.id, "family": pair.family, "dataset": pair.schema_name}
+    recs: list[dict] = []
+
+    # Q1 -- composition vs mechanism (per outcome)
+    for resp in r["y"]:
+        d = _dec.kob_decompose(a, b, resp, core)
+        recs.append({**base, "question": "Q1", "metric": "composition_share", "key": resp,
+                     "value": d["composition_share"], "mechanism_share": d["mechanism_share"],
+                     "ess_ratio": d["ess_ratio"], "label": d["label"]})
+        if _dec._is_num(a[resp]) and _dec._is_num(b[resp]):
+            ob = _dec.oaxaca_blinder(a, b, resp, core)
+            recs.append({**base, "question": "Q1", "metric": "composition_share_ob",
+                         "key": resp, "value": ob["composition_share_ob"],
+                         "endowment": ob["endowment"], "coefficient": ob["coefficient"]})
+
+    # Q2 -- X composition distance (per covariate)
+    for xc in x_sweep:
+        dist, kind = marginal_distance(a[xc], b[xc])
+        recs.append({**base, "question": "Q2", "metric": "marginal_distance", "key": xc,
+                     "value": dist, "kind": kind})
+
+    # Q3 -- mechanism / association stability
+    stab = _cop.copula_stability(a, b, cols)
+    n = len(stab)
+    counts = stab["label"].value_counts()
+    for lab in ("stable", "shifted", "undefined"):
+        recs.append({**base, "question": "Q3", "metric": f"pct_{lab}", "key": "all_pairs",
+                     "value": (float(counts.get(lab, 0)) / n) if n else np.nan})
+    recs.append({**base, "question": "Q3", "metric": "median_abs_delta", "key": "all_pairs",
+                 "value": float(stab["abs_delta"].median(skipna=True)) if n else np.nan})
+
+    # Q4 -- shape vs level (numeric outcomes; focal must be a real column in both frames)
+    if focal in a.columns and focal in b.columns:
+        for resp in r["y"]:
+            if _dec._is_num(a[resp]) and _dec._is_num(b[resp]):
+                s = shape_level_split(a, b, resp, focal)
+                recs.append({**base, "question": "Q4", "metric": "shape_ratio", "key": resp,
+                             "value": s["shape_ratio"], "level": s["level"],
+                             "shape": s["shape"], "focal": focal, "n_bins": s["n_bins"]})
+    return recs
+
+
+def run_characterization(pairs: list[Pair] = PAIRS) -> pd.DataFrame:
+    """Concatenate pair_records over all pairs into one tidy long-format table."""
+    rows: list[dict] = []
+    for p in pairs:
+        rows.extend(pair_records(p))
+    return pd.DataFrame(rows)

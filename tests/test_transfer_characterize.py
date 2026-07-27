@@ -90,3 +90,25 @@ def test_pairs_registry_shape_and_paths():
         assert p.a.csv.exists() and p.b.csv.exists(), f"missing csv for {p.id}"
     assert CORE_DEMOGRAPHICS["cfps"] == ("gender", "sib_number")
     assert FOCAL["cfps"] == "birth_year" and GROUP_COL["gss"] == "race"
+
+
+def test_resolve_columns_group_excludes_grouping_var():
+    from ssdataagent.transfer.characterize import PAIRS, resolve_columns
+    pair = next(p for p in PAIRS if p.id == "gss_2018_race")
+    r = resolve_columns(pair)
+    assert "race" not in r["core"], "grouping var must be excluded from Q1 core"
+    assert "race" not in r["x_sweep"], "grouping var must be excluded from Q2 sweep"
+    assert r["core"] == ["age", "gender"]
+    assert r["focal"] == "age"
+
+
+def test_run_characterization_tidy_schema_on_one_pair():
+    from ssdataagent.transfer.characterize import PAIRS, run_characterization
+    pair = next(p for p in PAIRS if p.id == "gss_2018_race")   # smallest (single gss wave)
+    df = run_characterization([pair])
+    for col in ("pair", "family", "dataset", "question", "metric", "key", "value"):
+        assert col in df.columns
+    assert set(df["question"]) >= {"Q1", "Q2", "Q3", "Q4"}
+    q1 = df[(df["question"] == "Q1") & (df["metric"] == "composition_share")]
+    assert len(q1) > 0 and q1["value"].notna().any()
+    assert (df["pair"] == "gss_2018_race").all()
