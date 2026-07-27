@@ -48,10 +48,13 @@ def test_shape_level_split_pure_level_shift():
 
 def test_shape_level_split_pure_shape_change():
     from ssdataagent.transfer.characterize import shape_level_split
-    focal = np.repeat(np.arange(-5, 6), 20).astype(float)   # symmetric about 0
+    # 10 distinct values symmetric about 0 (skip 0) -> one per bin, so `level` is exactly 0
+    # and the whole gap is shape. (arange(-5,6) has 11 values into 10 bins, which merges the
+    # top bin and biases `level` to -0.45; skipping 0 keeps the binning symmetric.)
+    focal = np.repeat(np.array([-5, -4, -3, -2, -1, 1, 2, 3, 4, 5]), 20).astype(float)
     a = pd.DataFrame({"f": focal, "y": np.zeros(len(focal))})
-    b = pd.DataFrame({"f": focal, "y": focal.copy()})        # gradient changes, mean gap ~ 0
+    b = pd.DataFrame({"f": focal, "y": focal.copy()})        # gradient changes, mean gap = 0
     r = shape_level_split(a, b, "y", "f", bins=10)
-    assert abs(r["level"]) < 0.5
-    assert r["shape"] > 1.0
-    assert r["shape_ratio"] > 0.8
+    assert abs(r["level"]) < 1e-6
+    assert r["shape"] > 3.0
+    assert r["shape_ratio"] > 0.99
