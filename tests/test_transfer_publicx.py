@@ -39,3 +39,18 @@ def test_with_public_x_absent_column_unchanged():
     base = pd.DataFrame({"age": [1, 2], "inc": [3, 4]})
     out = with_public_x(base, pd.DataFrame({"inc": [9, 9]}), ["age"], seed=0)
     assert list(out["age"]) == [1, 2]              # age absent from b -> left unchanged
+
+
+def test_px_frames_differ_from_base_only_in_public_x():
+    """PX_carry's marginal frame == A except in PUBLIC_X; PX_llm's == the LLM frame except in
+    PUBLIC_X. This is the invariant the runner relies on to isolate the X-margin fix."""
+    from ssdataagent.transfer.publicx import with_public_x, PUBLIC_X
+    a = pd.DataFrame({"age": [30] * 6, "gender": ["M"] * 6, "race": ["W"] * 6,
+                      "income": [1, 2, 3, 4, 5, 6], "education": list("aabbcc")})
+    b_pool = pd.DataFrame({"age": [70] * 6, "gender": ["F"] * 6, "race": ["B"] * 6,
+                           "income": [9] * 6, "education": list("cccccc")})
+    x_cols = [c for c in PUBLIC_X if c in a.columns]
+    px_carry = with_public_x(a, b_pool, x_cols, seed=1)
+    changed = [c for c in a.columns if not a[c].equals(px_carry[c])]
+    assert set(changed) == set(x_cols)                       # only demographics changed
+    assert list(px_carry["income"]) == [1, 2, 3, 4, 5, 6]    # Y untouched (== A carry-over)
