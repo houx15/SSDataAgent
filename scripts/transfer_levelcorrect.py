@@ -25,7 +25,8 @@ sys.path.insert(0, str(REPO / "scripts"))
 from ssdataagent.data.schema import load_schema  # noqa: E402
 from ssdataagent.transfer.generate import transfer_build  # noqa: E402
 from ssdataagent.transfer.levelcorrect import (  # noqa: E402
-    apply_level_shift, assemble_shifts, numeric_outcomes, oracle_shifts, pooled_shifts,
+    apply_affine_shift, apply_level_shift, assemble_shifts, numeric_outcomes,
+    oracle_affine, oracle_shifts, pooled_shifts,
 )
 from ssdataagent.transfer.pairs import PAIRS, covariates_outcomes, load_pair  # noqa: E402
 from ssdataagent.transfer.retrieval import reweighted_pool, sibling_csvs  # noqa: E402
@@ -47,7 +48,7 @@ def _pool(pair, a, b_pool, cols, covs, *, seed=0):
     return sib_rew, ess, len(sibs)
 
 
-def run_levelcorrect(pair, *, seeds, n, bootstrap_B, dry_run=False):
+def run_levelcorrect(pair, *, seeds, n, bootstrap_B, dry_run=False, configs_filter=None):
     """Score LC_none(==B0), LC_oracle, LC_llm, LC_pooled, LC_hybrid, ref_oracle_comp(==B1),
     ref_floor, ref_ceiling on the crosswalk cols -- identical protocol to B0-B6/face-swap.
     Only ref_oracle_comp + LC_oracle + the scorer touch B's pool; LC_llm reads B's
@@ -78,7 +79,13 @@ def run_levelcorrect(pair, *, seeds, n, bootstrap_B, dry_run=False):
               flush=True)
         return None
 
-    shifts = assemble_shifts(a, b_pool, sib_rew, ds, ys, n_sib, ess)
+    affine_oracle = oracle_affine(a, b_pool, ys)
+    # Only the additive/estimated arms need the LLM+pooled assembly; skip it (and the LLM call)
+    # when the selected configs don't include them -- e.g. the cheap LC_oracle_affine test.
+    est_arms = ("LC_llm", "LC_pooled", "LC_hybrid", "LC_oracle")
+    need_est = configs_filter is None or any(c in configs_filter for c in est_arms)
+    shifts = (assemble_shifts(a, b_pool, sib_rew, ds, ys, n_sib, ess) if need_est
+              else {"oracle": oracle_shifts(a, b_pool, ys), "llm": {}, "pooled": {}, "hybrid": {}})
     print(f"{pair.id}: numeric outcomes {ys}; siblings {n_sib} ess {ess:.3f}", flush=True)
 
     configs = {
@@ -91,10 +98,15 @@ def run_levelcorrect(pair, *, seeds, n, bootstrap_B, dry_run=False):
                                                     cols, n, s, "marginal-swap"),
         "LC_hybrid":       lambda s: transfer_build(a, apply_level_shift(a, shifts["hybrid"]),
                                                     cols, n, s, "marginal-swap"),
+        "LC_oracle_affine": lambda s: transfer_build(a, apply_affine_shift(a, affine_oracle),
+                                                     cols, n, s, "marginal-swap"),
         "ref_oracle_comp": lambda s: transfer_build(a, b_pool, cols, n, s, "marginal-swap"),
         "ref_floor":       lambda s: nb.build(b_pool, cols, n, s, "independence"),
         "ref_ceiling":     lambda s: nb.build(b_pool, cols, n, s, "rowresample"),
     }
+
+    if configs_filter:
+        configs = {k: v for k, v in configs.items() if k in configs_filter}
 
     out_rows = []
     with tempfile.TemporaryDirectory() as cfg_td:
@@ -111,7 +123,8 @@ def run_levelcorrect(pair, *, seeds, n, bootstrap_B, dry_run=False):
 
     df = pd.DataFrame(out_rows)
     OUT.mkdir(parents=True, exist_ok=True)
-    df.to_csv(OUT / f"levelcorrect_{pair.id}.csv", index=False)
+    suffix = "" if not configs_filter else "_partial"   # don't clobber the full ladder CSV
+    df.to_csv(OUT / f"levelcorrect_{pair.id}{suffix}.csv", index=False)
     print(df.to_string(index=False), flush=True)
     return df
 
@@ -124,10 +137,13 @@ def main() -> None:
     ap.add_argument("--bootstrap-B", type=int, default=200)
     ap.add_argument("--dry-run", action="store_true",
                     help="compute + print shifts on real data (no LLM, no scoring)")
+    ap.add_argument("--configs", default=None,
+                    help="comma-separated config names to score (subset); writes *_partial.csv")
     args = ap.parse_args()
     pair = next(p for p in PAIRS if p.id == args.pair_id)
+    cf = set(args.configs.split(",")) if args.configs else None
     run_levelcorrect(pair, seeds=args.seeds, n=args.n, bootstrap_B=args.bootstrap_B,
-                     dry_run=args.dry_run)
+                     dry_run=args.dry_run, configs_filter=cf)
 
 
 if __name__ == "__main__":

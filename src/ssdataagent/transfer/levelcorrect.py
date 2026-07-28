@@ -139,3 +139,45 @@ def assemble_shifts(a: pd.DataFrame, b: pd.DataFrame, sib_rew: pd.DataFrame, ds:
     pooled = pooled_shifts(a, sib_rew, ys)
     hybrid = hybrid_shifts(pooled, llm, n_siblings, ess)
     return {"oracle": oracle, "llm": llm, "pooled": pooled, "hybrid": hybrid}
+
+
+def outcome_std(frame: pd.DataFrame, y: str) -> float:
+    """NaN-aware sample std (ddof=1) of a numeric column (NaN if <2 values)."""
+    v = pd.to_numeric(frame[y], errors="coerce").dropna()
+    return float(v.std()) if len(v) > 1 else float("nan")
+
+
+def _is_integer_valued(s: pd.Series) -> bool:
+    """True if every non-missing value is (numerically) a whole number -- a count outcome."""
+    v = pd.to_numeric(s, errors="coerce").dropna().to_numpy()
+    return bool(len(v)) and bool(np.all(np.isclose(v, np.round(v))))
+
+
+def oracle_affine(a: pd.DataFrame, b: pd.DataFrame, ys: list[str]) -> dict[str, tuple]:
+    """{y: (mean_B, std_B)} -- the affine target (center + spread) from B (ceiling arm)."""
+    return {y: (outcome_mean(b, y), outcome_std(b, y)) for y in ys}
+
+
+def apply_affine_shift(marg: pd.DataFrame, targets: dict[str, tuple]) -> pd.DataFrame:
+    """Copy of ``marg`` with each numeric column named in ``targets`` mapped affinely to a
+    target (mean, std): new = (x - meanA)*(std_target/stdA) + mean_target -- matching BOTH the
+    center and the spread (unlike the additive shift, which keeps A's spread). NaN preserved;
+    integer-valued (count) columns are rounded; values are floored at A's own minimum when that
+    minimum is >= 0 (no negative incomes/counts). Other columns are byte-identical."""
+    out = marg.copy()
+    for y, (tmean, tstd) in targets.items():
+        if y not in out.columns:
+            continue
+        x = pd.to_numeric(out[y], errors="coerce")
+        mA, sA = float(x.mean()), float(x.std())
+        if not (np.isfinite(mA) and np.isfinite(sA) and sA > 0
+                and np.isfinite(tmean) and np.isfinite(tstd)):
+            continue
+        newv = (x - mA) * (tstd / sA) + tmean
+        lo = float(x.min())
+        if np.isfinite(lo) and lo >= 0:
+            newv = newv.clip(lower=lo)
+        if _is_integer_valued(marg[y]):
+            newv = newv.round()
+        out[y] = newv
+    return out

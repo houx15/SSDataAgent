@@ -108,3 +108,38 @@ def test_assemble_shifts_wires_all_four_arms(tmp_path):
     assert abs(shifts["pooled"]["inc"] - 4.0) < 1e-9
     assert abs(shifts["llm"]["inc"] - 7.0) < 1e-9
     assert abs(shifts["hybrid"]["inc"] - 4.0) < 1e-9             # 3 sib, ess .6 -> pooled
+
+
+def test_apply_affine_matches_mean_and_std():
+    from ssdataagent.transfer.levelcorrect import apply_affine_shift
+    a = pd.DataFrame({"inc": np.arange(0.0, 100.0) + 0.5})   # non-integer -> no count rounding
+    out = apply_affine_shift(a, {"inc": (200.0, 10.0)})
+    x = pd.to_numeric(out["inc"])
+    assert abs(x.mean() - 200.0) < 1e-6
+    assert abs(x.std() - 10.0) < 1e-6
+
+
+def test_apply_affine_rounds_and_floors_counts():
+    from ssdataagent.transfer.levelcorrect import apply_affine_shift
+    a = pd.DataFrame({"kid": np.array([0, 0, 1, 1, 2, 3, 4, 5, 6, 7], dtype=float)})
+    out = apply_affine_shift(a, {"kid": (1.0, 2.0)})
+    x = pd.to_numeric(out["kid"]).dropna()
+    assert (x >= 0).all()                                  # floored at A's min 0
+    assert np.allclose(x.to_numpy(), np.round(x.to_numpy()))  # kept whole
+
+
+def test_apply_affine_preserves_nan_and_other_cols():
+    from ssdataagent.transfer.levelcorrect import apply_affine_shift
+    a = pd.DataFrame({"inc": [1.0, 2.0, 3.0, np.nan], "occ": ["x", "y", "z", "w"]})
+    out = apply_affine_shift(a, {"inc": (10.0, 2.0)})
+    assert out["inc"].isna().sum() == 1
+    assert list(out["occ"]) == list(a["occ"])
+
+
+def test_oracle_affine_returns_target_mean_and_std():
+    from ssdataagent.transfer.levelcorrect import oracle_affine
+    a = pd.DataFrame({"inc": [0.0, 0.0, 0.0, 0.0]})
+    b = pd.DataFrame({"inc": [1.0, 2.0, 3.0, 4.0]})
+    t = oracle_affine(a, b, ["inc"])
+    assert abs(t["inc"][0] - 2.5) < 1e-9                       # mean_B
+    assert abs(t["inc"][1] - pd.Series([1, 2, 3, 4]).std()) < 1e-9  # std_B (ddof=1)
