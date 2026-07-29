@@ -60,3 +60,24 @@ def test_empirical_carries_missingness_rate():
     B = pd.DataFrame({"x": [1.0] * 600 + [np.nan] * 400})   # 40% NaN target
     ec = empirical_transfer(A, B, ["x"], 5000, 1)
     assert 0.30 <= ec["x"].isna().mean() <= 0.50
+
+
+def test_ec_carry_reproduces_source_joint_better_than_engine():
+    """On a small mixed frame, EC_carry (empirical_transfer(A, A)) keeps A's numeric+categorical
+    association at least as well as transfer_build carryover -- the runner's EC_carry arm."""
+    from ssdataagent.transfer.empirical_copula import empirical_transfer
+    from ssdataagent.transfer.generate import transfer_build
+    from ssdataagent.transfer.copula_stability import pair_association
+    rng = np.random.default_rng(1)
+    n = 3000
+    g = rng.choice(["lo", "hi"], n)
+    A = pd.DataFrame({
+        "grp": g,
+        "cat": np.where(g == "hi", "A", "B").astype(object),
+        "val": np.where(g == "hi", 1.0, 0.0) + rng.normal(0, 0.2, n),
+    })
+    ec = empirical_transfer(A, A, ["grp", "cat", "val"], n, 2)
+    tb = transfer_build(A, A, ["grp", "cat", "val"], n, 2, "carryover")
+    a_true = pair_association(A, "grp", "cat")[0]
+    assert pair_association(ec, "grp", "cat")[0] >= pair_association(tb, "grp", "cat")[0] - 1e-6
+    assert pair_association(ec, "grp", "cat")[0] > 0.8 * a_true
